@@ -1,9 +1,9 @@
 # configuration
 DEBUG = True
-SECRET_KEY = 'GBg4Y%hx$5M7'
+SECRET_KEY = 'secretkey'
 
 # Database
-DATABASE = 'telomere'
-SQLALCHEMY_DATABASE_URI = 'mysql://lampuser:PeRin1@127.0.0.1/telomere'
+DATABASE = 'databasename'
+SQLALCHEMY_DATABASE_URI = 'connection_string'
 SQLALCHEMY_ECHO = True
 

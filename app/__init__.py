@@ -5,7 +5,7 @@ from flask.ext.login import LoginManager, UserMixin, login_required, login_user
 import defaultSettings
 
 telomere = Flask(__name__)
-telomere.config.from_object('app.defaultSettings')
+telomere.config.from_object('app.settings')
 
 db = SQLAlchemy(telomere)
 
