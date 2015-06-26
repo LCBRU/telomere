@@ -1,4 +1,4 @@
-from flask import redirect, url_for, request,g
+from flask import redirect, url_for, request, g, render_template
 from flask.ext.login import LoginManager, login_user, logout_user, current_user
 import ldap
 
@@ -7,7 +7,7 @@ from app.model.user import User
 
 login_manager = LoginManager()
 login_manager.init_app(telomere)
-login_manager.login_view = "login_here" 
+login_manager.login_view = "login" 
  
 @login_manager.user_loader
 def load_user(userId):
@@ -22,8 +22,8 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@telomere.route("/login_here",methods=["GET", "POST"])
-def login_here():
+@telomere.route("/login",methods=["GET", "POST"])
+def login():
     if request.method == 'POST':
 
         username = request.form['username']
@@ -40,13 +40,7 @@ def login_here():
             login_user(user)
             return redirect(url_for('index'))
 
-    return '''
-        <form action="" method="post">
-            <label for=username>Username</label><input type=text name=username>
-            <label for=password>Password</label><input type=password name=password>
-            <input type=submit value=Login>
-        </form>
-    '''
+    return render_template('user/login.html')
 
 def validateLDAP(username,password):
     ld = ldap.initialize(telomere.config['LDAP_URL'])
