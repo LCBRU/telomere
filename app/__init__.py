@@ -1,6 +1,7 @@
-from flask import Flask, redirect, url_for, request
+from flask import Flask, redirect, url_for, request, g
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager, UserMixin, login_required, login_user
+from flask.ext.login import LoginManager, UserMixin, login_required, login_user, current_user
+import ldap
 
 import defaultSettings
 
@@ -18,48 +19,58 @@ login_manager = LoginManager()
 login_manager.init_app(telomere)
 login_manager.login_view = "login_here" 
  
-class User(UserMixin):
-    # proxy for a database of users
-    user_database = {"JohnDoe": ("JohnDoe", "John"),
-               "JaneDoe": ("JaneDoe", "Jane")}
- 
-    def __init__(self, username, password):
-        self.id = username
-        self.password = password
- 
-    @classmethod
-    def get(cls,id):
-        userData = cls.user_database.get(id)
-        return User(userData[0], userData[1])
- 
- 
 @login_manager.user_loader
 def load_user(userId):
-    print "User ID is: "
-    print userId
-    return User.get(userId)
+    return User.query.filter_by(id=userId).first()
  
+@telomere.before_request
+def get_current_user():
+    g.user = current_user
+
 @telomere.route("/login_here",methods=["GET", "POST"])
 def login_here():
     if request.method == 'POST':
+
         username = request.form['username']
-        user = User.get(username)
+        password = request.form['password']
 
-        if user is not None:
+        if validateLDAP(username,password):
+            user = User.query.filter_by(username=username).first()
+ 
+            if not user:
+                user = User(username)
+                db.session.add(user)
+                db.session.commit()
+
             login_user(user)
+            return redirect(url_for('index'))
 
-        return redirect(url_for('index'))
     return '''
         <form action="" method="post">
-            <p><input type=text name=username>
-            <p><input type=submit value=Login>
+            <label for=username>Username</label><input type=text name=username>
+            <label for=password>Password</label><input type=password name=password>
+            <input type=submit value=Login>
         </form>
     '''
+
+def validateLDAP(username,password):
+    ld = ldap.initialize(telomere.config['LDAP_URL'])
+    try:
+        ld.simple_bind_s(
+            'uid={0},{1}'.format(username, telomere.config['LDAP_BASEDN']),
+            password
+        )
+        print "Validated user"
+        return True
+    except ldap.LDAPError, e:
+        print "authentication error"
+        print e
+        return False
 
 @telomere.route("/protected/",methods=["GET"])
 @login_required
 def protected():
-    return "Hello Protected World!"
+    return "Hello %s!" % g.user.username
  
 from app import views
 
