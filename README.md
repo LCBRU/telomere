@@ -12,3 +12,24 @@ Record audit information for the telomere length study
     sudo apt-get install libldap2-dev
     sudo apt-get install libsasl2-dev
     sudo pip install python-ldap
+
+## Install
+
+1. Copy or clone the source from the git repository.
+2. Copy the defaultSettings.py file to settings.py
+3. Edit the settings.py file and change the following settings:
+	1. Change `Debug` to be false
+	2. Change `SECRET_KEY` to a secret key.
+	3. Change `DATABASE` to the database name
+	4. Change `SQLALCHEMY_DATABASE_URI` to a valid MySQL connection string
+	5. Change `LDAP_URL` to be include the server and port for the LDAP service
+	6. Change `LDAP_BASEDN` to be a valid one of those things.
+
+## Create the database
+
+The Telomere application creates the tables that it requires,
+but first you must create the database and give the user then
+necessary permissions.
+
+1. `CREATE DATABASE telomere;`
+2. `GRANT ALL PRIVILEGES ON {database_name}.* to {username}@'{machine_name}' identified by '{password}';`
