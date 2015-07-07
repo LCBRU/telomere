@@ -1,5 +1,6 @@
 from flask import redirect, url_for, request, g, render_template
 from flask.ext.login import LoginManager, login_user, logout_user, current_user
+from app import db
 import ldap
 
 from app import telomere
