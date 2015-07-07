@@ -41,16 +41,17 @@
             <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
             <li><a href="{{ url_for('protected') }}">Protected</a></li>
           </ul>
+          {% if current_user.username %}
+              <p class="navbar-text navbar-right">{{ current_user.username }}: <a href="{{ url_for('logout') }}" class="navbar-link">Logout</a></p>
+          {% endif %}
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
     <div class="container">
-
       <div>
         {% block content %}{% endblock %}
       </div>
-
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
