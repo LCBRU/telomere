@@ -1,10 +1,19 @@
-{% extends "base.html" %}
+{% extends "standardLayout.html" %}
+
+{% block bodyClass %}dialog{% endblock %}
+
 {% block content %}
-    <form method="post">
-        <label for=username>Username</label>
-        <input type=text name=username>
-        <label for=password>Password</label>
-        <input type=password name=password>
-        <input type=submit value=Login>
-    </form>
+    <div class="container">
+
+      <form class="form-signin" method="post">
+        <h2 class="form-signin-heading">Please sign in using your University of Leicester username and password</h2>
+        <label for="username" class="sr-only">Username</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+    </div> <!-- /container -->
+
 {% endblock %}
