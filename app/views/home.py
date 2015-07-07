@@ -12,5 +12,4 @@ def index():
 @telomere.route("/protected/",methods=["GET"])
 @login_required
 def protected():
-    return "Hello %s!" % g.user.username
- 
+    return render_template('protected.html')
