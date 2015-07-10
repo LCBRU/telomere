@@ -58,3 +58,7 @@ target/
 
 # Settings
 app/settings.py
+
+# Virtual Environment
+venv
+
