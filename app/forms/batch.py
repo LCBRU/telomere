@@ -4,3 +4,4 @@ from wtforms.validators import DataRequired
 
 class BatchEntry(Form):
     name = StringField('name', validators=[DataRequired()])
+    robot = StringField('robot', validators=[DataRequired()])

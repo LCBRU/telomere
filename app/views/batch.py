@@ -13,5 +13,5 @@ def batch_entry():
     form = BatchEntry(obj=item)
     if form.validate_on_submit():
         form.populate_obj(item)
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
     return render_template('batch/batchEntry.html', form=form)

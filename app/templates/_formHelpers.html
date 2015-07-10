@@ -1,0 +1,28 @@
+{% macro render_field(field) %}
+  <div>
+    {% if field.type == "BooleanField" %}
+        {{ render_field_control(field, **kwargs) }}{{ field.label }}
+    {% else %}
+        {{ field.label }}{{ render_field_control(field, **kwargs) }}
+    {% endif %}
+    {{ render_errors(field)}}
+  </div>
+{% endmacro %}
+
+{% macro render_field_control(field) %}
+  {% if field.flags.required %}
+    {{ field(required="required", **kwargs)|safe }}
+  {% else %}
+    {{ field(**kwargs)|safe }}
+  {% endif %}
+{% endmacro %}
+
+{% macro render_errors(field) %}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}
