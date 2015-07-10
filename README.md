@@ -12,6 +12,7 @@ Record audit information for the telomere length study
     sudo apt-get install libldap2-dev
     sudo apt-get install libsasl2-dev
     sudo pip install python-ldap
+    sudo pip install Flask-WTF
 
 ## Install
 
@@ -33,3 +34,7 @@ necessary permissions.
 
 1. `CREATE DATABASE telomere;`
 2. `GRANT ALL PRIVILEGES ON {database_name}.* to {username}@'{machine_name}' identified by '{password}';`
+
+## Installation on University of Leicester LAMP servers
+
+See [Here](http://lcbru-trac.rcs.le.ac.uk/wiki/Telomere%20Length%20Recording%20Application%20HowTo%20Install).

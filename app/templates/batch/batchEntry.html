@@ -1,0 +1,17 @@
+{% extends "standardLayout.html" %}
+
+{% block content %}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <dl>
+    	{{ form.name.label }} {{ form.name(size=20) }}
+    </dl>
+
+    <div>
+        <a href="{{ url_for('index') }}" class="button">Cancel</a>
+        <input type="submit" value="Save">
+    </div>
+</form>
+
+{% endblock %}
