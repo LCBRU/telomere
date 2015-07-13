@@ -7,6 +7,7 @@ class Batch(db.Model):
     pcrMachine = db.Column(db.String(20))
     temperature = db.Column(db.Numeric(precision=3, scale=1))
     datetime = db.Column(db.DateTime())
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get('id')
@@ -15,3 +16,4 @@ class Batch(db.Model):
         self.pcrMachine = kwargs.get('pcrMachine')
         self.temperature = kwargs.get('temperature')
         self.datetime = kwargs.get('datetime')
+        self.userId = kwargs.get('userId')

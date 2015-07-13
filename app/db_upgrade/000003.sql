@@ -5,6 +5,11 @@ CREATE TABLE batch (
     ,	pcrMachine VARCHAR(20) NOT NULL
     ,	temperature DECIMAL(3,1) NOT NULL
     ,	datetime DATETIME NOT NULL
+    ,	userId INTEGER NOT NULL
+	,	CONSTRAINT fk_batch_user FOREIGN KEY (userId) REFERENCES user(Id)
     )
+;
 
-
+CREATE INDEX idx_batch_userId
+ON batch (userId)
+;

@@ -18,6 +18,7 @@ def batch_entry():
         item.pcrMachine = form.pcrMachine.data
         item.temperature = form.temperature.data
         item.datetime = form.datetime.data
+        item.userId = current_user.id
         db.session.add(item)
         db.session.commit()
         print item.id
