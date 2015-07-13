@@ -13,7 +13,14 @@ def batch_entry():
     item.datetime = datetime.datetime.now()
     form = BatchEntry(obj=item, operator=current_user.username)
     if form.validate_on_submit():
-        form.populate_obj(item)
+        item.batchId = form.batchId.data
+        item.robot = form.robot.data
+        item.pcrMachine = form.pcrMachine.data
+        item.temperature = form.temperature.data
+        item.datetime = form.datetime.data
+        db.session.add(item)
+        db.session.commit()
+        print item.id
         return redirect(url_for('index'))
 
     return render_template('batch/batchEntry.html', form=form)

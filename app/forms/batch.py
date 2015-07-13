@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, FieldList, FormField, DecimalField
+from wtforms import StringField, FieldList, FormField, DecimalField, Form as WtfForm
 from wtforms.validators import DataRequired, ValidationError, StopValidation, Length
 from wtforms_components import TimeField, read_only
 from wtforms.fields.html5 import DateTimeField
@@ -21,7 +21,7 @@ class RequiredIfSampleDataEntered(object):
     	if (not field.data and (form.t1.data or form.s1.data or form.t2.data or form.s2.data or form.tSRatio.data)):
             raise ValidationError(self.message)
 
-class SampleEntry(Form):
+class SampleEntry(WtfForm):
     sampleId = StringField('Sample Id', validators=[RequiredIfSampleDataEntered()])
     t1 = DecimalField('T1', validators=[RequiredIfSampleId()], places=1)
     s1 = DecimalField('S1', validators=[RequiredIfSampleId()], places=1)
