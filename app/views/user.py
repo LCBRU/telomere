@@ -1,7 +1,7 @@
 from flask import redirect, url_for, request, g, render_template
 from flask.ext.login import LoginManager, login_user, logout_user, current_user
 from app import db
-import ldap
+import ldap, time
 
 from app import telomere
 from app.model.user import User
@@ -33,14 +33,11 @@ def login():
         if validateLDAP(username,password):
             user = User.query.filter_by(username=username).first()
  
-            if not user:
-                user = User(username)
-                db.session.add(user)
-                db.session.commit()
+            if user:
+                login_user(user)
+                return redirect(url_for('index'))
 
-            login_user(user)
-            return redirect(url_for('index'))
-
+    time.sleep(5.5)
     return render_template('user/login.html')
 
 def validateLDAP(username,password):
