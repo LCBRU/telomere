@@ -5,21 +5,15 @@
 
 <form method="POST">
     {{ form.hidden_tag() }}
-    <dl>
-    	{{ formhelper.render_field(form.name) }}
-    </dl>
-    <dl>
-		<label for="robot">robot</label>
-  
-    	<input id="robot" name="robot" type="text" value="">
 
-	   	{{ formhelper.render_errors(form.robot)}}
-    </dl>
-
-    <div>
-        <a href="{{ url_for('index') }}" class="button">Cancel</a>
-        <input type="submit" value="Save">
+    <div class="form-inline">
+        {{ formhelper.render_field(form.operator) }}
+        {{ formhelper.render_field(form.batchId) }}
+        {{ formhelper.render_field(form.robot) }}
     </div>
+
+    <a href="{{ url_for('index') }}" class="btn btn-default" role="button">Cancel</a>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 {% endblock %}

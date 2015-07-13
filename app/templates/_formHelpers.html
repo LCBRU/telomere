@@ -1,9 +1,9 @@
 {% macro render_field(field) %}
-  <div>
+  <div class="form-group">
     {% if field.type == "BooleanField" %}
         {{ render_field_control(field, **kwargs) }}{{ field.label }}
     {% else %}
-        {{ field.label }}{{ render_field_control(field, **kwargs) }}
+        {{ field.label() }}{{ render_field_control(field, **kwargs) }}
     {% endif %}
     {{ render_errors(field)}}
   </div>
@@ -11,9 +11,9 @@
 
 {% macro render_field_control(field) %}
   {% if field.flags.required %}
-    {{ field(required="required", **kwargs)|safe }}
+    {{ field(class="form-control", required="required", **kwargs)|safe }}
   {% else %}
-    {{ field(**kwargs)|safe }}
+    {{ field(class="form-control", **kwargs)|safe }}
   {% endif %}
 {% endmacro %}
 
