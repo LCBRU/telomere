@@ -10,8 +10,10 @@ from flask_login import current_user
 @login_required
 def batch_entry():
     item = Batch()
-    form = BatchEntry(obj=item)
+    item.datetime = datetime.datetime.now()
+    form = BatchEntry(obj=item, operator=current_user.username)
     if form.validate_on_submit():
         form.populate_obj(item)
         return redirect(url_for('index'))
+
     return render_template('batch/batchEntry.html', form=form)

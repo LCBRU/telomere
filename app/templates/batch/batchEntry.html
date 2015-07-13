@@ -3,17 +3,67 @@
 
 {% block content %}
 
-<form method="POST">
+<h2>Enter Batch</h2>
+
+<form method="POST" class="form-horizontal">
     {{ form.hidden_tag() }}
 
-    <div class="form-inline">
+    <div class="col-sm-5">
         {{ formhelper.render_field(form.operator) }}
         {{ formhelper.render_field(form.batchId) }}
         {{ formhelper.render_field(form.robot) }}
     </div>
 
-    <a href="{{ url_for('index') }}" class="btn btn-default" role="button">Cancel</a>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <div class="col-sm-2"></div>
+
+    <div class="col-sm-5">
+        {{ formhelper.render_field(form.pcrMachine) }}
+        {{ formhelper.render_field(form.temperature) }}
+        {{ formhelper.render_field(form.datetime) }}
+    </div>
+
+    <h3>Samples</h3>
+    <table class="table col-sm-12 table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Sample ID</th>
+                <th>T1</th>
+                <th>S1</th>
+                <th>T2</th>
+                <th>S2</th>
+                <th>T/S</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sample in form.samples %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    {{ formhelper.render_control_cell(sample.sampleId) }}
+                    {{ formhelper.render_control_cell(sample.t1) }}
+                    {{ formhelper.render_control_cell(sample.s1) }}
+                    {{ formhelper.render_control_cell(sample.t2) }}
+                    {{ formhelper.render_control_cell(sample.s2) }}
+                    {{ formhelper.render_control_cell(sample.tSRatio) }}
+                </tr>
+            {% endfor %}  
+        </tbody>
+    </table>
+
+    <div class="col-sm-12 text-right">
+        <a href="{{ url_for('index') }}" class="btn btn-default" role="button">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
 </form>
+
+{% endblock %}
+
+{% block script %}
+
+<script type="text/javascript">
+    $(function () {
+        $('#datetime').datetimepicker({ format: 'D/M/YYYY H:m'});
+    });
+</script>
 
 {% endblock %}
