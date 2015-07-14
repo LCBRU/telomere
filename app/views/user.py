@@ -37,7 +37,8 @@ def login():
                 login_user(user)
                 return redirect(url_for('index'))
 
-    time.sleep(5.5)
+        time.sleep(5.5)
+
     return render_template('user/login.html')
 
 def validateLDAP(username,password):
