@@ -18,7 +18,7 @@ def batch_entry():
         batch = _saveBatch(form)
 
         if (batch):
-            _saveSamples(form, item)
+            _saveSampleMeasurements(form, batch)
 
             db.session.commit()
             return redirect(url_for('index'))
@@ -43,13 +43,20 @@ def _saveBatch(form):
 
     return batch
 
-def _saveSamples(form, batch):
+def _saveSampleMeasurements(form, batch):
     for formSample in form.samples.entries:
-        sampleId = formSample.sampleId.data
+        sample = _saveSample(formSample)
 
-        if (sampleId):
-            sample = Sample.query.filter_by(sampleId=sampleId).first()
+def _saveSample(formSample):
+    sampleId = formSample.sampleId.data
 
-            if (not sample):
-                sample = Sample(sampleId=sampleId)
-                db.session.add(sample)
+    if (sampleId):
+        sample = Sample.query.filter_by(sampleId=sampleId).first()
+
+        if (not sample):
+            sample = Sample(sampleId=sampleId)
+            db.session.add(sample)
+        else:
+            flash("Duplicate measurement for sample '%s' recorded." % sampleId)
+
+        return sample
