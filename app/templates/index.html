@@ -1,26 +1,28 @@
 {% extends "standardLayout.html" %}
 {% block content %}
     <div class="jumbotron">
-        <h1>Telomere Length</h1>
+        <h1 class="text-center">Telomere Length</h1>
     </div>
 
-    <h2>Progress so far</h2>
-
-    <table class="table">
-    	<tr>
-    		<td>Bathes Processed</td>
-    		<td>{{batches}}</td>
-    	</tr>
-    	<tr>
-    		<td>Samples Processed</td>
-    		<td>{{samples}}</td>
-    	</tr>
-    	<tr>
-    		<td>Measurements Processed</td>
-    		<td>{{measurements}}</td>
-    	</tr>
-    </table>
-
-    <a href="{{ url_for('batch_entry') }}" class="btn btn-default" role="button">Enter Batch</a>
+    <div class="col-sm-6 col-sm-offset-3">
+        <h2>Progress so far</h2>
+        <table class="table">
+        	<tr>
+        		<td>Batches Processed</td>
+        		<td class="text-right">{{ '%d' | format(batches) }}</td>
+        	</tr>
+        	<tr>
+        		<td>Samples Processed</td>
+                <td class="text-right">{{ '%d' | format(samples) }}</td>
+        	</tr>
+        	<tr>
+        		<td>Measurements Processed</td>
+                <td class="text-right">{{ '%d' | format(measurements) }}</td>
+        	</tr>
+        </table>
+    </div>
+    <div class="col-sm-12 text-center">
+        <a href="{{ url_for('batch_entry') }}" class="btn btn-primary" role="button">Enter Batch</a>
+    </div>
 {% endblock %}
 
