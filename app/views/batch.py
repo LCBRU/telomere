@@ -26,14 +26,14 @@ def batch_entry():
     return render_template('batch/batchEntry.html', form=form)
 
 def _saveBatch(form):
-    batch = Batch.query.filter_by(batchId=form.batchId.data).first()
+    batch = Batch.query.filter_by(batchCode=form.batchCode.data).first()
 
     if (batch):
-        flash("Batch ID already exists", "error")
+        flash("Batch Code already exists", "error")
         return False
 
     batch = Batch()
-    batch.batchId = form.batchId.data
+    batch.batchCode = form.batchCode.data
     batch.robot = form.robot.data
     batch.pcrMachine = form.pcrMachine.data
     batch.temperature = form.temperature.data

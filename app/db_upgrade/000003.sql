@@ -1,6 +1,6 @@
 CREATE TABLE batch (
         id INTEGER PRIMARY KEY AUTO_INCREMENT
-    ,   batchId VARCHAR(20) NOT NULL
+    ,   batchCode VARCHAR(20) NOT NULL
     ,	robot VARCHAR(20) NOT NULL
     ,	pcrMachine VARCHAR(20) NOT NULL
     ,	temperature DECIMAL(3,1) NOT NULL
@@ -14,6 +14,6 @@ CREATE INDEX idx_batch_userId
 ON batch (userId)
 ;
 
-CREATE UNIQUE INDEX idx_batch_batchId
-ON batch (batchId)
+CREATE UNIQUE INDEX idx_batch_batchCode
+ON batch (batchCode)
 ;

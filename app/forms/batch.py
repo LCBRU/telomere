@@ -30,7 +30,7 @@ class SampleEntry(WtfForm):
     tSRatio = DecimalField('T/S', validators=[RequiredIfSampleId()], places=1)
 
 class BatchEntry(Form):
-    batchId = StringField('Batch Id', validators=[DataRequired(), Length(max=20)])
+    batchCode = StringField('Batch Code', validators=[DataRequired(), Length(max=20)])
     operator = StringField('Operator')
     robot = StringField('Robot', validators=[DataRequired(), Length(max=20)])
     pcrMachine = StringField('PCR Machine', validators=[DataRequired(), Length(max=20)])
