@@ -1,5 +1,5 @@
 import datetime
-from flask import redirect, url_for, request, g, render_template
+from flask import flash, redirect, url_for, request, g, render_template
 from flask.ext.login import login_required
 from app import db, telomere
 from app.forms.batch import BatchEntry
@@ -13,22 +13,35 @@ def batch_entry():
     item = Batch()
     item.datetime = datetime.datetime.now()
     form = BatchEntry(obj=item, operator=current_user.username)
+
     if form.validate_on_submit():
-        item.batchId = form.batchId.data
-        item.robot = form.robot.data
-        item.pcrMachine = form.pcrMachine.data
-        item.temperature = form.temperature.data
-        item.datetime = form.datetime.data
-        item.userId = current_user.id
-        db.session.add(item)
+        batch = _saveBatch(form)
 
-        _saveSamples(form, item)
+        if (batch):
+            _saveSamples(form, item)
 
-        db.session.commit()
-        print item.id
-        return redirect(url_for('index'))
+            db.session.commit()
+            return redirect(url_for('index'))
 
     return render_template('batch/batchEntry.html', form=form)
+
+def _saveBatch(form):
+    batch = Batch.query.filter_by(batchId=form.batchId.data).first()
+
+    if (batch):
+        flash("Batch ID already exists", "error")
+        return False
+
+    batch = Batch()
+    batch.batchId = form.batchId.data
+    batch.robot = form.robot.data
+    batch.pcrMachine = form.pcrMachine.data
+    batch.temperature = form.temperature.data
+    batch.datetime = form.datetime.data
+    batch.userId = current_user.id
+    db.session.add(batch)
+
+    return batch
 
 def _saveSamples(form, batch):
     for formSample in form.samples.entries:
@@ -39,7 +52,4 @@ def _saveSamples(form, batch):
 
             if (not sample):
                 sample = Sample(sampleId=sampleId)
-                print sample.sampleId
-                #db.session.add(sample)
-
-            print sampleId
+                db.session.add(sample)

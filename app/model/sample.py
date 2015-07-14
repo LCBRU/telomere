@@ -6,4 +6,4 @@ class Sample(db.Model):
 
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get('id')
-        self.batchId = kwargs.get('sampleId')
+        self.sampleId = kwargs.get('sampleId')
