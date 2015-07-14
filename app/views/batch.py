@@ -33,46 +33,48 @@ def _saveBatch(form):
         flash("Batch Code already exists", "error")
         return False
 
-    batch = Batch()
-    batch.batchCode = form.batchCode.data
-    batch.robot = form.robot.data
-    batch.pcrMachine = form.pcrMachine.data
-    batch.temperature = form.temperature.data
-    batch.datetime = form.datetime.data
-    batch.userId = current_user.id
+    batch = Batch(
+        batchCode = form.batchCode.data,
+        robot = form.robot.data,
+        pcrMachine = form.pcrMachine.data,
+        temperature = form.temperature.data,
+        datetime = form.datetime.data,
+        userId = current_user.id
+        )
+
     db.session.add(batch)
 
     return batch
 
 def _saveSampleMeasurements(form, batch):
-    for formSample in form.samples.entries:
-        sample = _saveSample(formSample)
+    for sm in form.samples.entries:
+        
+        if not sm.sampleCode.data: continue
 
-        if (sample):
-            measurement = Measurement(
-                batchId=batch.id,
-                sampleId=sample.id,
-                t1=formSample.t1.data,
-                s1=formSample.s1.data,
-                t2=formSample.t2.data,
-                s2=formSample.s2.data,
-                tsRatio=formSample.tsRatio.data,
-                )
-            db.session.add(measurement)
+        sampleId = sm.sampleCode.data
+
+        sample = _getOrCreateSample(sampleId)
+
+        measurement = Measurement(
+            batchId=batch.id,
+            sampleId=sample.id,
+            t1=sm.t1.data,
+            s1=sm.s1.data,
+            t2=sm.t2.data,
+            s2=sm.s2.data,
+            tsRatio=sm.tsRatio.data,
+            )
+        db.session.add(measurement)
 
 
-def _saveSample(formSample):
-    sampleCode = formSample.sampleCode.data
+def _getOrCreateSample(sampleCode):
+    sample = Sample.query.filter_by(sampleCode=sampleCode).first()
 
-    if (sampleCode):
-        sample = Sample.query.filter_by(sampleCode=sampleCode).first()
+    if (not sample):
+        sample = Sample(sampleCode=sampleCode)
+        db.session.add(sample)
+        db.session.flush()
+    else:
+        flash("Duplicate measurement for sample '%s' recorded." % sampleCode)
 
-        if (not sample):
-            sample = Sample()
-            sample.sampleCode = sampleCode
-            db.session.add(sample)
-            db.session.flush()
-        else:
-            flash("Duplicate measurement for sample '%s' recorded." % sampleCode)
-
-        return sample
+    return sample
