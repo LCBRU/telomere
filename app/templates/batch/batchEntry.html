@@ -27,7 +27,7 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Sample ID</th>
+                <th>Sample Code</th>
                 <th>T1</th>
                 <th>S1</th>
                 <th>T2</th>
@@ -39,12 +39,12 @@
             {% for sample in form.samples %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    {{ formhelper.render_control_cell(sample.sampleId) }}
+                    {{ formhelper.render_control_cell(sample.sampleCode) }}
                     {{ formhelper.render_control_cell(sample.t1) }}
                     {{ formhelper.render_control_cell(sample.s1) }}
                     {{ formhelper.render_control_cell(sample.t2) }}
                     {{ formhelper.render_control_cell(sample.s2) }}
-                    {{ formhelper.render_control_cell(sample.tSRatio) }}
+                    {{ formhelper.render_control_cell(sample.tsRatio) }}
                 </tr>
             {% endfor %}  
         </tbody>

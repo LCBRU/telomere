@@ -5,6 +5,7 @@ from app import db, telomere
 from app.forms.batch import BatchEntry
 from app.model.batch import Batch
 from app.model.sample import Sample
+from app.model.measurement import Measurement
 from flask_login import current_user
 
 @telomere.route("/batch/entry", methods=['GET', 'POST'])
@@ -47,16 +48,31 @@ def _saveSampleMeasurements(form, batch):
     for formSample in form.samples.entries:
         sample = _saveSample(formSample)
 
-def _saveSample(formSample):
-    sampleId = formSample.sampleId.data
+        if (sample):
+            measurement = Measurement(
+                batchId=batch.id,
+                sampleId=sample.id,
+                t1=formSample.t1.data,
+                s1=formSample.s1.data,
+                t2=formSample.t2.data,
+                s2=formSample.s2.data,
+                tsRatio=formSample.tsRatio.data,
+                )
+            db.session.add(measurement)
 
-    if (sampleId):
-        sample = Sample.query.filter_by(sampleId=sampleId).first()
+
+def _saveSample(formSample):
+    sampleCode = formSample.sampleCode.data
+
+    if (sampleCode):
+        sample = Sample.query.filter_by(sampleCode=sampleCode).first()
 
         if (not sample):
-            sample = Sample(sampleId=sampleId)
+            sample = Sample()
+            sample.sampleCode = sampleCode
             db.session.add(sample)
+            db.session.flush()
         else:
-            flash("Duplicate measurement for sample '%s' recorded." % sampleId)
+            flash("Duplicate measurement for sample '%s' recorded." % sampleCode)
 
         return sample
