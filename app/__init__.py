@@ -1,4 +1,5 @@
-from flask import Flask
+import datetime
+from flask import Flask, g
 from flask.ext.sqlalchemy import SQLAlchemy
 
 telomere = Flask(__name__)
@@ -10,5 +11,9 @@ import app.database
 database.init_db()
 
 telomere.secret_key = telomere.config['SECRET_KEY']
+
+@telomere.before_request
+def set_date():
+    g.year = datetime.datetime.now().year
 
 from app.views import *
