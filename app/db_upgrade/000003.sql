@@ -13,3 +13,7 @@ CREATE TABLE batch (
 CREATE INDEX idx_batch_userId
 ON batch (userId)
 ;
+
+CREATE UNIQUE INDEX idx_batch_batchId
+ON batch (batchId)
+;
