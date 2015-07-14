@@ -13,6 +13,7 @@ Record audit information for the telomere length study
     sudo apt-get install libsasl2-dev
     sudo pip install python-ldap
     sudo pip install Flask-WTF
+    sudo pip WTForms-Components
 
 ## Install
 
@@ -33,7 +34,7 @@ but first you must create the database and give the user then
 necessary permissions.
 
 1. `CREATE DATABASE telomere;`
-2. `GRANT ALL PRIVILEGES ON {database_name}.* to {username}@'{machine_name}' identified by '{password}';`
+2. `GRANT ALL PRIVILEGES ON telomere.* to {username}@127.0.0.1 identified by '{password}';`
 
 ## Installation on University of Leicester LAMP servers
 
