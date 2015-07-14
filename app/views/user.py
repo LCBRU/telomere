@@ -1,7 +1,8 @@
-from flask import redirect, url_for, request, g, render_template
+from flask import redirect, url_for, request, g, render_template, request
 from flask.ext.login import LoginManager, login_user, logout_user, current_user
 from app import db
 import ldap, time
+from urlparse import urlparse
 
 from app import telomere
 from app.model.user import User
@@ -35,7 +36,8 @@ def login():
  
             if user:
                 login_user(user)
-                return redirect(url_for('index'))
+                next = _getValidatedNext()
+                return redirect(next or url_for('index'))
 
         time.sleep(5.5)
 
@@ -55,3 +57,9 @@ def validateLDAP(username,password):
         print e
         return False
 
+def _getValidatedNext():
+    o = urlparse(request.url_root)
+    q = urlparse(request.args.get('next'))
+
+    if q.hostname is None or q.hostname == o.hostname:
+        return request.args.get('next')
