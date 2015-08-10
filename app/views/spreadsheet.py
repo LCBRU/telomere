@@ -1,4 +1,4 @@
-import datetime
+import datetime, os
 from flask import flash, redirect, url_for, request, render_template
 from flask.ext.login import login_required
 from werkzeug import secure_filename
@@ -25,8 +25,14 @@ def speadsheet_upload():
         db.session.add(spreadsheet)
         db.session.commit()
 
-    #        form.spreadsheet.data.save('uploads/' + filename)
+        form.spreadsheet.data.save(os.path.join(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], "%d.xls" % spreadsheet.id))
         flash("File '%s' Uploaded" % filename)
+
+        _processFile(spreadsheet.id)
+
         return redirect(url_for('index'))
 
     return render_template('spreadsheet/upload.html', form=form)
+
+def _processFile(fileId):
+    flash("File processed")

@@ -20,5 +20,5 @@ class FileField(_FileField):
 class SpreadsheetUpload(Form):
     spreadsheet = FileField('Spreadsheet', accept=['application/vnd.ms-excel'], validators=[
         FileRequired(),
-        FileAllowed(['xls'], 'Only spreadsheets allowed')
+        FileAllowed(['xls'], 'Only XLS spreadsheets allowed')
     ])
