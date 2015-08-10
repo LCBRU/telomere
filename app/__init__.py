@@ -16,4 +16,6 @@ telomere.secret_key = telomere.config['SECRET_KEY']
 def set_date():
     g.year = datetime.datetime.now().year
 
+import app.helpers.templateFilters
+
 from app.views import *

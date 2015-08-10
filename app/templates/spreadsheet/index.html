@@ -29,7 +29,7 @@
 				<td><time>{{ item.uploaded }}</time></td>
 				<td>
 					{% if item.processed %}
-					    <time>{{ item.processed }}</time>
+					    <time datetime="{{ item.processed | datetime_format}}">{{ item.processed }}</time>
 					{% else %}
 						<a href="{{ url_for('speadsheet_process', id=item.id) }}" class="btn btn-default" role="button">Process</a>
 					{% endif %}
