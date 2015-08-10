@@ -31,7 +31,7 @@ def speadsheet_index(page=1):
             .order_by(Spreadsheet.uploaded.desc())
             .paginate(
                 page=page,
-                per_page=20,
+                per_page=10,
                 error_out=False))
 
 @telomere.route("/spreadsheet/process/<int:id>")

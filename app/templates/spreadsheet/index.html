@@ -26,10 +26,10 @@
 			<tr>
 				<td></td>
 				<td>{{ item.filename }}</td>
-				<td><time>{{ item.uploaded }}</time></td>
+				<td><time datetime="{{ item.uploaded.isoformat() }}">{{ item.uploaded | datetime_format }}</time></td>
 				<td>
 					{% if item.processed %}
-					    <time datetime="{{ item.processed | datetime_format}}">{{ item.processed }}</time>
+					    <time datetime="{{ item.processed }}">{{ item.processed | datetime_format }}</time>
 					{% else %}
 						<a href="{{ url_for('speadsheet_process', id=item.id) }}" class="btn btn-default" role="button">Process</a>
 					{% endif %}
@@ -39,7 +39,10 @@
 	</tbody>
 </table>
 
+{{ formhelper.render_pagination(spreadsheets, 'speadsheet_index') }}
+
 {% endblock %}
+
 
 {% block script %}
 
@@ -47,9 +50,7 @@
     $(function () {
 		$( "time" ).each(function() {
 			self = $(this);
-
 			m = moment(self.text());
-
 			self.text(m.fromNow());
   		});
     });
