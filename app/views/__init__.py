@@ -1,1 +1,1 @@
-__all__ = ["home", "user", "batch"]
+__all__ = ["home", "user", "batch", "spreadsheet"]
