@@ -1,10 +1,8 @@
-import datetime, os
 from flask import flash, redirect, url_for, request, render_template
 from flask.ext.login import login_required
-from werkzeug import secure_filename
 from app import db, telomere
-from flask_login import current_user
 from app.forms.spreadsheet import SpreadsheetUpload
+from app.services.spreadsheet import SpreadsheetService
 from app.model.spreadsheet import Spreadsheet
 
 @telomere.route("/spreadsheet/upload", methods=['GET', 'POST'])
@@ -14,25 +12,30 @@ def speadsheet_upload():
     form = SpreadsheetUpload()
 
     if form.validate_on_submit():
-        filename = secure_filename(form.spreadsheet.data.filename)
+        service = SpreadsheetService()
+        spreadsheet = service.SaveAndReturn(form.spreadsheet.data)
+        service.Process(spreadsheet.id)
 
-        spreadsheet = Spreadsheet(
-            filename = filename,
-            uploaded = datetime.datetime.now(),
-            userId = current_user.id
-            )
+        flash("File '%s' Uploaded" % spreadsheet.filename)
 
-        db.session.add(spreadsheet)
-        db.session.commit()
-
-        form.spreadsheet.data.save(os.path.join(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], "%d.xls" % spreadsheet.id))
-        flash("File '%s' Uploaded" % filename)
-
-        _processFile(spreadsheet.id)
-
-        return redirect(url_for('index'))
+        return redirect(url_for('speadsheet_index'))
 
     return render_template('spreadsheet/upload.html', form=form)
 
-def _processFile(fileId):
-    flash("File processed")
+@telomere.route('/spreadsheet/')
+@telomere.route("/spreadsheet/page:<int:page>")
+@login_required
+def speadsheet_index(page=1):
+
+    return render_template('spreadsheet/index.html', spreadsheets=Spreadsheet.query
+            .order_by(Spreadsheet.uploaded.desc())
+            .paginate(
+                page=page,
+                per_page=20,
+                error_out=False))
+
+@telomere.route("/spreadsheet/process/<int:id>")
+@login_required
+def speadsheet_process(id):
+
+    return redirect(url_for('speadsheet_index'))
