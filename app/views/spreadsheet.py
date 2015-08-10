@@ -4,16 +4,18 @@ from flask.ext.login import login_required
 from werkzeug import secure_filename
 from app import db, telomere
 from flask_login import current_user
+from app.forms.spreadsheet import SpreadsheetUpload
 
 @telomere.route("/spreadsheet/upload", methods=['GET', 'POST'])
 @login_required
 def speadsheet_upload():
 
-    if request.method == 'POST':
-        file = request.files['file']
-        if file:
-            filename = secure_filename(file.filename)
-            flash("File '%s' Uploaded" % filename)
-            return redirect(url_for('index'))
+    form = SpreadsheetUpload()
 
-    return render_template('spreadsheet/upload.html')
+    if form.validate_on_submit():
+        filename = secure_filename(form.spreadsheet.data.filename)
+#        form.spreadsheet.data.save('uploads/' + filename)
+        flash("File '%s' Uploaded" % filename)
+        return redirect(url_for('index'))
+
+    return render_template('spreadsheet/upload.html', form=form)

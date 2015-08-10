@@ -6,8 +6,9 @@
 <h2>Upload Spreadsheet</h2>
 
 <form method="POST" class="form-horizontal" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
     <div class="col-sm-5">
-        <input type="file" name="file" accept="application/vnd.ms-excel">
+        {{ formhelper.render_field(form.spreadsheet) }}
     </div>
 
     <div class="col-sm-12 text-right">

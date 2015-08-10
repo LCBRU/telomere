@@ -2,6 +2,8 @@
   <div class="form-group{% if field.errors %} has-error{%endif%}">
     {% if field.type == "BooleanField" %}
         {{ render_field_control(field, **kwargs) }}{{ field.label }}
+    {% elif field.type == "FileField" %}
+        {{ field.label(class="col-sm-5 control-label") }}{{ render_file_field_control(field, **kwargs) }}
     {% else %}
         {{ field.label(class="col-sm-5 control-label") }}{{ render_field_control(field, **kwargs) }}
     {% endif %}
@@ -12,6 +14,12 @@
 {% macro render_field_control(field) %}
     <div class="col-sm-7">
         {{ field(class="form-control", **kwargs)|safe }}
+    </div>
+{% endmacro %}
+
+{% macro render_file_field_control(field) %}
+    <div class="col-sm-7">
+        {{ field(**kwargs)|safe }}
     </div>
 {% endmacro %}
 
