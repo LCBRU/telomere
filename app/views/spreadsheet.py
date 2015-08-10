@@ -5,6 +5,7 @@ from werkzeug import secure_filename
 from app import db, telomere
 from flask_login import current_user
 from app.forms.spreadsheet import SpreadsheetUpload
+from app.model.spreadsheet import Spreadsheet
 
 @telomere.route("/spreadsheet/upload", methods=['GET', 'POST'])
 @login_required
@@ -14,7 +15,17 @@ def speadsheet_upload():
 
     if form.validate_on_submit():
         filename = secure_filename(form.spreadsheet.data.filename)
-#        form.spreadsheet.data.save('uploads/' + filename)
+
+        spreadsheet = Spreadsheet(
+            filename = filename,
+            uploaded = datetime.datetime.now(),
+            userId = current_user.id
+            )
+
+        db.session.add(spreadsheet)
+        db.session.commit()
+
+    #        form.spreadsheet.data.save('uploads/' + filename)
         flash("File '%s' Uploaded" % filename)
         return redirect(url_for('index'))
 
