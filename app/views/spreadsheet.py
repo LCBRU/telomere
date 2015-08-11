@@ -34,7 +34,7 @@ def speadsheet_index(page=1):
                 per_page=10,
                 error_out=False))
 
-@telomere.route("/spreadsheet/process/<int:id>")
+@telomere.route("/spreadsheet/process/<int:id>", methods=['POST'])
 @login_required
 def speadsheet_process(id):
 
