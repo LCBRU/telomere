@@ -14,6 +14,7 @@ Record audit information for the telomere length study
     sudo pip install python-ldap
     sudo pip install Flask-WTF
     sudo pip WTForms-Components
+    sudo pip install xlrd
 
 ## Install
 
@@ -26,6 +27,7 @@ Record audit information for the telomere length study
 	4. Change `SQLALCHEMY_DATABASE_URI` to a valid MySQL connection string
 	5. Change `LDAP_URL` to be include the server and port for the LDAP service
 	6. Change `LDAP_BASEDN` to be a valid one of those things.
+    7. Change `SPREADSHEET_UPLOAD_DIRECTORY` to be a valid directory for which the user `wwwrun` has read and write permission.
 
 ## Create the database
 
