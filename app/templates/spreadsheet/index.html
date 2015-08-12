@@ -17,6 +17,8 @@
 		<tr>
 			<th></th>
 			<th>Filename</th>
+			<th>Uploaded by</th>
+			<th>Batch Code</th>
 			<th>Uploaded</th>
 			<th>Processed</th>
 		</tr>
@@ -26,6 +28,8 @@
 			<tr>
 				<td></td>
 				<td>{{ item.filename }}</td>
+				<td>{{ item.user.username }}</td>
+				<td>{{ item.batch.batchCode }}</td>
 				<td><time datetime="{{ item.uploaded.isoformat() }}">{{ item.uploaded | datetime_format }}</time></td>
 				<td>
 					{% if item.processed %}

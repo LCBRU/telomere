@@ -21,7 +21,7 @@ def speadsheet_upload():
         if (batch):
             spreadsheetService = SpreadsheetService()
             spreadsheet = spreadsheetService.SaveAndReturn(form.spreadsheet.data, batch)
-            spreadsheetService.Process(spreadsheet.id)
+            spreadsheetService.Process(spreadsheet)
 
             flash("File '%s' Uploaded" % spreadsheet.filename)
 

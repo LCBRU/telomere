@@ -24,7 +24,7 @@ class SpreadsheetService():
 
         return spreadsheet
 
-    def Process(self, spreadsheetId):
+    def Process(self, spreadsheet):
     	return 1
 
     def GetPath(self, spreadsheet):
