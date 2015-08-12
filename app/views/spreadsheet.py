@@ -5,6 +5,7 @@ from app import db, telomere
 from app.forms.spreadsheet import SpreadsheetUpload
 from app.services.spreadsheet import SpreadsheetService
 from app.services.batch import BatchService
+from app.services.sample import SampleService
 from app.model.spreadsheet import Spreadsheet
 from flask_login import current_user
 
@@ -23,9 +24,15 @@ def speadsheet_upload():
             spreadsheet = spreadsheetService.SaveAndReturn(form.spreadsheet.data, batch)
             errors = spreadsheetService.Process(spreadsheet)
 
-            flash("File '%s' Uploaded" % spreadsheet.filename)
+            if len(errors) > 0:
+                for e in errors:
+                    flash(e)
+            else:
+                flash("File '%s' Uploaded" % spreadsheet.filename)
 
-            return redirect(url_for('speadsheet_index'))
+                db.session.commit()
+
+                return redirect(url_for('speadsheet_index'))
 
     return render_template('spreadsheet/upload.html', form=form)
 
@@ -50,6 +57,8 @@ def speadsheet_process(id):
 
     for e in errors:
         flash(e)
+
+    db.session.commit()
 
     return redirect(url_for('speadsheet_index'))
 

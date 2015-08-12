@@ -3,6 +3,7 @@ from flask import flash, redirect, url_for, request, g, render_template
 from flask.ext.login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
+from app.services.sample import SampleService
 from app.forms.batch import BatchAndSampleForm
 from app.model.batch import Batch
 from app.model.sample import Sample
@@ -33,7 +34,8 @@ def _saveSampleMeasurements(form, batch):
 
         sampleId = sm.sampleCode.data
 
-        sample = _getOrCreateSample(sampleId)
+        sampleService = SampleService()
+        sample = sampleService.GetOrCreateSample(sampleId)
 
         measurement = Measurement(
             batchId=batch.id,
@@ -45,15 +47,3 @@ def _saveSampleMeasurements(form, batch):
             )
         db.session.add(measurement)
 
-
-def _getOrCreateSample(sampleCode):
-    sample = Sample.query.filter_by(sampleCode=sampleCode).first()
-
-    if (not sample):
-        sample = Sample(sampleCode=sampleCode)
-        db.session.add(sample)
-        db.session.flush()
-    else:
-        flash("Duplicate measurement for sample '%s' recorded." % sampleCode)
-
-    return sample

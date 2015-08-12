@@ -4,6 +4,7 @@ from flask_login import current_user
 from app import db, telomere
 from app.model.spreadsheet import Spreadsheet
 from app.model.measurement import Measurement, MeasurementSet
+from app.services.sample import SampleService
 from openpyxl import load_workbook
 
 class SpreadsheetService():
@@ -33,13 +34,23 @@ class SpreadsheetService():
             if len(ms) != 2:
                 errors.append("Sample %s has %d set(s) of measurement instead of 2" % (sampleCode, len(ms)) )
 
-        if len(errors) > 0:
-            return errors
+        if len(errors) == 0:
+            sampleService = SampleService()
 
-        for sampleCode, ms in measurementSets.iteritems():
-            if len(ms) != 2:
-                errors.append("Sample %s has %d set(s) of measurement instead of 2" % (sampleCode, len(ms)) )
-        
+            for sampleCode, ms in measurementSets.iteritems():
+                sample = sampleService.GetOrCreateSample(sampleCode)
+
+                measurement = Measurement(
+                    batchId=spreadsheet.batch.id,
+                    sampleId=sample.id,
+                    t1=ms[0].tValue,
+                    s1=ms[0].sValue,
+                    t2=ms[1].tValue,
+                    s2=ms[1].sValue,
+                    )
+                db.session.add(measurement)
+
+        return errors
 
     def _GetMeasurementSetsFromSpreadsheet(self, spreadsheet):
         result = {}
