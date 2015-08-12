@@ -6,6 +6,7 @@ class Spreadsheet(db.Model):
     uploaded = db.Column(db.DateTime())
     processed = db.Column(db.DateTime())
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
+    batchId = db.Column(db.Integer, db.ForeignKey('batch.id'))
 
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get('id')
@@ -13,3 +14,4 @@ class Spreadsheet(db.Model):
         self.uploaded = kwargs.get('uploaded')
         self.processed = kwargs.get('processed')
         self.userId = kwargs.get('userId')
+        self.batchId = kwargs.get('batchId')

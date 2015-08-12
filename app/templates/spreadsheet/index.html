@@ -32,6 +32,8 @@
 					    <time datetime="{{ item.processed }}">{{ item.processed | datetime_format }}</time>
 					{% else %}
 						<form method="POST" action="{{ url_for('speadsheet_process', id=item.id) }}">
+					        <a href="{{ url_for('speadsheet_details', id=item.id) }}" class="btn btn-default" role="button">View Details</a>
+					        <a href="{{ url_for('speadsheet_download', id=item.id) }}" class="btn btn-default" role="button">Download</a>
 							<button type="submit" class="btn btn-default">Process</button>
 						</form>
 					{% endif %}

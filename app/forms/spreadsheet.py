@@ -1,6 +1,8 @@
 from flask_wtf import Form
+from wtforms import FormField
 from flask_wtf.file import FileField as _FileField, FileAllowed, FileRequired
 from wtforms.widgets import FileInput as _FileInput
+from app.forms.batch import BatchForm
 
 class FileInput(_FileInput):
 
@@ -18,7 +20,8 @@ class FileField(_FileField):
         super(FileField, self).__init__(*args, **kwargs)
 
 class SpreadsheetUpload(Form):
-    spreadsheet = FileField('Spreadsheet', accept=['application/vnd.ms-excel'], validators=[
-        FileRequired(),
-        FileAllowed(['xls'], 'Only XLS spreadsheets allowed')
+    batch = FormField(BatchForm)
+    spreadsheet = FileField('Spreadsheet', accept=['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], validators=[
+        FileRequired()
+#        , FileAllowed(['.xlsx'], 'Only XLSX spreadsheets allowed')
     ])

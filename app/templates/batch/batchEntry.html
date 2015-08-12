@@ -9,17 +9,17 @@
     {{ form.hidden_tag() }}
 
     <div class="col-sm-5">
-        {{ formhelper.render_field(form.operator) }}
-        {{ formhelper.render_field(form.batchCode) }}
-        {{ formhelper.render_field(form.robot) }}
+        {{ formhelper.render_field(form.batch.operator) }}
+        {{ formhelper.render_field(form.batch.batchCode) }}
+        {{ formhelper.render_field(form.batch.robot) }}
     </div>
 
     <div class="col-sm-2"></div>
 
     <div class="col-sm-5">
-        {{ formhelper.render_field(form.pcrMachine) }}
-        {{ formhelper.render_field(form.temperature) }}
-        {{ formhelper.render_field(form.datetime) }}
+        {{ formhelper.render_field(form.batch.pcrMachine) }}
+        {{ formhelper.render_field(form.batch.temperature) }}
+        {{ formhelper.render_field(form.batch.datetime) }}
     </div>
 
     <h3>Samples</h3>
@@ -62,7 +62,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $('#datetime').datetimepicker({ format: 'D/M/YYYY H:m'});
+        $('#batch-datetime').datetimepicker({ format: 'D/M/YYYY H:m'});
     });
 </script>
 

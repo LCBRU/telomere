@@ -2,7 +2,8 @@ import datetime
 from flask import flash, redirect, url_for, request, g, render_template
 from flask.ext.login import login_required
 from app import db, telomere
-from app.forms.batch import BatchEntry
+from app.services.batch import BatchService
+from app.forms.batch import BatchAndSampleForm
 from app.model.batch import Batch
 from app.model.sample import Sample
 from app.model.measurement import Measurement
@@ -11,12 +12,11 @@ from flask_login import current_user
 @telomere.route("/batch/entry", methods=['GET', 'POST'])
 @login_required
 def batch_entry():
-    item = Batch()
-    item.datetime = datetime.datetime.now()
-    form = BatchEntry(obj=item, operator=current_user.username)
+    form = BatchAndSampleForm(batch = {'operator': current_user.username, 'datetime': datetime.datetime.now()})
 
     if form.validate_on_submit():
-        batch = _saveBatch(form)
+        batchService = BatchService()
+        batch = batchService.SaveAndReturn(form.batch)
 
         if (batch):
             _saveSampleMeasurements(form, batch)
@@ -25,26 +25,6 @@ def batch_entry():
             return redirect(url_for('index'))
 
     return render_template('batch/batchEntry.html', form=form)
-
-def _saveBatch(form):
-    batch = Batch.query.filter_by(batchCode=form.batchCode.data).first()
-
-    if (batch):
-        flash("Batch Code already exists", "error")
-        return False
-
-    batch = Batch(
-        batchCode = form.batchCode.data,
-        robot = form.robot.data,
-        pcrMachine = form.pcrMachine.data,
-        temperature = form.temperature.data,
-        datetime = form.datetime.data,
-        userId = current_user.id
-        )
-
-    db.session.add(batch)
-
-    return batch
 
 def _saveSampleMeasurements(form, batch):
     for sm in form.samples.entries:
