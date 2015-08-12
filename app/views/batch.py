@@ -42,7 +42,6 @@ def _saveSampleMeasurements(form, batch):
             s1=sm.s1.data,
             t2=sm.t2.data,
             s2=sm.s2.data,
-            tsRatio=sm.tsRatio.data,
             )
         db.session.add(measurement)
 

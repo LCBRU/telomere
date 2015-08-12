@@ -21,7 +21,7 @@ def speadsheet_upload():
         if (batch):
             spreadsheetService = SpreadsheetService()
             spreadsheet = spreadsheetService.SaveAndReturn(form.spreadsheet.data, batch)
-            spreadsheetService.Process(spreadsheet)
+            errors = spreadsheetService.Process(spreadsheet)
 
             flash("File '%s' Uploaded" % spreadsheet.filename)
 
@@ -44,6 +44,12 @@ def speadsheet_index(page=1):
 @telomere.route("/spreadsheet/process/<int:id>", methods=['POST'])
 @login_required
 def speadsheet_process(id):
+    spreadsheetService = SpreadsheetService()
+    spreadsheet = Spreadsheet.query.get(id)
+    errors = spreadsheetService.Process(spreadsheet)
+
+    for e in errors:
+        flash(e)
 
     return redirect(url_for('speadsheet_index'))
 
