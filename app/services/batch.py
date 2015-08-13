@@ -25,3 +25,4 @@ class BatchService():
         db.session.flush()
 
         return batch
+

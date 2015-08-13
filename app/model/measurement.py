@@ -14,6 +14,8 @@ class Measurement(db.Model):
     t2 = db.Column(db.Numeric(precision=5, scale=2))
     s2 = db.Column(db.Numeric(precision=5, scale=2))
 
+    batch = db.relationship("Batch", backref=db.backref('measurements', order_by=id, cascade="all, delete-orphan"))
+
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get('id')
         self.batchId = kwargs.get('batchId')

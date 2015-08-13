@@ -30,6 +30,10 @@
 		{% for item in spreadsheets.items %}
 			<tr>
 				<td>
+					<a href="{{ url_for('batch_delete', id=item.batch.id) }}">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						<span class="sr-only">Delete:</span>
+					</a>
 				</td>
 				<td>{{ item.user.username }}</td>
 				<td>{{ item.batch.batchCode }}</td>

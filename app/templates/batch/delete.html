@@ -1,0 +1,21 @@
+{% extends "standardLayout.html" %}
+
+{% block content %}
+
+<h2>Delete Batch</h2>
+
+<div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  Are you sure you want to delete batch '{{ batch.batchCode }}'?
+</div>
+
+<form method="POST" class="form-horizontal" action="{{ url_for('batch_delete_confirm') }}">
+    {{ form.hidden_tag() }}
+
+    <div class="col-sm-12 text-right">
+        <a href="{{ url_for('speadsheet_index') }}" class="btn btn-default" role="button">Cancel</a>
+        <button type="submit" class="btn btn-primary">Delete</button>
+    </div>
+</form>
+
+{% endblock %}

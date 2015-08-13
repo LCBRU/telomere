@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, FieldList, FormField, DecimalField, Form as WtfForm
+from wtforms import StringField, HiddenField, FieldList, FormField, DecimalField, Form as WtfForm
 from wtforms.validators import DataRequired, ValidationError, StopValidation, Length
 from wtforms_components import TimeField, read_only
 from wtforms.fields.html5 import DateTimeField
@@ -43,4 +43,7 @@ class BatchForm(WtfForm):
 class BatchAndSampleForm(Form):
     batch = FormField(BatchForm)
     samples = FieldList(FormField(SampleForm), min_entries=48)
+
+class BatchDelete(Form):
+    id = HiddenField('id')
 

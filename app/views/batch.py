@@ -4,7 +4,7 @@ from flask.ext.login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
 from app.services.sample import SampleService
-from app.forms.batch import BatchAndSampleForm
+from app.forms.batch import BatchAndSampleForm, BatchDelete
 from app.model.batch import Batch
 from app.model.sample import Sample
 from app.model.measurement import Measurement
@@ -47,3 +47,24 @@ def _saveSampleMeasurements(form, batch):
             )
         db.session.add(measurement)
 
+@telomere.route("/batch/delete/<int:id>")
+@login_required
+def batch_delete(id):
+    batch = Batch.query.get(id)
+    form = BatchDelete(obj=batch)
+    return render_template('batch/delete.html', batch=batch, form=form)
+
+@telomere.route("/batch/delete", methods=['POST'])
+@login_required
+def batch_delete_confirm():
+    form = BatchDelete()
+
+    if form.validate_on_submit():
+        batch = Batch.query.get(form.id.data)
+
+        if (batch):
+            db.session.delete(batch)
+            db.session.commit()
+            flash("Deleted batch '%s'." % batch.batchCode)
+            
+    return redirect(url_for('speadsheet_index'))
