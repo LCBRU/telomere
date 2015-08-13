@@ -30,7 +30,6 @@
 		{% for item in spreadsheets.items %}
 			<tr>
 				<td>
-			        <a href="{{ url_for('speadsheet_details', id=item.id) }}" class="btn btn-default" role="button">View Details</a>
 				</td>
 				<td>{{ item.user.username }}</td>
 				<td>{{ item.batch.batchCode }}</td>

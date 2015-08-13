@@ -64,12 +64,6 @@ def speadsheet_process(id):
 
     return redirect(url_for('speadsheet_index'))
 
-@telomere.route("/spreadsheet/details/<int:id>")
-@login_required
-def speadsheet_details(id):
-    service = SpreadsheetService()
-    return render_template('spreadsheet/details.html', details=service.GetDetails(id))
-
 @telomere.route("/spreadsheet/download/<int:id>")
 @login_required
 def speadsheet_download(id):
