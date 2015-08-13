@@ -6,10 +6,7 @@ from app.model.batch import Batch
 class BatchService():
 
     def SaveAndReturn(self, batchForm):
-        batch = Batch.query.filter_by(batchCode=batchForm.batchCode.data).first()
-
-        if (batch):
-            flash("Batch Code already exists", "error")
+        if (self.BatchCodeIsDuplicate(batchCode=batchForm.batchCode.data)):
             return False
 
         batch = Batch(
@@ -26,3 +23,11 @@ class BatchService():
 
         return batch
 
+    def BatchCodeIsDuplicate(self, batchCode, excludingId=None):
+        existingBatch = Batch.query.filter(Batch.batchCode == batchCode).filter(Batch.id != excludingId).first()
+
+        if (existingBatch):
+            flash("Batch Code already exists", "error")
+            return True
+        else:
+            return False

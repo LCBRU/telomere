@@ -4,7 +4,7 @@ from flask.ext.login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
 from app.services.sample import SampleService
-from app.forms.batch import BatchAndSampleForm, BatchDelete
+from app.forms.batch import BatchAndSampleForm, BatchDelete, BatchEditForm
 from app.model.batch import Batch
 from app.model.sample import Sample
 from app.model.measurement import Measurement
@@ -13,7 +13,7 @@ from flask_login import current_user
 @telomere.route("/batch/entry", methods=['GET', 'POST'])
 @login_required
 def batch_entry():
-    form = BatchAndSampleForm(batch = {'operator': current_user.username, 'datetime': datetime.datetime.now()})
+    form = BatchAndSampleForm(batch = {'datetime': datetime.datetime.now()})
 
     if form.validate_on_submit():
         batchService = BatchService()
@@ -26,6 +26,33 @@ def batch_entry():
             return redirect(url_for('batch_index'))
 
     return render_template('batch/batchEntry.html', form=form)
+
+@telomere.route("/batch/edit/<int:id>", methods=['GET','POST'])
+@login_required
+def batch_edit(id):
+    batch = Batch.query.get(id)
+    form = BatchEditForm(id=id, batch=batch, version_id=batch.version_id)
+
+    if form.validate_on_submit():
+
+        if (str(batch.version_id) != str(form.version_id.data)):
+            flash("Batch has been updated by another user, please re-enter your changes to the most recent version of the batch.", "error")
+            return redirect(url_for('batch_edit', id=id))
+
+        batchService = BatchService()
+
+        if not(batchService.BatchCodeIsDuplicate(excludingId=batch.id, batchCode=form.batch.batchCode.data)):
+            batch.batchCode = form.batch.batchCode.data
+            batch.robot = form.batch.robot.data
+            batch.pcrMachine = form.batch.pcrMachine.data
+            batch.temperature = form.batch.temperature.data
+            batch.datetime = form.batch.datetime.data
+            batch.userId = current_user.id
+            db.session.commit()
+            
+            return redirect(url_for('batch_index'))
+
+    return render_template('batch/batchEdit.html', form=form)
 
 def _saveSampleMeasurements(form, batch):
     for sm in form.samples.entries:

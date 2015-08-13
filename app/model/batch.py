@@ -8,6 +8,11 @@ class Batch(db.Model):
     temperature = db.Column(db.Numeric(precision=3, scale=1))
     datetime = db.Column(db.DateTime())
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
+    version_id = db.Column(db.Integer, nullable=False)
+
+    __mapper_args__ = {
+        "version_id_col": version_id
+    }
 
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get('id')

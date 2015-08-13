@@ -30,19 +30,19 @@ class SampleForm(WtfForm):
 
 class BatchForm(WtfForm):
     batchCode = StringField('Batch Code', validators=[DataRequired(), Length(max=20)])
-    operator = StringField('Operator')
     robot = StringField('Robot', validators=[DataRequired(), Length(max=20)])
     pcrMachine = StringField('PCR Machine', validators=[DataRequired(), Length(max=20)])
     temperature = DecimalField('Temperature', validators=[DataRequired()], places=1)
     datetime = DateTimeField('Date and Time', validators=[DataRequired()], format='%d/%m/%Y %H:%M')
 
-    def __init__(self, *args, **kwargs):
-        super(BatchForm, self).__init__(*args, **kwargs)
-        read_only(self.operator)
-
 class BatchAndSampleForm(Form):
     batch = FormField(BatchForm)
     samples = FieldList(FormField(SampleForm), min_entries=48)
+
+class BatchEditForm(Form):
+    id = HiddenField('id')
+    version_id = HiddenField('version_id')
+    batch = FormField(BatchForm)
 
 class BatchDelete(Form):
     id = HiddenField('id')
