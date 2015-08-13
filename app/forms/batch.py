@@ -27,7 +27,6 @@ class SampleForm(WtfForm):
     s1 = DecimalField('S1', validators=[RequiredIfSampleCode()], places=1)
     t2 = DecimalField('T2', validators=[RequiredIfSampleCode()], places=1)
     s2 = DecimalField('S2', validators=[RequiredIfSampleCode()], places=1)
-    tsRatio = DecimalField('T/S', validators=[RequiredIfSampleCode()], places=1)
 
 class BatchForm(WtfForm):
     batchCode = StringField('Batch Code', validators=[DataRequired(), Length(max=20)])

@@ -32,7 +32,6 @@
                 <th>S1</th>
                 <th>T2</th>
                 <th>S2</th>
-                <th>T/S</th>
             </tr>
         </thead>
         <tbody>
@@ -44,7 +43,6 @@
                     {{ formhelper.render_control_cell(sample.s1) }}
                     {{ formhelper.render_control_cell(sample.t2) }}
                     {{ formhelper.render_control_cell(sample.s2) }}
-                    {{ formhelper.render_control_cell(sample.tsRatio) }}
                 </tr>
             {% endfor %}  
         </tbody>
