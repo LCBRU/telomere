@@ -16,9 +16,13 @@
 	<thead>
 		<tr>
 			<th></th>
-			<th>Filename</th>
 			<th>Uploaded by</th>
 			<th>Batch Code</th>
+			<th>Robot</th>
+			<th>PCR Machine</th>
+			<th>Temperature</th>
+			<th>Batch Processed</th>
+			<th>Spreadsheet</th>
 			<th>Uploaded</th>
 		</tr>
 	</thead>
@@ -27,11 +31,14 @@
 			<tr>
 				<td>
 			        <a href="{{ url_for('speadsheet_details', id=item.id) }}" class="btn btn-default" role="button">View Details</a>
-			        <a href="{{ url_for('speadsheet_download', id=item.id) }}" class="btn btn-default" role="button">Download</a>
 				</td>
-				<td>{{ item.filename }}</td>
 				<td>{{ item.user.username }}</td>
 				<td>{{ item.batch.batchCode }}</td>
+				<td>{{ item.batch.robot }}</td>
+				<td>{{ item.batch.pcrMachine }}</td>
+				<td>{{ item.batch.temperature }}</td>
+				<td>{{ item.batch.datetime | datetime_format }}</td>
+				<td><a href="{{ url_for('speadsheet_download', id=item.id) }}">{{ item.filename }}</a></td>
 				<td><time datetime="{{ item.uploaded.isoformat() }}">{{ item.uploaded | datetime_format }}</time></td>
 			</tr>
 		{% endfor %}
