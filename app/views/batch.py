@@ -23,7 +23,7 @@ def batch_entry():
             _saveSampleMeasurements(form, batch)
 
             db.session.commit()
-            return redirect(url_for('index'))
+            return redirect(url_for('batch_index'))
 
     return render_template('batch/batchEntry.html', form=form)
 
@@ -47,6 +47,19 @@ def _saveSampleMeasurements(form, batch):
             )
         db.session.add(measurement)
 
+@telomere.route('/batch/')
+@telomere.route("/batch/page:<int:page>")
+@login_required
+def batch_index(page=1):
+
+    return render_template('batch/index.html', batches=Batch.query
+            .order_by(Batch.datetime.desc())
+            .paginate(
+                page=page,
+                per_page=10,
+                error_out=False))
+
+
 @telomere.route("/batch/delete/<int:id>")
 @login_required
 def batch_delete(id):
@@ -67,4 +80,4 @@ def batch_delete_confirm():
             db.session.commit()
             flash("Deleted batch '%s'." % batch.batchCode)
             
-    return redirect(url_for('speadsheet_index'))
+    return redirect(url_for('batch_index'))

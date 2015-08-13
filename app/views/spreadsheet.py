@@ -34,21 +34,9 @@ def speadsheet_upload():
 
                 db.session.commit()
 
-                return redirect(url_for('speadsheet_index'))
+                return redirect(url_for('batch_index'))
 
     return render_template('spreadsheet/upload.html', form=form)
-
-@telomere.route('/spreadsheet/')
-@telomere.route("/spreadsheet/page:<int:page>")
-@login_required
-def speadsheet_index(page=1):
-
-    return render_template('spreadsheet/index.html', spreadsheets=Spreadsheet.query
-            .order_by(Spreadsheet.uploaded.desc())
-            .paginate(
-                page=page,
-                per_page=10,
-                error_out=False))
 
 @telomere.route("/spreadsheet/process/<int:id>", methods=['POST'])
 @login_required
@@ -62,7 +50,7 @@ def speadsheet_process(id):
 
     db.session.commit()
 
-    return redirect(url_for('speadsheet_index'))
+    return redirect(url_for('batch_index'))
 
 @telomere.route("/spreadsheet/download/<int:id>")
 @login_required

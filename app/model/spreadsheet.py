@@ -7,7 +7,7 @@ class Spreadsheet(db.Model):
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
     batchId = db.Column(db.Integer, db.ForeignKey('batch.id'))
     user = db.relationship("User")
-    batch = db.relationship("Batch", backref=db.backref('spreadsheet', cascade="all, delete-orphan"))
+    batch = db.relationship("Batch", backref=db.backref('spreadsheet', uselist=False, cascade="all, delete-orphan"))
 
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get('id')

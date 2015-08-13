@@ -4,9 +4,10 @@
 {% block content %}
 
 <header>
-	<h2 class="col-sm-11">Uploaded Spreadsheets</h2>
-	<div class="col-sm-1">
-		<a href="{{ url_for('speadsheet_upload') }}" class="btn btn-primary" role="button">Upload New</a>
+	<h2 class="col-sm-6">Batches</h2>
+	<div class="col-sm-6 text-right">
+		<a href="{{ url_for('speadsheet_upload') }}" class="btn btn-primary" role="button">Upload Spreadsheet</a>
+		<a href="{{ url_for('batch_entry') }}" class="btn btn-primary" role="button">Enter Batch</a>
 	</div>
 </header>
 
@@ -16,39 +17,37 @@
 	<thead>
 		<tr>
 			<th></th>
-			<th>Uploaded by</th>
+			<th>Entered by</th>
 			<th>Batch Code</th>
 			<th>Robot</th>
 			<th>PCR Machine</th>
 			<th>Temperature</th>
 			<th>Batch Processed</th>
 			<th>Spreadsheet</th>
-			<th>Uploaded</th>
 		</tr>
 	</thead>
 	<tbody>
-		{% for item in spreadsheets.items %}
+		{% for item in batches.items %}
 			<tr>
 				<td>
-					<a href="{{ url_for('batch_delete', id=item.batch.id) }}">
+					<a href="{{ url_for('batch_delete', id=item.id) }}">
 						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 						<span class="sr-only">Delete:</span>
 					</a>
 				</td>
 				<td>{{ item.user.username }}</td>
-				<td>{{ item.batch.batchCode }}</td>
-				<td>{{ item.batch.robot }}</td>
-				<td>{{ item.batch.pcrMachine }}</td>
-				<td>{{ item.batch.temperature }}</td>
-				<td>{{ item.batch.datetime | datetime_format }}</td>
-				<td><a href="{{ url_for('speadsheet_download', id=item.id) }}">{{ item.filename }}</a></td>
-				<td><time datetime="{{ item.uploaded.isoformat() }}">{{ item.uploaded | datetime_format }}</time></td>
+				<td>{{ item.batchCode }}</td>
+				<td>{{ item.robot }}</td>
+				<td>{{ item.pcrMachine }}</td>
+				<td>{{ item.temperature }}</td>
+				<td>{{ item.datetime | datetime_format }}</td>
+				<td><a href="{{ url_for('speadsheet_download', id=item.id) }}">{{ item.spreadsheet.filename }}</a></td>
 			</tr>
 		{% endfor %}
 	</tbody>
 </table>
 
-{{ formhelper.render_pagination(spreadsheets, 'speadsheet_index') }}
+{{ formhelper.render_pagination(batches, 'batch_index') }}
 
 {% endblock %}
 
