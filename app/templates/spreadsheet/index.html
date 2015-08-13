@@ -20,28 +20,19 @@
 			<th>Uploaded by</th>
 			<th>Batch Code</th>
 			<th>Uploaded</th>
-			<th>Processed</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for item in spreadsheets.items %}
 			<tr>
-				<td></td>
+				<td>
+			        <a href="{{ url_for('speadsheet_details', id=item.id) }}" class="btn btn-default" role="button">View Details</a>
+			        <a href="{{ url_for('speadsheet_download', id=item.id) }}" class="btn btn-default" role="button">Download</a>
+				</td>
 				<td>{{ item.filename }}</td>
 				<td>{{ item.user.username }}</td>
 				<td>{{ item.batch.batchCode }}</td>
 				<td><time datetime="{{ item.uploaded.isoformat() }}">{{ item.uploaded | datetime_format }}</time></td>
-				<td>
-					{% if item.processed %}
-					    <time datetime="{{ item.processed }}">{{ item.processed | datetime_format }}</time>
-					{% else %}
-						<form method="POST" action="{{ url_for('speadsheet_process', id=item.id) }}">
-					        <a href="{{ url_for('speadsheet_details', id=item.id) }}" class="btn btn-default" role="button">View Details</a>
-					        <a href="{{ url_for('speadsheet_download', id=item.id) }}" class="btn btn-default" role="button">Download</a>
-							<button type="submit" class="btn btn-default">Process</button>
-						</form>
-					{% endif %}
-				</td>
 			</tr>
 		{% endfor %}
 	</tbody>

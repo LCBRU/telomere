@@ -18,7 +18,7 @@ class RequiredIfSampleDataEntered(object):
         self.message = message
 
     def __call__(self, form, field):
-    	if (not field.data and (form.t1.data or form.s1.data or form.t2.data or form.s2.data or form.tsRatio.data)):
+    	if (not field.data and (form.t1.data or form.s1.data or form.t2.data or form.s2.data)):
             raise ValidationError(self.message)
 
 class SampleForm(WtfForm):

@@ -33,3 +33,13 @@
 </form>
 
 {% endblock %}
+
+{% block script %}
+
+<script type="text/javascript">
+    $(function () {
+        $('#batch-datetime').datetimepicker({ format: 'D/M/YYYY H:m'});
+    });
+</script>
+
+{% endblock %}

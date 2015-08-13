@@ -20,7 +20,7 @@ class SpreadsheetService():
             )
 
         db.session.add(spreadsheet)
-        db.session.commit()
+        db.session.flush()
 
         spreadsheetFile.save(self.GetPath(spreadsheet))
 

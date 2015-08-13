@@ -27,6 +27,8 @@ def speadsheet_upload():
             if len(errors) > 0:
                 for e in errors:
                     flash(e)
+
+                db.session.rollback()
             else:
                 flash("File '%s' Uploaded" % spreadsheet.filename)
 
