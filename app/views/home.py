@@ -65,7 +65,7 @@ def _writeCsv(outputFile):
 
     output = csv.DictWriter(outputFile, fieldnames=fieldnames)
 
-    output.writeheader()
+    output.writer.writerow(output.fieldnames)
 
     for batch in Batch.query.order_by(Batch.datetime.asc()):
     	for measurement in batch.measurements:
