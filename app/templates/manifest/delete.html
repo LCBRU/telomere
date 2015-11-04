@@ -1,0 +1,21 @@
+{% extends "standardLayout.html" %}
+
+{% block content %}
+
+<h2>Delete Manifest</h2>
+
+<div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  Are you sure you want to delete manifest '{{ manifest.filename }}'?
+</div>
+
+<form method="POST" class="form-horizontal" action="{{ url_for('manifest_delete_confirm') }}">
+    {{ form.hidden_tag() }}
+
+    <div class="col-sm-12 text-right">
+        <a href="{{ url_for('manifest_index') }}" class="btn btn-default" role="button">Cancel</a>
+        <button type="submit" class="btn btn-primary">Delete</button>
+    </div>
+</form>
+
+{% endblock %}

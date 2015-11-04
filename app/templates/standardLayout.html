@@ -15,6 +15,7 @@
           <ul class="nav navbar-nav">
             <li><a href="{{ url_for('index') }}">Home</a></li>
             <li><a href="{{ url_for('batch_index') }}">Batches</a></li>
+            <li><a href="{{ url_for('manifest_index') }}">Manifests</a></li>
             <li><a href="{{ url_for('export') }}">Export</a></li>
           </ul>
           {% if current_user.username %}
@@ -61,7 +62,7 @@
 
     <footer class="footer">
       <div class="container">
-        <p class="text-muted text-right">&copy; {{g.year}} Leicester Cardiovascular Biomedical Research Unit</p>
+        <p class="text-muted text-right">&copy; {{g.year}} <a href="" target="_blank">Leicester Cardiovascular Biomedical Research Unit</a></p>
       </div>
     </footer>
 {% endblock %}
