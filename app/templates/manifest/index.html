@@ -4,10 +4,7 @@
 {% block content %}
 
 <header>
-	<h2 class="col-sm-6">Manifests</h2>
-	<div class="col-sm-6 text-right">
-		<a href="{{ url_for('manifest_upload') }}" class="btn btn-primary" role="button">Upload Manifest</a>
-	</div>
+	<h2 class="col-sm-6">Manifest</h2>
 </header>
 
 <div class="clearfix"></div>
@@ -15,26 +12,17 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th></th>
 			<th>Date Uploaded</th>
 			<th>User</th>
 			<th>Spreadsheet</th>
 		</tr>
 	</thead>
 	<tbody>
-		{% for item in manifests.items %}
-			<tr>
-				<td>
-					<a href="{{ url_for('manifest_delete', id=item.id) }}">
-						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-						<span class="sr-only">Delete</span>
-					</a>
-				</td>
-				<td>{{ item.uploaded | datetime_format }}</td>
-				<td>{{ item.user.username }}</td>
-				<td><a href="{{ url_for('manifest_download', id=item.id) }}">{{ item.filename }}</a></td>
-			</tr>
-		{% endfor %}
+		<tr>
+			<td>{{ manifest.uploaded | datetime_format }}</td>
+			<td>{{ manifest.user.username }}</td>
+			<td><a href="{{ url_for('manifest_download', id=item.id) }}">{{ item.filename }}</a></td>
+		</tr>
 	</tbody>
 </table>
 
