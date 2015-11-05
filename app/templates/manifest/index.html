@@ -21,11 +21,9 @@
 		<tr>
 			<td>{{ manifest.uploaded | datetime_format }}</td>
 			<td>{{ manifest.user.username }}</td>
-			<td><a href="{{ url_for('manifest_download', id=item.id) }}">{{ item.filename }}</a></td>
+			<td><a href="{{ url_for('manifest_download', id=manifest.id) }}">{{ manifest.filename }}</a></td>
 		</tr>
 	</tbody>
 </table>
-
-{{ formhelper.render_pagination(manifests, 'manifest_index') }}
 
 {% endblock %}

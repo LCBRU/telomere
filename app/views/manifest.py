@@ -20,7 +20,7 @@ def manifest_index(page=1):
     if manifest_count > 1:
         raise ValueError('More than one manifest found')
 
-    return render_template('manifest/index.html', manifest=Manifest.query.one_or_none())
+    return render_template('manifest/index.html', manifest=Manifest.query.one())
 
 @login_required
 @telomere.route('/manifest/upload/', methods=['GET', 'POST'])
