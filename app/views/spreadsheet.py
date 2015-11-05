@@ -13,7 +13,7 @@ from flask_login import current_user
 @telomere.route('/spreadsheet/upload/', methods=['GET', 'POST'])
 def speadsheet_upload():
 
-    form = SpreadsheetUpload(batch = {'datetime': datetime.datetime.now()})
+    form = SpreadsheetUpload()
 
     if form.validate_on_submit():
         batchService = BatchService()
