@@ -39,13 +39,12 @@ class ManifestService():
         wb = load_workbook(filename = self.GetPath(manifest), use_iterators = True)
         ws = wb.get_sheet_by_name(name = 'Sheet1')
 
-        for i in range(2, ws.get_highest_row()):
-            sampleCode = ws.cell(column = 1, row = i).value
-            volume = ws.cell(column = 2, row = i).value
-            concentration = ws.cell(column = 3, row = i).value
-            plateId = ws.cell(column = 4, row = i).value
-
-            result.append(Sample(sampleCode = sampleCode, volume = volume, concentration = concentration, plateId = plateId))
+        for row in ws.iter_rows(row_offset=1):
+            result.append(Sample(
+                sampleCode = row[0].value,
+                volume = row[1].value,
+                concentration = row[2].value,
+                plateId = row[3].value))
 
         return result
 
