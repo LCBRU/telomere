@@ -42,10 +42,10 @@ class SpreadsheetService():
                 measurement = Measurement(
                     batchId=spreadsheet.batch.id,
                     sampleId=ss.sample.id,
-                    t1=ss.measurementSet[0].tValue,
-                    s1=ss.measurementSet[0].sValue,
-                    t2=ss.measurementSet[1].tValue,
-                    s2=ss.measurementSet[1].sValue,
+                    t1=ss.measurementSets[0].tValue,
+                    s1=ss.measurementSets[0].sValue,
+                    t2=ss.measurementSets[1].tValue,
+                    s2=ss.measurementSets[1].sValue,
                     )
                 db.session.add(measurement)
 
@@ -57,10 +57,10 @@ class SpreadsheetService():
         wb = load_workbook(filename = self.GetPath(spreadsheet), use_iterators = True)
         ws = wb.get_sheet_by_name(name = 'Sheet1')
 
-        for i in range(1, ws.get_highest_row()):
-            sampleCode = ws.cell(column = 24, row = i).value
-            tValue = ws.cell(column = 25, row = i).value
-            sValue = ws.cell(column = 26, row = i).value
+        for row in ws.iter_rows(row_offset=1):
+            sampleCode = row[23].value
+            tValue = row[24].value
+            sValue = row[25].value
 
             if (sampleCode is not None and str(sampleCode).isdigit()):
 
