@@ -37,14 +37,18 @@ class ManifestService():
         result = []
 
         wb = load_workbook(filename = self.GetPath(manifest), use_iterators = True)
-        ws = wb.get_sheet_by_name(name = 'Sheet1')
+        ws = wb.worksheets[0]
 
         for row in ws.iter_rows(row_offset=1):
             result.append(Sample(
-                sampleCode = row[0].value,
-                volume = row[1].value,
-                concentration = row[2].value,
-                plateId = row[3].value))
+                plateName = row[0].value,
+                well = row[1].value,
+                sampleCode = row[2].value,
+                conditionDescription = row[3].value,
+                volume = row[4].value,
+                dnaTest = row[5].value,
+                picoTest = row[6].value
+                ))
 
         return result
 

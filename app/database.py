@@ -28,6 +28,6 @@ def init_db() :
         print 'Running DB script %s' % f
 
         with open(os.path.join(dbUpgradeDir, f)) as s:
-            db.engine.execute(s.read())
+            r = db.engine.execute(s.read())
             db.engine.execute('INSERT INTO db_version (version, appliedDate) VALUES (%s, %s)', [int(f.split('.')[0]), datetime.datetime.now()])
 

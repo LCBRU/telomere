@@ -22,11 +22,11 @@ def speadsheet_upload():
         if (batch):
             spreadsheetService = SpreadsheetService()
             spreadsheet = spreadsheetService.SaveAndReturn(form.spreadsheet.data, batch)
-            errors = spreadsheetService.Process(spreadsheet)
+            missingSampleCodes = spreadsheetService.Process(spreadsheet)
 
-            if len(errors) > 0:
-                for e in errors:
-                    flash(e)
+            if len(missingSampleCodes) > 0:
+                for ms in missingSampleCodes:
+                    flash("Sample '%s' is not in the manifest" % ms)
 
                 db.session.rollback()
             else:
