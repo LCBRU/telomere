@@ -22,11 +22,16 @@ def speadsheet_upload():
         if (batch):
             spreadsheetService = SpreadsheetService()
             spreadsheet = spreadsheetService.SaveAndReturn(form.spreadsheet.data, batch)
-            missingSampleCodes = spreadsheetService.Process(spreadsheet)
+            spreadsheetLoadResult = spreadsheetService.Process(spreadsheet)
 
-            if len(missingSampleCodes) > 0:
-                for ms in missingSampleCodes:
-                    flash("Sample '%s' is not in the manifest" % ms)
+            if spreadsheetLoadResult.abortUpload():
+                if len(spreadsheetLoadResult.missingSampleCodes) > 0:
+                    flash("The following samples are not in the manifest: %s" % ", ".join(str(x) for x in spreadsheetLoadResult.missingSampleCodes), "error")
+
+                if len(spreadsheetLoadResult.plateMismatchCodes) > 0:
+                    flash("The following samples are for a different plate: %s" % ", ".join(str(x) for x in spreadsheetLoadResult.plateMismatchCodes), "error")
+
+                flash("File '%s' has not been uploaded" % spreadsheet.filename, "error")
 
                 db.session.rollback()
             else:
@@ -37,20 +42,6 @@ def speadsheet_upload():
                 return redirect(url_for('batch_index'))
 
     return render_template('spreadsheet/upload.html', form=form)
-
-@telomere.route("/spreadsheet/process/<int:id>", methods=['POST'])
-@login_required
-def speadsheet_process(id):
-    spreadsheetService = SpreadsheetService()
-    spreadsheet = Spreadsheet.query.get(id)
-    errors = spreadsheetService.Process(spreadsheet)
-
-    for e in errors:
-        flash(e)
-
-    db.session.commit()
-
-    return redirect(url_for('batch_index'))
 
 @telomere.route("/spreadsheet/download/<int:id>")
 @login_required

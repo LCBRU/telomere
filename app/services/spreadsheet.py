@@ -28,12 +28,14 @@ class SpreadsheetService():
         return spreadsheet
 
     def Process(self, spreadsheet):
-        missingSampleCodes = Set()
+        result = SpreadsheetLoadResult()
 
         wb = load_workbook(filename = self.GetPath(spreadsheet), use_iterators = True)
         ws = wb.worksheets[0]
 
         for row in ws.iter_rows(row_offset=1):
+            okToSaveMeasurement = True
+
             sampleCode = row[23].value #Col X
             errorCode = row[29].value or '' #Col AD
 
@@ -43,9 +45,16 @@ class SpreadsheetService():
             sample = Sample.query.filter_by(sampleCode=sampleCode).first()
 
             if sample is None:
-                missingSampleCodes.add(sampleCode)
+                result.missingSampleCodes.add(sampleCode)
+                okToSaveMeasurement = False
 
-            if len(missingSampleCodes) == 0:
+            else:
+                if sample.plateName != spreadsheet.batch.plateName:
+                    result.plateMismatchCodes.add(sampleCode)
+                    okToSaveMeasurement = False
+
+
+            if okToSaveMeasurement:
                 measurement = Measurement(
                     batchId=spreadsheet.batch.id,
                     sampleId=sample.id,
@@ -60,10 +69,19 @@ class SpreadsheetService():
                     )
                 db.session.add(measurement)
 
-        return missingSampleCodes
+        return result
 
     def GetPath(self, spreadsheet):
         return os.path.join(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], self.GetFilename(spreadsheet))
 
     def GetFilename(self, spreadsheet):
         return "%d.xlsx" % spreadsheet.id
+
+class SpreadsheetLoadResult:
+
+    def __init__(self, *args, **kwargs):
+        self.missingSampleCodes = Set()
+        self.plateMismatchCodes = Set()
+
+    def abortUpload(self):
+        return len(self.missingSampleCodes) > 0 or len(self.plateMismatchCodes) > 0
