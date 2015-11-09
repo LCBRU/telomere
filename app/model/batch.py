@@ -9,6 +9,12 @@ class Batch(db.Model):
     datetime = db.Column(db.DateTime())
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
     version_id = db.Column(db.Integer, nullable=False)
+    plateName = db.Column(db.String(50))
+    halfPlate = db.Column(db.String(1))
+    humidity = db.Column(db.Numeric(precision=6, scale=2))
+    primerBatch = db.Column(db.String(50))
+    enzymeBatch = db.Column(db.String(50))
+    rotorGene = db.Column(db.String(50))
 
     __mapper_args__ = {
         "version_id_col": version_id
@@ -22,3 +28,9 @@ class Batch(db.Model):
         self.temperature = kwargs.get('temperature')
         self.datetime = kwargs.get('datetime')
         self.userId = kwargs.get('userId')
+        self.plateName = kwargs.get('plateName')
+        self.halfPlate = kwargs.get('halfPlate')
+        self.humidity = kwargs.get('humidity')
+        self.primerBatch = kwargs.get('primerBatch')
+        self.enzymeBatch = kwargs.get('enzymeBatch')
+        self.rotorGene = kwargs.get('rotorGene')

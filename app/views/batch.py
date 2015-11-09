@@ -31,6 +31,12 @@ def batch_edit(id):
             batch.temperature = form.batch.temperature.data
             batch.datetime = form.batch.datetime.data
             batch.userId = current_user.id
+            batch.plateName = form.batch.plateName.data
+            batch.halfPlate = form.batch.halfPlate.data
+            batch.humidity = form.batch.humidity.data
+            batch.primerBatch = form.batch.primerBatch.data
+            batch.enzymeBatch = form.batch.enzymeBatch.data
+            batch.rotorGene = form.batch.rotorGene.data
             db.session.commit()
             
             return redirect(url_for('batch_index'))

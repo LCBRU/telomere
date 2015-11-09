@@ -18,9 +18,8 @@
 			<th></th>
 			<th>Entered by</th>
 			<th>Batch Code</th>
-			<th>Robot</th>
-			<th>PCR Machine</th>
-			<th>Temperature</th>
+			<th>Plate</th>
+			<th>Half Plate</th>
 			<th>Batch Processed</th>
 			<th>Spreadsheet</th>
 		</tr>
@@ -40,9 +39,8 @@
 				</td>
 				<td>{{ item.user.username }}</td>
 				<td>{{ item.batchCode }}</td>
-				<td>{{ item.robot }}</td>
-				<td>{{ item.pcrMachine }}</td>
-				<td>{{ item.temperature }}</td>
+				<td>{{ item.plateName }}</td>
+				<td>{{ item.halfPlate }}</td>
 				<td>{{ item.datetime | datetime_format }}</td>
 				<td><a href="{{ url_for('speadsheet_download', id=item.id) }}">{{ item.spreadsheet.filename }}</a></td>
 			</tr>

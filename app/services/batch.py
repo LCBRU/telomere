@@ -15,7 +15,13 @@ class BatchService():
             pcrMachine = batchForm.pcrMachine.data,
             temperature = batchForm.temperature.data,
             datetime = batchForm.datetime.data,
-            userId = current_user.id
+            userId = current_user.id,
+            plateName = batchForm.plateName.data,
+            halfPlate = batchForm.halfPlate.data,
+            humidity = batchForm.humidity.data,
+            primerBatch = batchForm.primerBatch.data,
+            enzymeBatch = batchForm.enzymeBatch.data,
+            rotorGene = batchForm.rotorGene.data
             )
 
         db.session.add(batch)

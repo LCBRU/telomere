@@ -10,6 +10,8 @@
 
     <div class="col-sm-5">
         {{ formhelper.render_field(form.batch.batchCode) }}
+        {{ formhelper.render_field(form.batch.plateName) }}
+        {{ formhelper.render_field(form.batch.halfPlate) }}
         {{ formhelper.render_field(form.batch.robot) }}
         {{ formhelper.render_field(form.batch.pcrMachine) }}
     </div>
@@ -17,7 +19,11 @@
     <div class="col-sm-2"></div>
 
     <div class="col-sm-5">
+        {{ formhelper.render_field(form.batch.primerBatch) }}
+        {{ formhelper.render_field(form.batch.enzymeBatch) }}
+        {{ formhelper.render_field(form.batch.rotorGene) }}
         {{ formhelper.render_field(form.batch.temperature) }}
+        {{ formhelper.render_field(form.batch.humidity) }}
         {{ formhelper.render_field(form.batch.datetime) }}
     </div>
 
