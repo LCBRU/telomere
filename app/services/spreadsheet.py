@@ -6,6 +6,7 @@ from app import db, telomere
 from app.model.spreadsheet import Spreadsheet
 from app.model.measurement import Measurement
 from app.model.sample import Sample
+from app.model.outstandingError import OutstandingError
 from openpyxl import load_workbook
 
 class SpreadsheetService():
@@ -34,40 +35,46 @@ class SpreadsheetService():
         ws = wb.worksheets[0]
 
         for row in ws.iter_rows(row_offset=1):
-            okToSaveMeasurement = True
 
             sampleCode = row[23].value #Col X
             errorCode = row[29].value or '' #Col AD
 
             if (sampleCode is None or not str(sampleCode).isdigit()):
-                continue #This is not a row that we are looking for - it's blank or a header or suttin
+                continue
 
             sample = Sample.query.filter_by(sampleCode=sampleCode).first()
 
             if sample is None:
                 result.missingSampleCodes.add(sampleCode)
-                okToSaveMeasurement = False
+                continue
 
-            else:
-                if sample.plateName != spreadsheet.batch.plateName:
-                    result.plateMismatchCodes.add(sampleCode)
-                    okToSaveMeasurement = False
+            if sample.plateName != spreadsheet.batch.plateName:
+                result.plateMismatchCodes.add(sampleCode)
+                continue
 
-
-            if okToSaveMeasurement:
-                measurement = Measurement(
-                    batchId=spreadsheet.batch.id,
-                    sampleId=sample.id,
-                    t_to=row[1].value, #Col B
-                    t_amp=row[2].value, #Col C
-                    t=row[3].value, #Col D
-                    s_to=row[13].value, #Col N
-                    s_amp=row[14].value, #Col 0
-                    s=row[15].value, #Col P
-                    ts=row[26].value, #Col AA
-                    errorCode=errorCode
+            if errorCode != '':
+                result.hasOutstandingErrors = True
+                outstandingError = OutstandingError(
+                    description = "Sample '%s' has an error code of '%s'." % (sampleCode, errorCode),
+                    batchId = spreadsheet.batch.id,
+                    sampleId = sample.id
                     )
-                db.session.add(measurement)
+                db.session.add(outstandingError)
+                continue
+
+            measurement = Measurement(
+                batchId=spreadsheet.batch.id,
+                sampleId=sample.id,
+                t_to=row[1].value, #Col B
+                t_amp=row[2].value, #Col C
+                t=row[3].value, #Col D
+                s_to=row[13].value, #Col N
+                s_amp=row[14].value, #Col 0
+                s=row[15].value, #Col P
+                ts=row[26].value, #Col AA
+                errorCode=errorCode
+                )
+            db.session.add(measurement)
 
         return result
 
@@ -82,6 +89,7 @@ class SpreadsheetLoadResult:
     def __init__(self, *args, **kwargs):
         self.missingSampleCodes = Set()
         self.plateMismatchCodes = Set()
+        self.hasOutstandingErrors = False
 
     def abortUpload(self):
         return len(self.missingSampleCodes) > 0 or len(self.plateMismatchCodes) > 0

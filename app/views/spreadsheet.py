@@ -37,6 +37,9 @@ def speadsheet_upload():
             else:
                 flash("File '%s' Uploaded" % spreadsheet.filename)
 
+                if spreadsheetLoadResult.hasOutstandingErrors:
+                    flash("Batch was loaded with errors", "warning")
+
                 db.session.commit()
 
                 return redirect(url_for('batch_index'))

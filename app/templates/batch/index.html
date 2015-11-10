@@ -22,6 +22,7 @@
 			<th>Half Plate</th>
 			<th>Batch Processed</th>
 			<th>Spreadsheet</th>
+			<th>Outstanding Errors</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -43,6 +44,7 @@
 				<td>{{ item.halfPlate }}</td>
 				<td>{{ item.datetime | datetime_format }}</td>
 				<td><a href="{{ url_for('speadsheet_download', id=item.id) }}">{{ item.spreadsheet.filename }}</a></td>
+				<td>{{ item.outstandingErrorCount }}</td>
 			</tr>
 		{% endfor %}
 	</tbody>

@@ -1,4 +1,5 @@
 from app import db
+from sqlalchemy.ext.hybrid import hybrid_property
 
 class Batch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,3 +35,14 @@ class Batch(db.Model):
         self.primerBatch = kwargs.get('primerBatch')
         self.enzymeBatch = kwargs.get('enzymeBatch')
         self.rotorGene = kwargs.get('rotorGene')
+
+    @hybrid_property
+    def outstandingErrorCount(self):
+        return len(self.outstandingErrors)
+
+    @outstandingErrorCount.expression
+    def outstandingErrorCount(cls):
+        return (select([func.count(OutstandingError.id)]).
+                where(OutstandingError.batchId == cls.id).
+                label("outstandingErrorCount")
+                )
