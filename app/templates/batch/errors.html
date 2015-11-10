@@ -22,9 +22,13 @@
 		{% for item in outstandingErrors.items %}
 			<tr>
 				<td>
+					<a href="{{ url_for('batch_edit', id=item.id) }}">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+						<span class="sr-only">Complete</span>
+					</a>
 				</td>
 				<td>{{ item.sample.sampleCode }}</td>
-				<td>{{ item.dsecription }}</td>
+				<td>{{ item.description }}</td>
 			</tr>
 		{% endfor %}
 	</tbody>

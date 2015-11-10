@@ -79,7 +79,23 @@ def batch_delete_confirm():
             
     return redirect(url_for('batch_index'))
 
-@telomere.route("/batch/errors/<int:id>")
+@telomere.route("/batch/<int:id>/errors/")
+@login_required
+def batch_errors(id, page=1):
+    batch = Batch.query.get(id)
+    errors = (OutstandingError
+                .query
+                .filter_by(batchId=id)
+                .join(OutstandingError.sample)
+                .order_by(Sample.sampleCode)
+                .paginate(
+                    page=page,
+                    per_page=20,
+                    error_out=False))
+
+    return render_template('batch/errors.html', batch=batch, outstandingErrors=errors)
+
+@telomere.route("/batch/errors/complete")
 @login_required
 def batch_errors(id, page=1):
     batch = Batch.query.get(id)
