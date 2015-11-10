@@ -7,6 +7,7 @@ from app.services.sample import SampleService
 from app.forms.batch import BatchDelete, BatchEditForm
 from app.model.batch import Batch
 from app.model.sample import Sample
+from app.model.outstandingError import OutstandingError
 from app.model.measurement import Measurement
 from flask_login import current_user
 
@@ -77,3 +78,20 @@ def batch_delete_confirm():
             flash("Deleted batch '%s'." % batch.batchCode)
             
     return redirect(url_for('batch_index'))
+
+@telomere.route("/batch/errors/<int:id>")
+@login_required
+def batch_errors(id, page=1):
+    batch = Batch.query.get(id)
+    errors = (OutstandingError
+                .query
+                .filter_by(batchId=id)
+                .join(OutstandingError.sample)
+                .order_by(Sample.sampleCode)
+                .paginate(
+                    page=page,
+                    per_page=20,
+                    error_out=False))
+
+    return render_template('batch/errors.html', batch=batch, outstandingErrors=errors)
+
