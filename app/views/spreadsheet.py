@@ -7,6 +7,7 @@ from app.services.spreadsheet import SpreadsheetService
 from app.services.batch import BatchService
 from app.services.sample import SampleService
 from app.model.spreadsheet import Spreadsheet
+from app.model.user import User
 from flask_login import current_user
 
 @login_required
@@ -14,6 +15,10 @@ from flask_login import current_user
 def speadsheet_upload():
 
     form = SpreadsheetUpload()
+
+    users = User.query.order_by(User.code.asc()).all()
+    form.batch.operatorUserId.choices = [(u.id, u.GetCodeAndName()) for u in users]
+    form.batch.operatorUserId.data = current_user.id
 
     if form.validate_on_submit():
         batchService = BatchService()

@@ -24,7 +24,8 @@ class BatchService():
             humidity = batchForm.humidity.data,
             primerBatch = batchForm.primerBatch.data,
             enzymeBatch = batchForm.enzymeBatch.data,
-            rotorGene = batchForm.rotorGene.data
+            rotorGene = batchForm.rotorGene.data,
+            operatorUserId = batchForm.operatorUserId.data
             )
 
         db.session.add(batch)

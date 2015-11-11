@@ -15,6 +15,7 @@ class BatchForm(WtfForm):
     primerBatch = StringField('Primer Batch', validators=[DataRequired(), Length(max=50)])
     enzymeBatch = StringField('Enzyme Batch', validators=[DataRequired(), Length(max=50)])
     rotorGene = StringField('Rotor Gene', validators=[DataRequired(), Length(max=50)])
+    operatorUserId = SelectField('Operator', coerce=int)
 
 class BatchEditForm(Form):
     id = HiddenField('id')

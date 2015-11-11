@@ -9,6 +9,7 @@ from app.model.batch import Batch
 from app.model.sample import Sample
 from app.model.outstandingError import OutstandingError
 from app.model.measurement import Measurement
+from app.model.user import User
 from flask_login import current_user
 
 @telomere.route("/batch/edit/<int:id>", methods=['GET','POST'])
@@ -16,6 +17,9 @@ from flask_login import current_user
 def batch_edit(id):
     batch = Batch.query.get(id)
     form = BatchEditForm(id=id, batch=batch, version_id=batch.version_id)
+
+    users = User.query.order_by(User.code.asc()).all()
+    form.batch.operatorUserId.choices = [(u.id, u.GetCodeAndName()) for u in users]
 
     if form.validate_on_submit():
 
@@ -38,6 +42,7 @@ def batch_edit(id):
             batch.primerBatch = form.batch.primerBatch.data
             batch.enzymeBatch = form.batch.enzymeBatch.data
             batch.rotorGene = form.batch.rotorGene.data
+            batch.operatorUserId = form.batch.operatorUserId.data
             db.session.commit()
             
             return redirect(url_for('batch_index'))

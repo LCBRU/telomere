@@ -1,7 +1,7 @@
-INSERT INTO user (username)
-VALUES ('rab63')
+INSERT INTO user (username, code)
+VALUES ('rab63', '0001')
 ;
 
-INSERT INTO user (username)
-VALUES ('vc15')
+INSERT INTO user (username, code)
+VALUES ('vc15', '0002')
 ;
