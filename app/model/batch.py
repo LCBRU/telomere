@@ -1,5 +1,7 @@
 from app import db
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.sql import select, func
+from app.model.outstandingError import OutstandingError
 
 class Batch(db.Model):
     id = db.Column(db.Integer, primary_key=True)

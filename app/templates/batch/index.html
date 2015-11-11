@@ -12,6 +12,7 @@
 
 <div class="clearfix"></div>
 
+
 <table class="table">
 	<thead>
 		<tr>
@@ -22,7 +23,13 @@
 			<th>Half Plate</th>
 			<th>Batch Processed</th>
 			<th>Spreadsheet</th>
-			<th>Outstanding Errors</th>
+			<th>Outstanding Errors
+				{% if errorsOnly != 'errors_only' %}
+				    <a class="btn btn-default btn-xs" href="{{ url_for('batch_index', page=batches.page, errorsOnly='errors_only') }}"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span><span class="sr-only">Show only batches with errors</span></a>
+				{% else %}    
+				    <a class="btn btn-default btn-xs btn-warning" href="{{ url_for('batch_index', page=batches.page) }}"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span><span class="sr-only">Show all batches</span></a>
+				{% endif %}
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -54,7 +61,7 @@
 	</tbody>
 </table>
 
-{{ formhelper.render_pagination(batches, 'batch_index') }}
+{{ formhelper.render_pagination(batches, 'batch_index', errorsOnly=errorsOnly) }}
 
 {% endblock %}
 

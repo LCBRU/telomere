@@ -45,16 +45,25 @@ def batch_edit(id):
     return render_template('batch/batchEdit.html', form=form)
 
 @telomere.route('/batch/')
-@telomere.route("/batch/page:<int:page>")
+@telomere.route('/batch/<errorsOnly>')
+@telomere.route("/batch/page/<int:page>")
+@telomere.route("/batch/<errorsOnly>/page/<int:page>")
 @login_required
-def batch_index(page=1):
+def batch_index(page=1, errorsOnly=''):
 
-    return render_template('batch/index.html', batches=Batch.query
-            .order_by(Batch.datetime.desc())
-            .paginate(
-                page=page,
-                per_page=10,
-                error_out=False))
+    batchQuery = Batch.query
+
+    if len(errorsOnly) > 0:
+        batchQuery = Batch.query.filter(Batch.outstandingErrorCount > 0)
+
+    batches = (batchQuery
+        .order_by(Batch.datetime.desc())
+        .paginate(
+            page=page,
+            per_page=10,
+            error_out=False))
+
+    return render_template('batch/index.html', batches=batches, errorsOnly=errorsOnly)
 
 
 @telomere.route("/batch/delete/<int:id>")
