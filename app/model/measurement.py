@@ -27,5 +27,5 @@ class Measurement(db.Model):
         self.s_to = kwargs.get('s_to')
         self.s_amp = kwargs.get('s_amp')
         self.s = kwargs.get('s')
-        self.ts = kwargs.get('ts')
         self.errorCode = kwargs.get('errorCode')
+        self.ts = self.t / self.s

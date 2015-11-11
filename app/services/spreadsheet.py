@@ -82,9 +82,6 @@ class SpreadsheetService():
             if not self._isValidValue(s):
                 errorDescriptions.add("Column 's' is missing or not numeric")
 
-            if not self._isValidValue(ts):
-                errorDescriptions.add("Column 'ts' is missing or not numeric")
-
             if len(errorDescriptions) > 0:
                 outstandingError = OutstandingError(
                     description = "; ".join(str(x) for x in errorDescriptions),
@@ -94,7 +91,6 @@ class SpreadsheetService():
 
                 db.session.add(outstandingError)
                 result.hasOutstandingErrors = True
-                continue
 
             measurement = Measurement(
                 batchId=spreadsheet.batch.id,
