@@ -4,11 +4,10 @@ from flask.ext.login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
 from app.services.sample import SampleService
-from app.forms.batch import BatchDelete, BatchEditForm
+from app.forms.batch import BatchDelete, BatchEditForm, BatchCompleteAllErrors, BatchCompleteError
 from app.model.batch import Batch
 from app.model.sample import Sample
 from app.model.outstandingError import OutstandingError
-from app.model.completedError import CompletedError
 from app.model.measurement import Measurement
 from flask_login import current_user
 
@@ -81,6 +80,7 @@ def batch_delete_confirm():
     return redirect(url_for('batch_index'))
 
 @telomere.route("/batch/<int:id>/errors/")
+@telomere.route("/batch/<int:id>/errors/<int:page>")
 @login_required
 def batch_errors(id, page=1):
     batch = Batch.query.get(id)
@@ -91,26 +91,51 @@ def batch_errors(id, page=1):
                 .order_by(Sample.sampleCode)
                 .paginate(
                     page=page,
-                    per_page=20,
+                    per_page=10,
                     error_out=False))
 
-    return render_template('batch/errors.html', batch=batch, outstandingErrors=errors)
+    completeAllForm = BatchCompleteAllErrors(obj=batch)
+    completeErrorForm = BatchCompleteError()
 
-@telomere.route("/batch/errors/complete/<int:id>/page:<int:page>")
+    return render_template('batch/errors.html', batch=batch, outstandingErrors=errors, completeAllForm=completeAllForm, completeErrorForm=completeErrorForm)
+
+@telomere.route("/batch/errors/complete/", methods=['POST'])
 @login_required
-def batch_error_complete(id, page):
-    oe = OutstandingError.query.get(id)
-    ce = CompletedError(
-        description = oe.description,
-        batchId = oe.batchId,
-        sampleId = oe.sampleId,
-        completedByUserId = current_user.id,
-        completedDatetime = datetime.datetime.now()
-        )
+def batch_error_complete_post():
+    form = BatchCompleteError()
 
-    db.session.add(ce)
-    db.session.delete(oe)
-    db.session.commit()
+    if form.validate_on_submit():
+        batchService = BatchService()
 
-    return redirect(url_for('batch_errors', id=oe.batchId, page=page))
+        oe = OutstandingError.query.get(form.id.data)
+        batchService.CompleteError(oe)
+
+        db.session.commit()
+        flash("All errors completed")
+
+        return redirect(url_for('batch_errors', id=form.batchId.data, page=form.page.data))
+    else:
+        flash("Something went wrong", "error")
+
+    return redirect(url_for('batch_index'))
+
+
+
+@telomere.route("/batch/errors/complete_all", methods=['POST'])
+@login_required
+def batch_errors_complete_all():
+    form = BatchCompleteAllErrors()
+
+    if form.validate_on_submit():
+        batchService = BatchService()
+
+        batch = Batch.query.get(form.id.data)
+        batchService.CompleteAllErrors(batch)
+
+        db.session.commit()
+        flash("Error completed")
+    else:
+        flash("Something went wrong", "error")
+
+    return redirect(url_for('batch_index'))
 

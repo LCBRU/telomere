@@ -4,9 +4,16 @@
 {% block content %}
 
 <header>
-	<h2>Batch Errors: {{ batch.batchCode }} ({{batch.datetime | datetime_format }})</h2>
+	<h2 class="col-sm-8">Errors for Batch '{{ batch.batchCode }}'</h2>
+	<div class="col-sm-4 text-right">
+		<form method="POST" action="{{ url_for('batch_errors_complete_all') }}">
+		    {{ completeAllForm.hidden_tag() }}
+			<button type="submit" class="btn btn-primary">
+				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Complete all outstanding errors for batch
+			</button>
+		</form>
+	</div>
 </header>
-
 
 <div class="clearfix"></div>
 
@@ -22,10 +29,15 @@
 		{% for item in outstandingErrors.items %}
 			<tr>
 				<td>
-					<a href="{{ url_for('batch_error_complete', id=item.id, page=outstandingErrors.page) }}">
-						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-						<span class="sr-only">Complete</span>
-					</a>
+    				<form method="POST" action="{{ url_for('batch_error_complete_post') }}">
+		    			{{ completeErrorForm.csrf_token }}
+		    			<input id="batchId" name="batchId" type="hidden" value="{{item.batch.id}}" />
+		    			<input id="id" name="id" type="hidden" value="{{item.id}}" />
+		    			<input id="page" name="page" type="hidden" value="{{outstandingErrors.page}}" />
+						<button type="submit" class="btn btn-primary btn-sm">
+							<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Complete
+						</button>
+					</form>
 				</td>
 				<td>{{ item.sample.sampleCode }}</td>
 				<td>{{ item.description }}</td>
@@ -34,7 +46,7 @@
 	</tbody>
 </table>
 
-{{ formhelper.render_pagination(outstandingErrors, 'batch_errors') }}
+{{ formhelper.render_pagination(outstandingErrors, 'batch_errors', id=batch.id) }}
 
 {% endblock %}
 

@@ -24,3 +24,11 @@ class BatchEditForm(Form):
 class BatchDelete(Form):
     id = HiddenField('id')
 
+class BatchCompleteAllErrors(Form):
+    id = HiddenField('id')
+
+class BatchCompleteError(Form):
+    batchId = HiddenField('batchId')
+    id = HiddenField('id')
+    page = HiddenField('page')
+
