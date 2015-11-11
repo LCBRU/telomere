@@ -49,11 +49,11 @@ def batch_edit(id):
 @telomere.route("/batch/page/<int:page>")
 @telomere.route("/batch/<errorsOnly>/page/<int:page>")
 @login_required
-def batch_index(page=1, errorsOnly=''):
+def batch_index(page=1, errorsOnly=None):
 
     batchQuery = Batch.query
 
-    if len(errorsOnly) > 0:
+    if errorsOnly is not None and len(errorsOnly) > 0:
         batchQuery = Batch.query.filter(Batch.outstandingErrorCount > 0)
 
     batches = (batchQuery
