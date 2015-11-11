@@ -8,6 +8,7 @@ from app.forms.batch import BatchDelete, BatchEditForm
 from app.model.batch import Batch
 from app.model.sample import Sample
 from app.model.outstandingError import OutstandingError
+from app.model.completedError import CompletedError
 from app.model.measurement import Measurement
 from flask_login import current_user
 
@@ -95,19 +96,21 @@ def batch_errors(id, page=1):
 
     return render_template('batch/errors.html', batch=batch, outstandingErrors=errors)
 
-@telomere.route("/batch/errors/complete")
+@telomere.route("/batch/errors/complete/<int:id>/page:<int:page>")
 @login_required
-def batch_errors(id, page=1):
-    batch = Batch.query.get(id)
-    errors = (OutstandingError
-                .query
-                .filter_by(batchId=id)
-                .join(OutstandingError.sample)
-                .order_by(Sample.sampleCode)
-                .paginate(
-                    page=page,
-                    per_page=20,
-                    error_out=False))
+def batch_error_complete(id, page):
+    oe = OutstandingError.query.get(id)
+    ce = CompletedError(
+        description = oe.description,
+        batchId = oe.batchId,
+        sampleId = oe.sampleId,
+        completedByUserId = current_user.id,
+        completedDatetime = datetime.datetime.now()
+        )
 
-    return render_template('batch/errors.html', batch=batch, outstandingErrors=errors)
+    db.session.add(ce)
+    db.session.delete(oe)
+    db.session.commit()
+
+    return redirect(url_for('batch_errors', id=oe.batchId, page=page))
 

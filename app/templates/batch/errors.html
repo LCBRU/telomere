@@ -22,7 +22,7 @@
 		{% for item in outstandingErrors.items %}
 			<tr>
 				<td>
-					<a href="{{ url_for('batch_edit', id=item.id) }}">
+					<a href="{{ url_for('batch_error_complete', id=item.id, page=outstandingErrors.page) }}">
 						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
 						<span class="sr-only">Complete</span>
 					</a>
