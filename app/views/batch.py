@@ -120,7 +120,7 @@ def batch_error_complete_post():
         batchService.CompleteError(oe)
 
         db.session.commit()
-        flash("All errors completed")
+        flash("Error completed")
 
         return redirect(url_for('batch_errors', id=form.batchId.data, page=form.page.data))
     else:
@@ -142,7 +142,7 @@ def batch_errors_complete_all():
         batchService.CompleteAllErrors(batch)
 
         db.session.commit()
-        flash("Error completed")
+        flash("All error completed")
     else:
         flash("Something went wrong", "error")
 
