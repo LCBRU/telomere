@@ -37,14 +37,6 @@ class SpreadsheetService():
         for row in ws.iter_rows(row_offset=1):
 
             sampleCode = row[23].value #Col X
-            errorCode = row[29].value or '' #Col AD
-            t_to = row[1].value #Col B
-            t_amp = row[2].value #Col C
-            t = row[3].value #Col D
-            s_to = row[13].value #Col N
-            s_amp = row[14].value #Col 0
-            s = row[15].value #Col P
-            ts = row[26].value #Col AA
 
             if (sampleCode is None or not str(sampleCode).isdigit()):
                 continue
@@ -59,52 +51,28 @@ class SpreadsheetService():
                 result.plateMismatchCodes.add(sampleCode)
                 continue
 
-            errorDescriptions = Set()
+            measurement = Measurement(
+                batchId=spreadsheet.batch.id,
+                sampleId=sample.id,
+                t_to=row[1].value, #Col B
+                t_amp=row[2].value, #Col C
+                t=row[3].value, #Col D
+                s_to=row[13].value, #Col N
+                s_amp=row[14].value, #Col O
+                s=row[15].value, #Col P
+                errorCode=row[29].value or '' #Col AD
+                )
+            db.session.add(measurement)
 
-            if errorCode != '':
-                errorDescriptions.add("Error Code is '%s'" % errorCode)
-
-            if not self._isValidValue(t_to):
-                errorDescriptions.add("Column 't_to' is missing or not numeric")
-
-            if not self._isValidValue(t_amp):
-                errorDescriptions.add("Column 't_amp' is missing or not numeric")
-
-            if not self._isValidValue(t):
-                errorDescriptions.add("Column 't' is missing or not numeric")
-
-            if not self._isValidValue(s_to):
-                errorDescriptions.add("Column 's_to' is missing or not numeric")
-
-            if not self._isValidValue(s_amp):
-                errorDescriptions.add("Column 's_amp' is missing or not numeric")
-
-            if not self._isValidValue(s):
-                errorDescriptions.add("Column 's' is missing or not numeric")
-
-            if len(errorDescriptions) > 0:
+            if (measurement.HasErrors()):
                 outstandingError = OutstandingError(
-                    description = "; ".join(str(x) for x in errorDescriptions),
+                    description = measurement.GetErrorDescription(),
                     batchId = spreadsheet.batch.id,
                     sampleId = sample.id
                     )
 
                 db.session.add(outstandingError)
                 result.hasOutstandingErrors = True
-
-            measurement = Measurement(
-                batchId=spreadsheet.batch.id,
-                sampleId=sample.id,
-                t_to=t_to, #Col B
-                t_amp=t_amp, #Col C
-                t=t, #Col D
-                s_to=s_to, #Col N
-                s_amp=s_amp, #Col 0
-                s=s, #Col P
-                ts=ts, #Col AA
-                errorCode=errorCode
-                )
-            db.session.add(measurement)
 
         return result
 
