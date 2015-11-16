@@ -9,6 +9,9 @@ class Sample(db.Model):
     conditionDescription = db.Column(db.String(50))
     dnaTest = db.Column(db.Numeric(precision=6, scale=2))
     picoTest = db.Column(db.Numeric(precision=6, scale=2))
+    manifestId = db.Column(db.Integer, db.ForeignKey('manifest.id'))
+
+    manifest = db.relationship("Manifest", backref=db.backref('samples', order_by=id, cascade="all, delete-orphan"))
 
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get('id')
@@ -19,3 +22,4 @@ class Sample(db.Model):
         self.conditionDescription = kwargs.get('conditionDescription')
         self.dnaTest = kwargs.get('dnaTest')
         self.picoTest = kwargs.get('picoTest')
+        self.manifestId = kwargs.get('manifestId')

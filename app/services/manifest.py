@@ -47,7 +47,8 @@ class ManifestService():
                 conditionDescription = row[3].value,
                 volume = row[4].value,
                 dnaTest = row[5].value,
-                picoTest = row[6].value
+                picoTest = row[6].value,
+                manifestId = manifest.id
                 ))
 
         return result
