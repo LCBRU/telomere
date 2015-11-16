@@ -17,16 +17,19 @@ def manifest_index(page=1):
     if manifest_count == 0:
         return redirect(url_for('manifest_upload'))
 
-    return render_template('manifest/index.html', manifest=Manifest.query.one())
+    manifests = (Manifest
+        .query
+        .order_by(Manifest.uploaded.desc())
+        .paginate(
+            page=page,
+            per_page=10,
+            error_out=False))
+
+    return render_template('manifest/index.html', manifests=manifests)
 
 @login_required
 @telomere.route('/manifest/upload/', methods=['GET', 'POST'])
 def manifest_upload():
-
-    manifest_count = Manifest.query.count()
-
-    if manifest_count != 0:
-        return redirect(url_for('manifest_index'))
 
     form = ManifestUpload(manifest = {'uploaded': datetime.datetime.now()})
 

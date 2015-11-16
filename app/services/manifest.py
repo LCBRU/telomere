@@ -26,21 +26,12 @@ class ManifestService():
 
     def Process(self, manifest):
         errors = []
-        samples = self._GetSamplesFromManifest(manifest)
-
-        for sample in samples:
-            db.session.add(sample)
-
-        return errors
-
-    def _GetSamplesFromManifest(self, manifest):
-        result = []
 
         wb = load_workbook(filename = self.GetPath(manifest), use_iterators = True)
         ws = wb.worksheets[0]
 
         for row in ws.iter_rows(row_offset=1):
-            result.append(Sample(
+            sample = Sample(
                 plateName = row[0].value,
                 well = row[1].value,
                 sampleCode = row[2].value,
@@ -49,9 +40,10 @@ class ManifestService():
                 dnaTest = row[5].value,
                 picoTest = row[6].value,
                 manifestId = manifest.id
-                ))
+                )
+            db.session.add(sample)
 
-        return result
+        return errors
 
     def GetPath(self, manifest):
         return os.path.join(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], self.GetFilename(manifest))
