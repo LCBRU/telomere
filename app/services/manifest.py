@@ -1,4 +1,5 @@
 import os, datetime
+from sets import Set
 from werkzeug import secure_filename
 from flask_login import current_user
 from app import db, telomere
@@ -25,7 +26,7 @@ class ManifestService():
         return manifest
 
     def Process(self, manifest):
-        errors = []
+        errors = Set()
 
         wb = load_workbook(filename = self.GetPath(manifest), use_iterators = True)
         ws = wb.worksheets[0]
@@ -41,7 +42,13 @@ class ManifestService():
                 picoTest = row[6].value,
                 manifestId = manifest.id
                 )
-            db.session.add(sample)
+
+            existingSample = Sample.query.filter_by(sampleCode=sample.sampleCode).first()
+
+            if (existingSample is None):
+                db.session.add(sample)
+            else:
+                errors.add(sample.sampleCode)
 
         return errors
 

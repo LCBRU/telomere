@@ -39,8 +39,7 @@ def manifest_upload():
         errors = manifestService.Process(manifest)
 
         if len(errors) > 0:
-            for e in errors:
-                flash(e)
+            flash("The following samples have already been loaded in a previous manifest: %s" % ", ".join(str(x) for x in errors), "error")
 
             db.session.rollback()
         else:
