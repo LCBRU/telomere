@@ -3,7 +3,7 @@ from flask import flash, redirect, url_for, request, render_template, send_from_
 from flask.ext.login import login_required
 from app import db, telomere
 from app.model.manifest import Manifest
-from app.forms.manifest import ManifestUpload
+from app.forms.manifest import ManifestUpload, ManifestDelete
 from app.services.manifest import ManifestService
 from flask_login import current_user
 
@@ -58,3 +58,26 @@ def manifest_download(id):
     service = ManifestService()
 
     return send_from_directory(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], service.GetFilename(manifest), as_attachment=True, attachment_filename=manifest.filename)
+
+@telomere.route("/manifest/delete/<int:id>")
+@login_required
+def manifest_delete(id):
+    manifest = Manifest.query.get(id)
+    form = ManifestDelete(obj=manifest)
+    return render_template('manifest/delete.html', manifest=manifest, form=form)
+
+@telomere.route("/manifest/delete", methods=['POST'])
+@login_required
+def manifest_delete_confirm():
+    form = ManifestDelete()
+
+    if form.validate_on_submit():
+        manifest = Manifest.query.get(form.id.data)
+
+        if (manifest):
+            db.session.delete(manifest)
+            db.session.commit()
+            flash("Deleted manifest '%s'." % manifest.filename)
+            
+    return redirect(url_for('manifest_index'))
+

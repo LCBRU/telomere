@@ -1,6 +1,6 @@
 from flask_wtf import Form
-from wtforms import StringField, SelectField, HiddenField, FormField, DecimalField, Form as WtfForm
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, SelectField, HiddenField, FormField, DecimalField, IntegerField, Form as WtfForm
+from wtforms.validators import DataRequired, Length, NumberRange
 from wtforms.fields.html5 import DateTimeField
 
 class BatchForm(WtfForm):
@@ -11,10 +11,10 @@ class BatchForm(WtfForm):
     datetime = DateTimeField('Date and Time', validators=[DataRequired()], format='%d/%m/%Y %H:%M')
     plateName = StringField('Plate Name', validators=[DataRequired(), Length(max=50)])
     halfPlate = SelectField('Half Plate', choices=[(None, ''), ('A', 'A'), ('B', 'B')])
-    humidity = DecimalField('Humidity', validators=[DataRequired()], places=2)
-    primerBatch = StringField('Primer Batch', validators=[DataRequired(), Length(max=50)])
-    enzymeBatch = StringField('Enzyme Batch', validators=[DataRequired(), Length(max=50)])
-    rotorGene = StringField('Rotor Gene', validators=[DataRequired(), Length(max=50)])
+    humidity = IntegerField('Humidity', validators=[DataRequired(), NumberRange(min=20, max=65)])
+    primerBatch = IntegerField('Primer Batch', validators=[DataRequired(), NumberRange(min=1, max=20)])
+    enzymeBatch = IntegerField('Enzyme Batch', validators=[DataRequired(), NumberRange(min=1, max=20)])
+    rotorGene = IntegerField('Rotor Gene', validators=[DataRequired(), NumberRange(min=1, max=8)])
     operatorUserId = SelectField('Operator', coerce=int)
 
 class BatchEditForm(Form):

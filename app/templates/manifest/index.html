@@ -15,6 +15,7 @@
 <table class="table">
 	<thead>
 		<tr>
+		    <th></th>
 			<th>Date Uploaded</th>
 			<th>User</th>
 			<th>Spreadsheet</th>
@@ -23,6 +24,13 @@
 	<tbody>
 		{% for item in manifests.items %}
 			<tr>
+			    <td>
+					<a href="{{ url_for('manifest_delete', id=item.id) }}">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						<span class="sr-only">Delete</span>
+					</a>
+
+			    </td>
 				<td>{{ item.uploaded | datetime_format }}</td>
 				<td>{{ item.user.username }}</td>
 				<td><a href="{{ url_for('manifest_download', id=item.id) }}">{{ item.filename }}</a></td>

@@ -14,10 +14,10 @@ class Batch(db.Model):
     version_id = db.Column(db.Integer, nullable=False)
     plateName = db.Column(db.String(50))
     halfPlate = db.Column(db.String(1))
-    humidity = db.Column(db.Numeric(precision=6, scale=2))
-    primerBatch = db.Column(db.String(50))
-    enzymeBatch = db.Column(db.String(50))
-    rotorGene = db.Column(db.String(50))
+    humidity = db.Column(db.Integer())
+    primerBatch = db.Column(db.Integer())
+    enzymeBatch = db.Column(db.Integer())
+    rotorGene = db.Column(db.Integer())
     operatorUserId = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     __mapper_args__ = {

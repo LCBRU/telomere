@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import FormField
+from wtforms import FormField, HiddenField
 from flask_wtf.file import FileField as _FileField, FileAllowed, FileRequired
 from wtforms.widgets import FileInput as _FileInput
 
@@ -23,3 +23,7 @@ class ManifestUpload(Form):
         FileRequired()
 #        , FileAllowed(['.xlsx'], 'Only XLSX spreadsheets allowed')
     ])
+
+class ManifestDelete(Form):
+    id = HiddenField('id')
+
