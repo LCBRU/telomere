@@ -5,7 +5,6 @@ from app import db, telomere
 from app.forms.spreadsheet import SpreadsheetUpload
 from app.services.spreadsheet import SpreadsheetService
 from app.services.batch import BatchService
-from app.services.sample import SampleService
 from app.model.spreadsheet import Spreadsheet
 from app.model.user import User
 from flask_login import current_user
