@@ -3,7 +3,6 @@ from flask import flash, redirect, url_for, request, g, render_template
 from flask.ext.login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
-from app.services.sample import SampleService
 from app.forms.batch import BatchDelete, BatchEditForm, BatchCompleteAllErrors, BatchCompleteError
 from app.model.batch import Batch
 from app.model.sample import Sample
