@@ -4,7 +4,7 @@
 {% block content %}
 
 <header>
-	<h2 class="col-sm-8">Errors for Batch '{{ batch.batchCode }}'</h2>
+	<h2 class="col-sm-8">Errors for Batch '{{ batch.id }}'</h2>
 	<div class="col-sm-4 text-right">
 		<form method="POST" action="{{ url_for('batch_errors_complete_all') }}">
 		    {{ completeAllForm.hidden_tag() }}

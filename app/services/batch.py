@@ -9,11 +9,7 @@ from app.model.completedError import CompletedError
 class BatchService():
 
     def SaveAndReturn(self, batchForm):
-        if (self.BatchCodeIsDuplicate(batchCode=batchForm.batchCode.data)):
-            return False
-
         batch = Batch(
-            batchCode = batchForm.batchCode.data,
             robot = batchForm.robot.data,
             pcrMachine = batchForm.pcrMachine.data,
             temperature = batchForm.temperature.data,
@@ -32,15 +28,6 @@ class BatchService():
         db.session.flush()
 
         return batch
-
-    def BatchCodeIsDuplicate(self, batchCode, excludingId=None):
-        existingBatch = Batch.query.filter(Batch.batchCode == batchCode).filter(Batch.id != excludingId).first()
-
-        if (existingBatch):
-            flash("Batch Code already exists", "error")
-            return True
-        else:
-            return False
 
     def CompleteError(self, outstandingError):
         ce = CompletedError(

@@ -28,24 +28,20 @@ def batch_edit(id):
 
         batchService = BatchService()
 
-        if not(batchService.BatchCodeIsDuplicate(excludingId=batch.id, batchCode=form.batch.batchCode.data)):
-            batch.batchCode = form.batch.batchCode.data
-            batch.robot = form.batch.robot.data
-            batch.pcrMachine = form.batch.pcrMachine.data
-            batch.temperature = form.batch.temperature.data
-            batch.datetime = form.batch.datetime.data
-            batch.userId = current_user.id
-            batch.plateName = form.batch.plateName.data
-            batch.halfPlate = form.batch.halfPlate.data
-            batch.humidity = form.batch.humidity.data
-            batch.primerBatch = form.batch.primerBatch.data
-            batch.enzymeBatch = form.batch.enzymeBatch.data
-            batch.rotorGene = form.batch.rotorGene.data
-            batch.operatorUserId = form.batch.operatorUserId.data
-            db.session.commit()
+        batch.robot = form.batch.robot.data
+        batch.pcrMachine = form.batch.pcrMachine.data
+        batch.temperature = form.batch.temperature.data
+        batch.datetime = form.batch.datetime.data
+        batch.userId = current_user.id
+        batch.plateName = form.batch.plateName.data
+        batch.halfPlate = form.batch.halfPlate.data
+        batch.humidity = form.batch.humidity.data
+        batch.primerBatch = form.batch.primerBatch.data
+        batch.enzymeBatch = form.batch.enzymeBatch.data
+        batch.rotorGene = form.batch.rotorGene.data
+        batch.operatorUserId = form.batch.operatorUserId.data
+        db.session.commit()
             
-            return redirect(url_for('batch_index'))
-
     return render_template('batch/batchEdit.html', form=form)
 
 @telomere.route('/batch/')
@@ -88,7 +84,7 @@ def batch_delete_confirm():
         if (batch):
             db.session.delete(batch)
             db.session.commit()
-            flash("Deleted batch '%s'." % batch.batchCode)
+            flash("Deleted batch '%s'." % batch.id)
             
     return redirect(url_for('batch_index'))
 

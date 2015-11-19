@@ -4,7 +4,6 @@ from wtforms.validators import DataRequired, Length, NumberRange
 from wtforms.fields.html5 import DateTimeField
 
 class BatchForm(WtfForm):
-    batchCode = StringField('Batch Code', validators=[DataRequired(), Length(max=20)])
     robot = StringField('Robot', validators=[DataRequired(), Length(max=20)])
     pcrMachine = StringField('PCR Machine', validators=[DataRequired(), Length(max=20)])
     temperature = DecimalField('Temperature', validators=[DataRequired()], places=1)

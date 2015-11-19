@@ -19,7 +19,7 @@
 			<th></th>
 			<th>Entered by</th>
 			<th>Operator</th>
-			<th>Batch Code</th>
+			<th>Batch Id</th>
 			<th>Plate</th>
 			<th>Half Plate</th>
 			<th>Batch Processed</th>
@@ -48,7 +48,7 @@
 				</td>
 				<td>{{ item.user.username }}</td>
 				<td>{{ item.operator.username }}</td>
-				<td>{{ item.batchCode }}</td>
+				<td>{{ item.id }}</td>
 				<td>{{ item.plateName }}</td>
 				<td>{{ item.halfPlate }}</td>
 				<td>{{ item.datetime | datetime_format }}</td>

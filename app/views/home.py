@@ -40,7 +40,7 @@ def export():
 	    f.close
 
 def _writeCsv(outputFile):
-    COL_BATCH_CODE = 'BatchCode'
+    COL_BATCH_CODE = 'BatchId'
     COL_ROBOT = 'Robot'
     COL_PCR_MACHINE = 'PcrMachine'
     COL_TEMPERATURE = 'Temperature'
@@ -104,7 +104,7 @@ def _writeCsv(outputFile):
 
     for measurement in Measurement.query:
         output.writerow({
-            COL_BATCH_CODE : measurement.batch.batchCode,
+            COL_BATCH_CODE : measurement.batch.id,
             COL_ROBOT : measurement.batch.robot,
             COL_PCR_MACHINE : measurement.batch.pcrMachine,
             COL_TEMPERATURE : measurement.batch.temperature,
