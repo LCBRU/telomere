@@ -19,7 +19,6 @@ def batch_edit(id):
 
     users = User.query.order_by(User.code.asc()).all()
     form.batch.operatorUserId.choices = [(u.id, u.GetCodeAndName()) for u in users]
-    form.batch.failed
 
     if form.validate_on_submit():
 
@@ -58,7 +57,7 @@ def batch_index(page=1, errorsOnly=None):
         batchQuery = Batch.query.filter(Batch.outstandingErrorCount > 0)
 
     batches = (batchQuery
-        .order_by(Batch.datetime.desc())
+        .order_by(Batch.id.desc())
         .paginate(
             page=page,
             per_page=10,

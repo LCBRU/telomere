@@ -1,5 +1,4 @@
 from app import db
-from sets import Set
 
 class Measurement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,22 +34,22 @@ class Measurement(db.Model):
         self.errorCode = kwargs.get('errorCode')
 
     def GetErrorDescription(self):
-        descs = Set()
+        descs = []
 
         if self.errorCode != '':
-            descs.add("Error Code is '%s'" % self.errorCode)
+            descs.append("Error Code is '%s'" % self.errorCode)
         if self.t_to is None:
-            descs.add(self._missingErrorDescription('t_to'))
+            descs.append(self._missingErrorDescription('t_to'))
         if self.t_amp is None:
-            descs.add(self._missingErrorDescription('t_amp'))
+            descs.append(self._missingErrorDescription('t_amp'))
         if self.t is None:
-            descs.add(self._missingErrorDescription('t'))
+            descs.append(self._missingErrorDescription('t'))
         if self.s_to is None:
-            descs.add(self._missingErrorDescription('s_to'))
+            descs.append(self._missingErrorDescription('s_to'))
         if self.s_amp is None:
-            descs.add(self._missingErrorDescription('s_amp'))
+            descs.append(self._missingErrorDescription('s_amp'))
         if self.s is None:
-            descs.add(self._missingErrorDescription('s'))
+            descs.append(self._missingErrorDescription('s'))
 
         return "; ".join(str(x) for x in descs)
 

@@ -1,8 +1,10 @@
 import os, datetime, re
 from sets import Set
 from werkzeug import secure_filename
+from flask import flash
 from flask_login import current_user
 from app import db, telomere
+from app.services.batch import BatchService
 from app.model.spreadsheet import Spreadsheet
 from app.model.measurement import Measurement
 from app.model.sample import Sample
@@ -64,15 +66,13 @@ class SpreadsheetService():
                 )
             db.session.add(measurement)
 
-            if (measurement.HasErrors()):
-                outstandingError = OutstandingError(
-                    description = measurement.GetErrorDescription(),
-                    batchId = spreadsheet.batch.id,
-                    sampleId = sample.id
-                    )
+        db.session.flush()
 
-                db.session.add(outstandingError)
-                result.hasOutstandingErrors = True
+        batchService = BatchService()
+
+        for e in batchService.GetValidationErrors(spreadsheet.batch):
+            db.session.add(e)
+            result.hasOutstandingErrors = True
 
         return result
 

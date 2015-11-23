@@ -5,6 +5,8 @@ from app import db
 from app.model.batch import Batch
 from app.model.outstandingError import OutstandingError
 from app.model.completedError import CompletedError
+import numpy
+from sets import Set
 
 class BatchService():
 
@@ -46,3 +48,57 @@ class BatchService():
         for oe in batch.outstandingErrors:
             self.CompleteError(oe)
 
+    def GetValidationErrors(self, batch):
+        result = []
+
+        for m in batch.measurements:
+            errorDescs = Set()
+
+            if m.errorCode != '':
+                errorDescs.add("Error Code is '%s'" % m.errorCode)
+
+            if m.t_to is None:
+                errorDescs.add(self._missingErrorDescription('t_to'))
+            elif m.t_to > 12.4 and str(m.errorCode) != '2':
+                errorDescs.add("Missing error code of '2'")
+            elif m.t_to <= 12.4 and str(m.errorCode) == '2':
+                errorDescs.add("Unnecessary error code of '2'")
+
+            if m.t_amp is None:
+                errorDescs.add(self._missingErrorDescription('t_amp'))
+
+            if m.t is None:
+                errorDescs.add(self._missingErrorDescription('t'))
+
+            if m.s_to is None:
+                errorDescs.add(self._missingErrorDescription('s_to'))
+
+            if m.s_amp is None:
+                errorDescs.add(self._missingErrorDescription('s_amp'))
+
+            if m.s is None:
+                errorDescs.add(self._missingErrorDescription('s'))
+
+            tsValues = [ x.ts for x in batch.get_measurements_for_sample_code(m.sample.sampleCode)]
+
+            if len(tsValues) != 2:
+                errorDescs.add("Sample should have 2 measurements in the batch, but instead has %d" % len(tsValues))
+            else:
+                cv = numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100
+
+                if cv > 10 and str(m.errorCode) != '1':
+                    errorDescs.add("Missing error code of '1'")
+                elif cv <= 10 and str(m.errorCode) == '1':
+                    errorDescs.add("Unnecessary error code of '1'")
+
+            for ed in errorDescs:
+                result.append(OutstandingError(
+                    description = ed,
+                    batchId = batch.id,
+                    sampleId = m.sample.id
+                    ))
+
+        return result
+
+    def _missingErrorDescription(self, fieldname):
+        return "'%s' is missing or not valid" % fieldname

@@ -50,3 +50,6 @@ class Batch(db.Model):
                 where(OutstandingError.batchId == cls.id).
                 label("outstandingErrorCount")
                 )
+
+    def get_measurements_for_sample_code(self, sampleCode):
+        return [m for m in self.measurements if m.sample.sampleCode == sampleCode]
