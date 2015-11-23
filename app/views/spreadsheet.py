@@ -23,6 +23,9 @@ def speadsheet_upload():
         batchService = BatchService()
         batch = batchService.SaveAndReturn(form.batch)
 
+        if batchService.IsBatchDuplicate(batch):
+            flash("The plate name and half plate have been used in a previous batch.", "warning")
+
         if (batch and batch.failed):
             db.session.commit()
 
@@ -37,9 +40,6 @@ def speadsheet_upload():
             if spreadsheetLoadResult.abortUpload():
                 if len(spreadsheetLoadResult.missingSampleCodes) > 0:
                     flash("The following samples are not in the manifest: %s" % ", ".join(str(x) for x in spreadsheetLoadResult.missingSampleCodes), "error")
-
-                if len(spreadsheetLoadResult.plateMismatchCodes) > 0:
-                    flash("The following samples are for a different plate: %s" % ", ".join(str(x) for x in spreadsheetLoadResult.plateMismatchCodes), "error")
 
                 flash("File '%s' has not been uploaded" % spreadsheet.filename, "error")
 

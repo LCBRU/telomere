@@ -32,6 +32,14 @@ class BatchService():
 
         return batch
 
+    def IsBatchDuplicate(self, batch):
+        return (Batch
+            .query
+            .filter_by(plateName=batch.plateName, halfPlate=batch.halfPlate)
+            .filter(Batch.id != batch.id)
+            .count()
+            ) > 0
+
     def CompleteError(self, outstandingError):
         ce = CompletedError(
             description = outstandingError.description,

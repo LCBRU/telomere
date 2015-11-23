@@ -49,10 +49,6 @@ class SpreadsheetService():
                 result.missingSampleCodes.add(sampleCode)
                 continue
 
-            if sample.plateName != spreadsheet.batch.plateName:
-                result.plateMismatchCodes.add(sampleCode)
-                continue
-
             measurement = Measurement(
                 batchId=spreadsheet.batch.id,
                 sampleId=sample.id,
@@ -91,8 +87,7 @@ class SpreadsheetLoadResult:
 
     def __init__(self, *args, **kwargs):
         self.missingSampleCodes = Set()
-        self.plateMismatchCodes = Set()
         self.hasOutstandingErrors = False
 
     def abortUpload(self):
-        return len(self.missingSampleCodes) > 0 or len(self.plateMismatchCodes) > 0
+        return len(self.missingSampleCodes) > 0
