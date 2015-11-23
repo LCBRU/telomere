@@ -18,6 +18,7 @@ class Batch(db.Model):
     enzymeBatch = db.Column(db.Integer())
     rotorGene = db.Column(db.Integer())
     operatorUserId = db.Column(db.Integer, db.ForeignKey('user.id'))
+    failed = db.Column(db.Boolean)
 
     __mapper_args__ = {
         "version_id_col": version_id
@@ -37,6 +38,7 @@ class Batch(db.Model):
         self.enzymeBatch = kwargs.get('enzymeBatch')
         self.rotorGene = kwargs.get('rotorGene')
         self.operatorUserId = kwargs.get('operatorUserId')
+        self.failed = kwargs.get('failed')
 
     @hybrid_property
     def outstandingErrorCount(self):

@@ -19,14 +19,13 @@ def batch_edit(id):
 
     users = User.query.order_by(User.code.asc()).all()
     form.batch.operatorUserId.choices = [(u.id, u.GetCodeAndName()) for u in users]
+    form.batch.failed
 
     if form.validate_on_submit():
 
         if (str(batch.version_id) != str(form.version_id.data)):
             flash("Batch has been updated by another user, please re-enter your changes to the most recent version of the batch.", "error")
             return redirect(url_for('batch_edit', id=id))
-
-        batchService = BatchService()
 
         batch.robot = form.batch.robot.data
         batch.pcrMachine = form.batch.pcrMachine.data
@@ -40,7 +39,9 @@ def batch_edit(id):
         batch.enzymeBatch = form.batch.enzymeBatch.data
         batch.rotorGene = form.batch.rotorGene.data
         batch.operatorUserId = form.batch.operatorUserId.data
+
         db.session.commit()
+        return redirect(url_for('batch_index'))
             
     return render_template('batch/batchEdit.html', form=form)
 

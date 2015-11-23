@@ -23,6 +23,12 @@ def speadsheet_upload():
         batchService = BatchService()
         batch = batchService.SaveAndReturn(form.batch)
 
+        if (batch and batch.failed):
+            db.session.commit()
+
+            return redirect(url_for('batch_index'))
+            
+
         if (batch):
             spreadsheetService = SpreadsheetService()
             spreadsheet = spreadsheetService.SaveAndReturn(form.spreadsheet.data, batch)

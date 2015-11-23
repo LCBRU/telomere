@@ -52,7 +52,13 @@
 				<td>{{ item.plateName }}</td>
 				<td>{{ item.halfPlate }}</td>
 				<td>{{ item.datetime | datetime_format }}</td>
-				<td><a href="{{ url_for('speadsheet_download', id=item.id) }}">{{ item.spreadsheet.filename }}</a></td>
+				<td>
+					{% if item.failed %}
+						<span>Failed</span>
+					{% else %}
+						<a href="{{ url_for('speadsheet_download', id=item.id) }}">{{ item.spreadsheet.filename }}</a>
+					{% endif %}
+				</td>
 				<td>
 					{% if item.outstandingErrorCount > 0 %}
 						<a href="{{ url_for('batch_errors', id=item.id) }}">{{ item.outstandingErrorCount }} Error{% if item.outstandingErrorCount > 1 %}s{%endif%}</a>
