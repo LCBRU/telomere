@@ -15,6 +15,7 @@ Record audit information for the telomere length study
     sudo pip install Flask-WTF
     sudo pip WTForms-Components
     sudo pip install openpyxl
+    sudo pip install numpy
 
 ## Install
 
