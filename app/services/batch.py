@@ -65,11 +65,11 @@ class BatchService():
             if m.t_to is None:
                 errorDescs.add(self._missingErrorDescription('t_to'))
             elif m.t_to < 12.4 and str(m.errorCode) != '2':
-                errorDescs.add("Measurement has T_TO value of {:.2f}, but does not have error code of '2'".format(m.t_to))
+                errorDescs.add("Measurement has T_TO value of {0:.2f}, but does not have error code of '2'".format(m.t_to))
             elif m.t_to >= 12.4 and str(m.errorCode) == '2':
-                errorDescs.add("Measurement has T_TO value of {:.2f}, but has been given an error code of '2'".format(m.t_to))
+                errorDescs.add("Measurement has T_TO value of {0:.2f}, but has been given an error code of '2'".format(m.t_to))
             elif m.t_to < 12.4 and str(m.errorCode) == '2':
-                errorDescs.add("Validated error code '2': T_TO = {:.2f}.".format(m.t_to))
+                errorDescs.add("Validated error code '2': T_TO = {0:.2f}.".format(m.t_to))
 
             if m.t_amp is None:
                 errorDescs.add(self._missingErrorDescription('t_amp'))
@@ -94,11 +94,11 @@ class BatchService():
                 cv = numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100
 
                 if cv > 10 and str(m.errorCode) != '1':
-                    errorDescs.add("Samples have a covariance of {:.2f}, but do not have an error code of '1'".format(cv))
+                    errorDescs.add("Samples have a covariance of {0:.2f}, but do not have an error code of '1'".format(cv))
                 elif cv <= 10 and str(m.errorCode) == '1':
-                    errorDescs.add("Samples have a covariance of {:.2f}, but have been given an error code of '1'".format(cv))
+                    errorDescs.add("Samples have a covariance of {0:.2f}, but have been given an error code of '1'".format(cv))
                 elif cv > 10 and str(m.errorCode) == '1':
-                    errorDescs.add("Validated error code '1': Sample covariance = {:.2f}".format(cv))
+                    errorDescs.add("Validated error code '1': Sample covariance = {0:.2f}".format(cv))
 
             for ed in errorDescs:
                 result.append(OutstandingError(
