@@ -1,6 +1,9 @@
 import datetime
 from flask import Flask, g
 from flask.ext.sqlalchemy import SQLAlchemy
+import logging
+
+logging.basicConfig()
 
 telomere = Flask(__name__)
 telomere.config.from_object('app.settings')
