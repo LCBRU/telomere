@@ -23,7 +23,7 @@ CREATE INDEX idx_completedError_completedByUserId
 ON completedError (completedByUserId)
 ;
 
-CREATE TABLE completedError_audit
+CREATE TABLE completedError_audit (
         audit_id INTEGER PRIMARY KEY AUTO_INCREMENT
     ,   audit_action VARCHAR(50) NOT NULL
     ,   audit_datetime DATETIME NOT NULL
@@ -33,6 +33,7 @@ CREATE TABLE completedError_audit
     ,   sampleId INTEGER NOT NULL
     ,   completedByUserId INTEGER NOT NULL
     ,   completedDatetime DATETIME NOT NULL
+    )
 ;
 
 CREATE TRIGGER trg_completedError_insert AFTER INSERT ON completedError

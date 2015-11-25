@@ -1,5 +1,5 @@
 ALTER TABLE spreadsheet
-    ADD filepath VARCHAR(1000)
+    ADD filepath VARCHAR(500)
 ;
 
 ALTER TABLE spreadsheet

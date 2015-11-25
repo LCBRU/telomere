@@ -38,7 +38,7 @@ CREATE TRIGGER trg_sample_delete AFTER DELETE ON sample
     FOR EACH ROW
     BEGIN
         INSERT INTO sample_audit(audit_action, audit_datetime, sampleId, sampleCode, volume, plateName, well, conditionDescription, dnaTest, picoTest, manifestId)
-        VALUES ('DELETE OLD',NOW(),OLD.id, OLD.sampleCode, OLD.volume, OLD.plateName, OLD.well, OLD.conditionDescription, OLD.dnaTest, OLD.picoTest, OLD.manifest);
+        VALUES ('DELETE OLD',NOW(),OLD.id, OLD.sampleCode, OLD.volume, OLD.plateName, OLD.well, OLD.conditionDescription, OLD.dnaTest, OLD.picoTest, OLD.manifestId);
     END
 ;
 

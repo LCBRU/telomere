@@ -16,7 +16,7 @@ CREATE INDEX idx_outstandingError_sampleId
 ON outstandingError (sampleId)
 ;
 
-CREATE TABLE outstandingError_audit
+CREATE TABLE outstandingError_audit (
         audit_id INTEGER PRIMARY KEY AUTO_INCREMENT
     ,   audit_action VARCHAR(50) NOT NULL
     ,   audit_datetime DATETIME NOT NULL
@@ -24,6 +24,7 @@ CREATE TABLE outstandingError_audit
     ,   description VARCHAR(200) NOT NULL
     ,   batchId INTEGER NOT NULL
     ,   sampleId INTEGER NOT NULL
+    )
 ;
 
 CREATE TRIGGER trg_outstandingError_insert AFTER INSERT ON outstandingError

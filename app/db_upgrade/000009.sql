@@ -1,7 +1,8 @@
 ALTER TABLE spreadsheet
-    DROP filepath
+DROP INDEX uc_spreadsheet_filepath
 ;
 
 ALTER TABLE spreadsheet
-DROP UNIQUE uc_spreadsheet_filepath
+    DROP filepath
 ;
+

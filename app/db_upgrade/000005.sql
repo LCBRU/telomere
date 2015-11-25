@@ -12,10 +12,10 @@ CREATE TABLE measurement (
     )
 ;
 
-CREATE INDEX idx_sample_batchId
-ON sample (batchId)
+CREATE INDEX idx_measurement_batchId
+ON measurement (batchId)
 ;
 
-CREATE INDEX idx_sample_sampleId
-ON sample (sampleId)
+CREATE INDEX idx_measurement_sampleId
+ON measurement (sampleId)
 ;
