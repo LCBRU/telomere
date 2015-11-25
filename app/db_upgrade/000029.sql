@@ -1,13 +1,13 @@
 ALTER TABLE measurement
-      ADD errorLowT_to BOOLEAN NOT NULL
-    , ADD errorHighCv BOOLEAN NOT NULL
+      ADD errorLowT_to BOOLEAN NULL
+    , ADD errorHighCv BOOLEAN NULL
     , ADD coefficientOfVariation DECIMAL(12,6) NULL
     , ADD errorInvalidSampleCount BOOLEAN NULL
 ;
 
 ALTER TABLE measurement_audit
-      ADD errorLowT_to BOOLEAN NOT NULL
-    , ADD errorHighCv BOOLEAN NOT NULL
+      ADD errorLowT_to BOOLEAN NULL
+    , ADD errorHighCv BOOLEAN NULL
     , ADD coefficientOfVariation DECIMAL(12,6) NULL
     , ADD errorInvalidSampleCount BOOLEAN NULL
 ;

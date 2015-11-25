@@ -30,7 +30,7 @@ CREATE TABLE outstandingError_audit (
 CREATE TRIGGER trg_outstandingError_insert AFTER INSERT ON outstandingError
     FOR EACH ROW
     BEGIN
-        INSERT INTO batch_audit(audit_action, audit_datetime, outstandingErrorId, description, batchId, sampleId)
+        INSERT INTO outstandingError_audit(audit_action, audit_datetime, outstandingErrorId, description, batchId, sampleId)
         VALUES ('INSERT NEW',NOW(),NEW.id, NEW.description, NEW.batchId, NEW.sampleId);
     END
 ;
@@ -38,9 +38,9 @@ CREATE TRIGGER trg_outstandingError_insert AFTER INSERT ON outstandingError
 CREATE TRIGGER trg_outstandingError_update AFTER UPDATE ON outstandingError
     FOR EACH ROW
     BEGIN
-        INSERT INTO batch_audit(audit_action, audit_datetime, outstandingErrorid, description, batchId, sampleId)
+        INSERT INTO outstandingError_audit(audit_action, audit_datetime, outstandingErrorid, description, batchId, sampleId)
         VALUES ('UPDATE OLD',NOW(),OLD.id, OLD.description, OLD.batchId, OLD.sampleId);
-        INSERT INTO batch_audit(audit_action, audit_datetime, outstandingErrorId, description, batchId, sampleId)
+        INSERT INTO outstandingError_audit(audit_action, audit_datetime, outstandingErrorId, description, batchId, sampleId)
         VALUES ('UPDATE NEW',NOW(),NEW.id, NEW.description, NEW.batchId, NEW.sampleId);
     END
 ;
@@ -48,7 +48,7 @@ CREATE TRIGGER trg_outstandingError_update AFTER UPDATE ON outstandingError
 CREATE TRIGGER trg_outstandingError_delete AFTER DELETE ON outstandingError
     FOR EACH ROW
     BEGIN
-        INSERT INTO batch_audit(audit_action, audit_datetime, outstandingErrorid, description, batchId, sampleId)
+        INSERT INTO outstandingError_audit(audit_action, audit_datetime, outstandingErrorid, description, batchId, sampleId)
         VALUES ('DELETE OLD',NOW(),OLD.id, OLD.description, OLD.batchId, OLD.sampleId);
     END
 ;

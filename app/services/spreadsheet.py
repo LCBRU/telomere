@@ -62,9 +62,10 @@ class SpreadsheetService():
                 )
             db.session.add(measurement)
 
-        db.session.flush()
-
         batchService = BatchService()
+        batchService.SetCoefficientsOfVariation(spreadsheet.batch)
+
+        db.session.flush()
 
         for e in batchService.GetValidationErrors(spreadsheet.batch):
             db.session.add(e)

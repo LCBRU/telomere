@@ -39,7 +39,7 @@ CREATE TABLE completedError_audit (
 CREATE TRIGGER trg_completedError_insert AFTER INSERT ON completedError
     FOR EACH ROW
     BEGIN
-        INSERT INTO batch_audit(audit_action, audit_datetime, completedErrorId, description, batchId, sampleId, completedByUserId, completedDatetime)
+        INSERT INTO completedError_audit(audit_action, audit_datetime, completedErrorId, description, batchId, sampleId, completedByUserId, completedDatetime)
         VALUES ('INSERT NEW',NOW(),NEW.id, NEW.description, NEW.batchId, NEW.sampleId, NEW.completedByUserId, NEW.completedDatetime);
     END
 ;
@@ -47,9 +47,9 @@ CREATE TRIGGER trg_completedError_insert AFTER INSERT ON completedError
 CREATE TRIGGER trg_completedError_update AFTER UPDATE ON completedError
     FOR EACH ROW
     BEGIN
-        INSERT INTO batch_audit(audit_action, audit_datetime, completedErrorid, description, batchId, sampleId, completedByUserId, completedDatetime)
+        INSERT INTO completedError_audit(audit_action, audit_datetime, completedErrorid, description, batchId, sampleId, completedByUserId, completedDatetime)
         VALUES ('UPDATE OLD',NOW(),OLD.id, OLD.description, OLD.batchId, OLD.sampleId, OLD.completedByUserId, OLD.completedDatetime);
-        INSERT INTO batch_audit(audit_action, audit_datetime, completedErrorId, description, batchId, sampleId, completedByUserId, completedDatetime)
+        INSERT INTO completedError_audit(audit_action, audit_datetime, completedErrorId, description, batchId, sampleId, completedByUserId, completedDatetime)
         VALUES ('UPDATE NEW',NOW(),NEW.id, NEW.description, NEW.batchId, NEW.sampleId, NEW.completedByUserId, NEW.completedDatetime);
     END
 ;
@@ -57,7 +57,7 @@ CREATE TRIGGER trg_completedError_update AFTER UPDATE ON completedError
 CREATE TRIGGER trg_completedError_delete AFTER DELETE ON completedError
     FOR EACH ROW
     BEGIN
-        INSERT INTO batch_audit(audit_action, audit_datetime, completedErrorid, description, batchId, sampleId, completedByUserId, completedDatetime)
+        INSERT INTO completedError_audit(audit_action, audit_datetime, completedErrorid, description, batchId, sampleId, completedByUserId, completedDatetime)
         VALUES ('DELETE OLD',NOW(),OLD.id, OLD.description, OLD.batchId, OLD.sampleId, OLD.completedByUserId, OLD.completedDatetime);
     END
 ;

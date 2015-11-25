@@ -56,51 +56,22 @@ class BatchService():
         for oe in batch.outstandingErrors:
             self.CompleteError(oe)
 
+    def SetCoefficientsOfVariation(self, batch):
+        for m in batch.measurements:
+            tsValues = [ x.ts for x in batch.get_measurements_for_sample_code(m.sample.sampleCode)]
+
+            if len(tsValues) != 2:
+                m.errorInvalidSampleCount = True
+                continue
+
+            m.coefficientOfVariation = numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100
+            m.errorHighCv = m.coefficientOfVariation > 10
+
     def GetValidationErrors(self, batch):
         result = []
 
         for m in batch.measurements:
-            errorDescs = Set()
-
-            if m.t_to is None:
-                errorDescs.add(self._missingErrorDescription('t_to'))
-            elif m.t_to < 12.4 and str(m.errorCode) != '2':
-                errorDescs.add("Measurement has T_TO value of {0:.2f}, but does not have error code of '2'".format(m.t_to))
-            elif m.t_to >= 12.4 and str(m.errorCode) == '2':
-                errorDescs.add("Measurement has T_TO value of {0:.2f}, but has been given an error code of '2'".format(m.t_to))
-            elif m.t_to < 12.4 and str(m.errorCode) == '2':
-                errorDescs.add("Validated error code '2': T_TO = {0:.2f}.".format(m.t_to))
-
-            if m.t_amp is None:
-                errorDescs.add(self._missingErrorDescription('t_amp'))
-
-            if m.t is None:
-                errorDescs.add(self._missingErrorDescription('t'))
-
-            if m.s_to is None:
-                errorDescs.add(self._missingErrorDescription('s_to'))
-
-            if m.s_amp is None:
-                errorDescs.add(self._missingErrorDescription('s_amp'))
-
-            if m.s is None:
-                errorDescs.add(self._missingErrorDescription('s'))
-
-            tsValues = [ x.ts for x in batch.get_measurements_for_sample_code(m.sample.sampleCode)]
-
-            if len(tsValues) != 2:
-                errorDescs.add("Sample should have 2 measurements in the batch, but instead has %d" % len(tsValues))
-            else:
-                cv = numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100
-
-                if cv > 10 and str(m.errorCode) != '1':
-                    errorDescs.add("Samples have a covariance of {0:.2f}, but do not have an error code of '1'".format(cv))
-                elif cv <= 10 and str(m.errorCode) == '1':
-                    errorDescs.add("Samples have a covariance of {0:.2f}, but have been given an error code of '1'".format(cv))
-                elif cv > 10 and str(m.errorCode) == '1':
-                    errorDescs.add("Validated error code '1': Sample covariance = {0:.2f}".format(cv))
-
-            for ed in errorDescs:
+            for ed in m.GetValidationErrors():
                 result.append(OutstandingError(
                     description = ed,
                     batchId = batch.id,
@@ -108,6 +79,3 @@ class BatchService():
                     ))
 
         return result
-
-    def _missingErrorDescription(self, fieldname):
-        return "'%s' is missing or not valid" % fieldname

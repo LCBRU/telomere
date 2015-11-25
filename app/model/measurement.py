@@ -12,6 +12,10 @@ class Measurement(db.Model):
     s = db.Column(db.Numeric(precision=6, scale=3), nullable=True)
     ts = db.Column(db.Numeric(precision=12, scale=6), nullable=True)
     errorCode = db.Column(db.String(50))
+    errorLowT_to = db.Column(db.Boolean(), nullable=True)
+    errorHighCv = db.Column(db.Boolean(), nullable=True)
+    errorInvalidSampleCount = db.Column(db.Boolean(), nullable=True)
+    coefficientOfVariation = db.Column(db.Numeric(precision=12, scale=6), nullable=True)
 
 
     batch = db.relationship("Batch", backref=db.backref('measurements', order_by=id, cascade="all, delete-orphan"))
@@ -31,30 +35,49 @@ class Measurement(db.Model):
         if self.t is not None and self.s is not None:
             self.ts = self.t / self.s
 
+        errorLowT_to =  (self.t_to < 12.4)
+
         self.errorCode = kwargs.get('errorCode')
 
-    def GetErrorDescription(self):
-        descs = []
+    def GetValidationErrors(self):
+        result = []
 
-        if self.errorCode != '':
-            descs.append("Error Code is '%s'" % self.errorCode)
         if self.t_to is None:
-            descs.append(self._missingErrorDescription('t_to'))
+            result.append(self._missingErrorDescription('t_to'))
+
+        elif self.errorLowT_to and str(self.errorCode) != '2':
+            result.append("Measurement has T_TO value of {0:.2f}, but does not have error code of '2'".format(self.t_to))
+        elif (not self.errorLowT_to) and str(self.errorCode) == '2':
+            result.append("Measurement has T_TO value of {0:.2f}, but has been given an error code of '2'".format(self.t_to))
+        elif self.errorLowT_to and str(self.errorCode) == '2':
+            result.append("Validated error code '2': T_TO = {0:.2f}.".format(self.t_to))
+
         if self.t_amp is None:
-            descs.append(self._missingErrorDescription('t_amp'))
+            result.append(self._missingErrorDescription('t_amp'))
+
         if self.t is None:
-            descs.append(self._missingErrorDescription('t'))
+            result.append(self._missingErrorDescription('t'))
+
         if self.s_to is None:
-            descs.append(self._missingErrorDescription('s_to'))
+            result.append(self._missingErrorDescription('s_to'))
+
         if self.s_amp is None:
-            descs.append(self._missingErrorDescription('s_amp'))
+            result.append(self._missingErrorDescription('s_amp'))
+
         if self.s is None:
-            descs.append(self._missingErrorDescription('s'))
+            result.append(self._missingErrorDescription('s'))
 
-        return "; ".join(str(x) for x in descs)
+        if self.errorInvalidSampleCount:
+            result.append("Sample should have 2 measurements in the batch.")
 
-    def HasErrors(self):
-        return len(self.GetErrorDescription()) > 0
+        if self.errorHighCv and str(self.errorCode) != '1':
+            result.append("Samples have a coefficient of variation of {0:.2f}, but do not have an error code of '1'".format(self.coefficientOfVariation))
+        elif (not self.errorHighCv) and str(self.errorCode) == '1':
+            result.append("Samples have a coefficient of variation of {0:.2f}, but have been given an error code of '1'".format(self.coefficientOfVariation))
+        elif self.coefficientOfVariation and str(self.errorCode) == '1':
+            result.append("Validated error code '1': Sample coefficient of variation = {0:.2f}".format(self.coefficientOfVariation))
+
+        return result
 
     def _missingErrorDescription(self, fieldname):
         return "'%s' is missing or not valid" % fieldname
