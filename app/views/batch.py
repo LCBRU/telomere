@@ -10,9 +10,11 @@ from app.model.outstandingError import OutstandingError
 from app.model.measurement import Measurement
 from app.model.user import User
 from flask_login import current_user
+from app.helpers.wrappers import manifest_required
 
 @telomere.route("/batch/edit/<int:id>", methods=['GET','POST'])
 @login_required
+@manifest_required
 def batch_edit(id):
     batch = Batch.query.get(id)
     form = BatchEditForm(id=id, batch=batch, version_id=batch.version_id)
@@ -49,6 +51,7 @@ def batch_edit(id):
 @telomere.route("/batch/page/<int:page>")
 @telomere.route("/batch/<errorsOnly>/page/<int:page>")
 @login_required
+@manifest_required
 def batch_index(page=1, errorsOnly=None):
 
     batchQuery = Batch.query
@@ -127,8 +130,6 @@ def batch_error_complete_post():
         flash("Something went wrong", "error")
 
     return redirect(url_for('batch_index'))
-
-
 
 @telomere.route("/batch/errors/complete_all", methods=['POST'])
 @login_required

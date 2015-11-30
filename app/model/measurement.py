@@ -1,4 +1,5 @@
 from app import db
+from decimal import *
 
 class Measurement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,10 +34,9 @@ class Measurement(db.Model):
         self.s = kwargs.get('s')
 
         if self.t is not None and self.s is not None:
-            self.ts = self.t / self.s
+            self.ts = round(self.t / self.s, 6)
 
-        errorLowT_to =  (self.t_to < 12.4)
-
+        self.errorLowT_to = (self.t_to < 12.4)
         self.errorCode = kwargs.get('errorCode')
 
     def GetValidationErrors(self):

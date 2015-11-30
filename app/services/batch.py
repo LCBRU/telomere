@@ -7,6 +7,7 @@ from app.model.outstandingError import OutstandingError
 from app.model.completedError import CompletedError
 import numpy
 from sets import Set
+from decimal import *
 
 class BatchService():
 
@@ -60,11 +61,14 @@ class BatchService():
         for m in batch.measurements:
             tsValues = [ x.ts for x in batch.get_measurements_for_sample_code(m.sample.sampleCode)]
 
+            m.errorInvalidSampleCount = False
+            m.errorHighCv = False
+
             if len(tsValues) != 2:
                 m.errorInvalidSampleCount = True
                 continue
 
-            m.coefficientOfVariation = numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100
+            m.coefficientOfVariation = round(numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100, 6)
             m.errorHighCv = m.coefficientOfVariation > 10
 
     def GetValidationErrors(self, batch):

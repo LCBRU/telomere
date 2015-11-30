@@ -6,16 +6,13 @@ from app.model.manifest import Manifest
 from app.forms.manifest import ManifestUpload, ManifestDelete
 from app.services.manifest import ManifestService
 from flask_login import current_user
+from app.helpers.wrappers import manifest_required
 
 @telomere.route('/manifest/')
 @telomere.route("/manifest/page:<int:page>")
 @login_required
+@manifest_required
 def manifest_index(page=1):
-
-    manifest_count = Manifest.query.count()
-
-    if manifest_count == 0:
-        return redirect(url_for('manifest_upload'))
 
     manifests = (Manifest
         .query

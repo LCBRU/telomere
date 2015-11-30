@@ -1,4 +1,5 @@
 import os, datetime
+import sys
 from app import db
 from flask import g
 from contextlib import closing
@@ -28,6 +29,14 @@ def init_db() :
         print 'Running DB script %s' % f
 
         with open(os.path.join(dbUpgradeDir, f)) as s:
-            r = db.engine.execute(s.read())
-            db.engine.execute('INSERT INTO db_version (version, appliedDate) VALUES (%s, %s)', [int(f.split('.')[0]), datetime.datetime.now()])
+            try:
+                curUpdate = db.engine.raw_connection().cursor()
+                curUpdate.execute("START TRANSACTION;\n" + s.read() + "\nCOMMIT; ")
+                curUpdate.close()
+
+                db.engine.execute('INSERT INTO db_version (version, appliedDate) VALUES (%s, %s)', [int(f.split('.')[0]), datetime.datetime.now()])
+            except:
+                db.engine.raw_connection().cursor().execute("ROLLBACK;")
+                print "Unexpected Error: ", sys.exc_info()[0]
+                raise
 
