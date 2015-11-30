@@ -73,6 +73,45 @@ class SpreadsheetService():
 
         return result
 
+    def ValidateFormat(self, spreadsheet):
+
+        wb = load_workbook(filename = self.GetPath(spreadsheet), use_iterators = True)
+        ws = wb.worksheets[0]
+
+        return (
+            ws['A1'].value == 'Name' and
+            ws['B1'].value == 'Take Off' and
+            ws['C1'].value == 'Amplification' and
+
+            ws['D1'].value == 'Comparative Conc.' and
+            ws['E1'].value == 'Rep. Takeoff' and
+            ws['F1'].value == 'Rep. Takeoff (95% CI)' and
+
+            ws['G1'].value == 'Rep. Amp.' and
+            ws['H1'].value == 'Rep. Amp. (95% CI)' and
+            ws['I1'].value == 'Rep. Conc.' and
+            ws['J1'].value == 'Rep. Calibrator' and
+
+            ws['M1'].value == 'Name' and
+            ws['N1'].value == 'Take Off' and
+            ws['O1'].value == 'Amplification' and
+            ws['P1'].value == 'Comparative Conc.' and
+            ws['Q1'].value == 'Rep. Takeoff' and
+            ws['R1'].value == 'Rep. Takeoff (95% CI)' and
+            ws['S1'].value == 'Rep. Amp.' and
+            ws['T1'].value == 'Rep. Amp. (95% CI)' and
+            ws['U1'].value == 'Rep. Conc.' and
+            ws['V1'].value == 'Rep. Calibrator' and
+
+            ws['X1'].value == 'id' and
+            ws['Y1'].value == 't' and
+            ws['Z1'].value == 's' and
+            ws['AA1'].value == 'ts' and
+            ws['AB1'].value == 'ave ts' and
+            ws['AC1'].value == 'cv' and
+            ws['AD1'].value == 'error code'
+            )
+
     def GetPath(self, spreadsheet):
         return os.path.join(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], self.GetFilename(spreadsheet))
 

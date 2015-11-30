@@ -22,6 +22,7 @@ def speadsheet_upload():
     form.batch.operatorUserId.data = current_user.id
 
     if form.validate_on_submit():
+
         batchService = BatchService()
         batch = batchService.SaveAndReturn(form.batch)
 
@@ -31,12 +32,18 @@ def speadsheet_upload():
         if (batch and batch.failed):
             db.session.commit()
 
-            return redirect(url_for('batch_index'))
-            
+            return redirect(url_for('batch_index'))            
 
         if (batch):
             spreadsheetService = SpreadsheetService()
             spreadsheet = spreadsheetService.SaveAndReturn(form.spreadsheet.data, batch)
+
+            if not spreadsheetService.ValidateFormat(spreadsheet):
+                flash("Spreadsheet does not have a valid format", "error")
+
+                db.session.rollback()
+                return render_template('spreadsheet/upload.html', form=form)
+
             spreadsheetLoadResult = spreadsheetService.Process(spreadsheet)
 
             if spreadsheetLoadResult.abortUpload():

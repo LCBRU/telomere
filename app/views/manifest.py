@@ -33,18 +33,24 @@ def manifest_upload():
     if form.validate_on_submit():
         manifestService = ManifestService()
         manifest = manifestService.SaveAndReturn(form.manifest.data)
-        errors = manifestService.Process(manifest)
 
-        if len(errors) > 0:
-            flash("The following samples have already been loaded in a previous manifest: %s" % ", ".join(str(x) for x in errors), "error")
-
+        if not manifestService.ValidateFormat(manifest):
+            flash("Manifest spreadsheet does not have a valid format", "error")
             db.session.rollback()
+
         else:
-            flash("File '%s' Uploaded" % manifest.filename)
+            errors = manifestService.Process(manifest)
 
-            db.session.commit()
+            if len(errors) > 0:
+                flash("The following samples have already been loaded in a previous manifest: %s" % ", ".join(str(x) for x in errors), "error")
 
-            return redirect(url_for('manifest_index'))
+                db.session.rollback()
+            else:
+                flash("File '%s' Uploaded" % manifest.filename)
+
+                db.session.commit()
+
+                return redirect(url_for('manifest_index'))
 
     return render_template('manifest/upload.html', form=form)
 

@@ -52,6 +52,20 @@ class ManifestService():
 
         return errors
 
+    def ValidateFormat(self, manifest):
+
+        wb = load_workbook(filename = self.GetPath(manifest), use_iterators = True)
+        ws = wb.worksheets[0]
+
+        return (
+            ws['A1'].value == 'Plate Name' and
+            ws['B1'].value == 'WELL' and
+            ws['C1'].value == 'Sample_Name' and
+            ws['D1'].value == 'Condition' and
+            ws['E1'].value == 'Volume' and
+            ws['F1'].value == 'DNA Test (ng/ul)' and
+            ws['G1'].value == 'Pico Test (ng/ul)')
+
     def GetPath(self, manifest):
         return os.path.join(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], self.GetFilename(manifest))
 
