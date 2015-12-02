@@ -42,7 +42,6 @@ def export():
 def _writeCsv(outputFile):
     COL_BATCH_CODE = 'BatchId'
     COL_ROBOT = 'Robot'
-    COL_PCR_MACHINE = 'PcrMachine'
     COL_TEMPERATURE = 'Temperature'
     COL_DATE_PROCESSED = 'DateProcessed'
     COL_UPLOADED_BY = 'Uploaded By'
@@ -71,7 +70,6 @@ def _writeCsv(outputFile):
     fieldnames = [
         COL_BATCH_CODE,
         COL_ROBOT,
-        COL_PCR_MACHINE,
         COL_TEMPERATURE,
         COL_DATE_PROCESSED,
         COL_UPLOADED_BY,
@@ -106,7 +104,6 @@ def _writeCsv(outputFile):
         output.writerow({
             COL_BATCH_CODE : measurement.batch.id,
             COL_ROBOT : measurement.batch.robot,
-            COL_PCR_MACHINE : measurement.batch.pcrMachine,
             COL_TEMPERATURE : measurement.batch.temperature,
             COL_DATE_PROCESSED : measurement.batch.datetime,
             COL_UPLOADED_BY : measurement.batch.user.username,

@@ -29,7 +29,6 @@ def batch_edit(id):
             return redirect(url_for('batch_edit', id=id))
 
         batch.robot = form.batch.robot.data
-        batch.pcrMachine = form.batch.pcrMachine.data
         batch.temperature = form.batch.temperature.data
         batch.datetime = form.batch.datetime.data
         batch.userId = current_user.id

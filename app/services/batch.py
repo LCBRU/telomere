@@ -14,7 +14,6 @@ class BatchService():
     def SaveAndReturn(self, batchForm):
         batch = Batch(
             robot = batchForm.robot.data,
-            pcrMachine = batchForm.pcrMachine.data,
             temperature = batchForm.temperature.data,
             datetime = batchForm.datetime.data,
             userId = current_user.id,

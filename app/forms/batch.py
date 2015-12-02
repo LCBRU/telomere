@@ -6,7 +6,6 @@ from wtforms_components import read_only
 
 class BatchForm(WtfForm):
     robot = StringField('Robot', validators=[DataRequired(), Length(max=20)])
-    pcrMachine = StringField('PCR Machine', validators=[DataRequired(), Length(max=20)])
     temperature = DecimalField('Temperature', validators=[DataRequired()], places=1)
     datetime = DateTimeField('Date and Time', validators=[DataRequired()], format='%d/%m/%Y %H:%M')
     plateName = StringField('Plate Name', validators=[DataRequired(), Length(max=50)])
