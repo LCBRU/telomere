@@ -66,6 +66,10 @@ def _writeCsv(outputFile):
     COL_S_AMP = 's_amp'
     COL_S = 's'
     COL_TS = 'ts'
+    COL_CV = 'CV'
+    COL_ERRORLOWT_TO = 'Error Low T_TO'
+    COL_ERRORHIGHCV = 'Error High CV'
+    COL_ERROR_INVALIDSAMPLECOUNT = 'Error Invalid Sample Count'
 
     fieldnames = [
         COL_BATCH_CODE,
@@ -93,7 +97,11 @@ def _writeCsv(outputFile):
         COL_S_TO,
         COL_S_AMP,
         COL_S,
-        COL_TS
+        COL_TS,
+        COL_CV,
+        COL_ERRORLOWT_TO,
+        COL_ERRORHIGHCV,
+        COL_ERROR_INVALIDSAMPLECOUNT
         ]
 
     output = csv.DictWriter(outputFile, fieldnames=fieldnames)
@@ -127,5 +135,9 @@ def _writeCsv(outputFile):
             COL_S_TO : measurement.s_to,
             COL_S_AMP : measurement.s_amp,
             COL_S : measurement.s,
-            COL_TS : measurement.ts
+            COL_TS : measurement.ts,
+            COL_CV : measurement.coefficientOfVariation,
+            COL_ERRORLOWT_TO : measurement.errorLowT_to,
+            COL_ERRORHIGHCV : measurement.errorHighCv,
+            COL_ERROR_INVALIDSAMPLECOUNT : measurement.errorInvalidSampleCount
             })
