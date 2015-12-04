@@ -34,7 +34,9 @@ def set_date():
 def internal_error(exception):
     telomere.logger.error(exception)
     return render_template('500.html'), 500
-        
+
+telomere.logger.error("Yellow")
+
 import app.helpers.templateFilters
 
 from app.views import *
