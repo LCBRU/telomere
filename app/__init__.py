@@ -20,7 +20,7 @@ if not telomere.debug:
 @telomere.errorhandler(500)
 @telomere.errorhandler(Exception)
 def internal_error(exception):
-    telomere.logger.error(sys.exc_info())
+    telomere.logger.error(sys.exc_info()[0])
     return render_template('500.html'), 500
 
 db = SQLAlchemy(telomere)
