@@ -17,6 +17,7 @@ def index():
 	return render_template('index.html', batches=batches, samples=samples, measurements=measurements)
 
 @telomere.route('/export')
+@login_required
 def export():
     f = tempfile.TemporaryFile()
 
