@@ -2,6 +2,7 @@ import datetime
 from flask import Flask, g, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 import logging
+import sys
 
 telomere = Flask(__name__)
 telomere.config.from_object('app.settings')
