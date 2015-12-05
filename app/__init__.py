@@ -1,43 +1,36 @@
 import datetime
-from flask import Flask, g
+from flask import Flask, g, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 import logging
 
-    #logging.basicConfig()
-
 telomere = Flask(__name__)
 telomere.config.from_object('app.settings')
+telomere.secret_key = telomere.config['SECRET_KEY']
 
-print telomere.debug
-ADMINS = ['rab63@le.ac.uk']
 if not telomere.debug:
-    print "Hello"
     import logging
     from logging.handlers import SMTPHandler
-    mail_handler = SMTPHandler('127.0.0.1',
-                               'lcbruit@le.ac.uk',
-                               ADMINS, 'Telomere Failed')
+    mail_handler = SMTPHandler(telomere.config['SMTP_SERVER'],
+                               telomere.config['APPLICATION_EMAIL_ADDRESSES'],
+                               telomere.config['ADMIN_EMAIL_ADDRESSES'],
+                               telomere.config['ERROR_EMAIL_SUBJECT'])
     mail_handler.setLevel(logging.ERROR)
     telomere.logger.addHandler(mail_handler)
 
+@telomere.errorhandler(500)
+@telomere.errorhandler(Exception)
+def internal_error(exception):
+    telomere.logger.error(exception)
+    return render_template('500.html'), 500
 
 db = SQLAlchemy(telomere)
 
 import app.database
 database.init_db()
 
-telomere.secret_key = telomere.config['SECRET_KEY']
-
 @telomere.before_request
 def set_date():
     g.year = datetime.datetime.now().year
-
-@telomere.errorhandler(500)
-def internal_error(exception):
-    telomere.logger.error(exception)
-    return render_template('500.html'), 500
-
-telomere.logger.error("Yellow")
 
 import app.helpers.templateFilters
 

@@ -18,6 +18,7 @@ def index():
 
 @telomere.route('/export')
 def export():
+    i = 1 / 0
     f = tempfile.TemporaryFile()
 
     try:
