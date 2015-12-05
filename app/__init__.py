@@ -8,8 +8,10 @@ import logging
 telomere = Flask(__name__)
 telomere.config.from_object('app.settings')
 
+print telomere.debug
 ADMINS = ['rab63@le.ac.uk']
 if not telomere.debug:
+    print "Hello"
     import logging
     from logging.handlers import SMTPHandler
     mail_handler = SMTPHandler('127.0.0.1',
