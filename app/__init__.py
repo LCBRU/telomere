@@ -2,7 +2,7 @@ import datetime
 from flask import Flask, g, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 import logging
-import sys
+import sys, traceback
 
 telomere = Flask(__name__)
 telomere.config.from_object('app.settings')
@@ -21,7 +21,7 @@ if not telomere.debug:
 @telomere.errorhandler(500)
 @telomere.errorhandler(Exception)
 def internal_error(exception):
-    telomere.logger.error(sys.exc_info())
+    telomere.logger.error(traceback.format_exc())
     return render_template('500.html'), 500
 
 db = SQLAlchemy(telomere)
