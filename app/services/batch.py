@@ -58,7 +58,7 @@ class BatchService():
 
     def SetCoefficientsOfVariation(self, batch):
         for m in batch.measurements:
-            tsValues = [ x.ts for x in batch.get_measurements_for_sample_code(m.sample.sampleCode)]
+            tsValues = [ x.ts for x in batch.get_measurements_for_sample_code(m.sample.sampleCode) if x.ts is not None]
 
             m.errorInvalidSampleCount = False
             m.errorHighCv = False

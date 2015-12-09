@@ -44,13 +44,15 @@ class Measurement(db.Model):
 
         if self.t_to is None:
             result.append(self._missingErrorDescription('t_to'))
-
         elif self.errorLowT_to and str(self.errorCode) != '2':
             result.append("Measurement has T_TO value of {0:.2f}, but does not have error code of '2'".format(self.t_to))
         elif (not self.errorLowT_to) and str(self.errorCode) == '2':
             result.append("Measurement has T_TO value of {0:.2f}, but has been given an error code of '2'".format(self.t_to))
         elif self.errorLowT_to and str(self.errorCode) == '2':
             result.append("Validated error code '2': T_TO = {0:.2f}.".format(self.t_to))
+
+        if str(self.errorCode) != '':
+            result.append("Error code of {0}".format(self.errorCode))            
 
         if self.t_amp is None:
             result.append(self._missingErrorDescription('t_amp'))
