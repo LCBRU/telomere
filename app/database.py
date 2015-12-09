@@ -1,8 +1,9 @@
 import os, datetime
 import sys
-from app import db
+from app import db, telomere
 from flask import g
 from contextlib import closing
+import traceback
 
 dbUpgradeDir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'db_upgrade')
 
@@ -36,6 +37,7 @@ def init_db() :
 
                 db.engine.execute('INSERT INTO db_version (version, appliedDate) VALUES (%s, %s)', [int(f.split('.')[0]), datetime.datetime.now()])
             except:
+                telomere.logger.error(traceback.format_exc())
                 db.engine.raw_connection().cursor().execute("ROLLBACK;")
                 print "Unexpected Error: ", sys.exc_info()[0]
                 raise
