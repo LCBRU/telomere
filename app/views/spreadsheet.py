@@ -10,8 +10,8 @@ from app.model.user import User
 from flask_login import current_user
 from app.helpers.wrappers import manifest_required
 
-@login_required
 @telomere.route('/spreadsheet/upload/', methods=['GET', 'POST'])
+@login_required
 @manifest_required
 def speadsheet_upload():
 

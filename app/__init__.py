@@ -21,6 +21,7 @@ if not telomere.debug:
 @telomere.errorhandler(500)
 @telomere.errorhandler(Exception)
 def internal_error(exception):
+    print(traceback.format_exc())
     telomere.logger.error(traceback.format_exc())
     return render_template('500.html'), 500
 
