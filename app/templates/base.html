@@ -41,5 +41,13 @@
 
     {% block script %}{% endblock %}
 
+    <script type="text/javascript">
+      $(function () {
+          $('button').click(function(){
+            $('body').append("<div class=\"loader\"></div>");
+          });
+      });
+    </script>
+
   </body>
 </html>
