@@ -17,7 +17,7 @@ def export_all_measurements():
     f = tempfile.TemporaryFile()
 
     try:
-        _writeCsv(f)
+        _write_all_measurements_csv(f)
 
         f.seek(0)
         response = send_file(f, as_attachment=True, attachment_filename="telomere_all_measurements_%s.csv" % datetime.datetime.now().strftime('%Y%M%d%H%m%S'),
@@ -35,7 +35,7 @@ def export_all_measurements():
     finally:
 	    f.close
 
-def _writeCsv(outputFile):
+def _write_all_measurements_csv(outputFile):
     COL_BATCH_CODE = 'BatchId'
     COL_ROBOT = 'Robot'
     COL_TEMPERATURE = 'Temperature'
