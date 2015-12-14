@@ -41,17 +41,20 @@ class BatchService():
 
     def SetCoefficientsOfVariation(self, batch):
         for m in batch.measurements:
-            tsValues = [ x.ts for x in batch.get_measurements_for_sample_code(m.sample.sampleCode) if x.ts is not None]
+            measurements = batch.get_measurements_for_sample_code(m.sample.sampleCode)
+            
+            tsValues = [ x.ts for x in measurements if x.ts is not None]
 
             m.errorInvalidSampleCount = False
             m.errorHighCv = False
 
-            if len(tsValues) != 2:
+            if len(measurements) != 2:
                 m.errorInvalidSampleCount = True
                 continue
 
-            m.coefficientOfVariation = round(numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100, 6)
-            m.errorHighCv = m.coefficientOfVariation > 10
+            if len(tsValues) == 2:
+                m.coefficientOfVariation = round(numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100, 6)
+                m.errorHighCv = m.coefficientOfVariation > 10
 
     def GetValidationErrors(self, batch):
         result = []
