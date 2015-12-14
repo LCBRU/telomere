@@ -140,7 +140,8 @@ def batch_errors_complete_all():
         outstandingErrorService = OutstandingErrorService()
 
         batch = Batch.query.get(form.id.data)
-        outstandingErrorService.CompleteAllErrors(batch)
+        for oe in batch.outstandingErrors:
+            outstandingErrorService.CompleteError(oe)
 
         db.session.commit()
         flash("All error completed")

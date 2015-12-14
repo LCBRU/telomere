@@ -17,7 +17,3 @@ class OutstandingErrorService():
 
         db.session.add(ce)
         db.session.delete(outstandingError)
-
-    def CompleteAllErrors(self, batch):
-        for oe in batch.outstandingErrors:
-            self.CompleteError(oe)

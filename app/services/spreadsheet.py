@@ -5,6 +5,7 @@ from flask import flash
 from flask_login import current_user
 from app import db, telomere
 from app.services.batch import BatchService
+from app.services.outstandingError import OutstandingErrorService
 from app.model.spreadsheet import Spreadsheet
 from app.model.measurement import Measurement
 from app.model.sample import Sample
@@ -60,6 +61,12 @@ class SpreadsheetService():
                 s=row[15].value, #Col P
                 errorCode=row[29].value or '' #Col AD
                 )
+
+            outstandingErrorService = OutstandingErrorService()
+
+            for oe in sample.outstandingErrors:
+                outstandingErrorService.CompleteError(oe)
+
             db.session.add(measurement)
 
         batchService = BatchService()
