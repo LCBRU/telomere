@@ -4,7 +4,7 @@ from flask.ext.login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
 from app.services.outstandingError import OutstandingErrorService
-from app.forms.batch import BatchDelete, BatchEditForm, BatchCompleteAllErrors, BatchCompleteError
+from app.forms.batch import BatchDelete, BatchEditForm
 from app.model.batch import Batch
 from app.model.sample import Sample
 from app.model.outstandingError import OutstandingError
@@ -106,47 +106,4 @@ def batch_errors(id, page=1):
                     per_page=10,
                     error_out=False))
 
-    completeAllForm = BatchCompleteAllErrors(obj=batch)
-    completeErrorForm = BatchCompleteError()
-
-    return render_template('batch/errors.html', batch=batch, outstandingErrors=errors, completeAllForm=completeAllForm, completeErrorForm=completeErrorForm)
-
-@telomere.route("/batch/errors/complete/", methods=['POST'])
-@login_required
-def batch_error_complete_post():
-    form = BatchCompleteError()
-
-    if form.validate_on_submit():
-        outstandingErrorService = OutstandingErrorService()
-
-        oe = OutstandingError.query.get(form.id.data)
-        outstandingErrorService.CompleteError(oe)
-
-        db.session.commit()
-        flash("Error completed")
-
-        return redirect(url_for('batch_errors', id=form.batchId.data, page=form.page.data))
-    else:
-        flash("Something went wrong", "error")
-
-    return redirect(url_for('batch_index'))
-
-@telomere.route("/batch/errors/complete_all", methods=['POST'])
-@login_required
-def batch_errors_complete_all():
-    form = BatchCompleteAllErrors()
-
-    if form.validate_on_submit():
-        outstandingErrorService = OutstandingErrorService()
-
-        batch = Batch.query.get(form.id.data)
-        for oe in batch.outstandingErrors:
-            outstandingErrorService.CompleteError(oe)
-
-        db.session.commit()
-        flash("All error completed")
-    else:
-        flash("Something went wrong", "error")
-
-    return redirect(url_for('batch_index'))
-
+    return render_template('batch/errors.html', batch=batch, outstandingErrors=errors)
