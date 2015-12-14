@@ -16,7 +16,7 @@
             <li><a href="{{ url_for('index') }}">Home</a></li>
             <li><a href="{{ url_for('batch_index') }}">Batches</a></li>
             <li><a href="{{ url_for('manifest_index') }}">Manifest</a></li>
-            <li><a href="{{ url_for('export') }}">Export</a></li>
+            <li><a href="{{ url_for('export_index') }}">Exports</a></li>
           </ul>
           {% if current_user.username %}
               <p class="navbar-text navbar-right">{{ current_user.username }}: <a href="{{ url_for('logout') }}" class="navbar-link">Logout</a></p>

@@ -1,4 +1,4 @@
-from flask import g, send_file
+from flask import g, send_file, render_template
 from flask.ext.login import login_required
 import tempfile, os, csv, datetime
 
@@ -6,16 +6,21 @@ from app import telomere, db
 
 from app.model.measurement import Measurement
 
-@telomere.route('/export')
+@telomere.route('/exports')
 @login_required
-def export():
+def export_index():
+    return render_template('export_index.html')
+
+@telomere.route('/exports/all_measurements')
+@login_required
+def export_all_measurements():
     f = tempfile.TemporaryFile()
 
     try:
         _writeCsv(f)
 
         f.seek(0)
-        response = send_file(f, as_attachment=True, attachment_filename="telomere_%s.csv" % datetime.datetime.now().strftime('%Y%M%d%H%m%S'),
+        response = send_file(f, as_attachment=True, attachment_filename="telomere_all_measurements_%s.csv" % datetime.datetime.now().strftime('%Y%M%d%H%m%S'),
                              add_etags=False)
         f.seek(0, os.SEEK_END)
         size = f.tell()
