@@ -3,6 +3,7 @@ from flask import flash, redirect, url_for, request, g, render_template
 from flask.ext.login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
+from app.services.outstandingError import OutstandingErrorService
 from app.forms.batch import BatchDelete, BatchEditForm, BatchCompleteAllErrors, BatchCompleteError
 from app.model.batch import Batch
 from app.model.sample import Sample
@@ -116,10 +117,10 @@ def batch_error_complete_post():
     form = BatchCompleteError()
 
     if form.validate_on_submit():
-        batchService = BatchService()
+        outstandingErrorService = OutstandingErrorService()
 
         oe = OutstandingError.query.get(form.id.data)
-        batchService.CompleteError(oe)
+        outstandingErrorService.CompleteError(oe)
 
         db.session.commit()
         flash("Error completed")
@@ -136,10 +137,10 @@ def batch_errors_complete_all():
     form = BatchCompleteAllErrors()
 
     if form.validate_on_submit():
-        batchService = BatchService()
+        outstandingErrorService = OutstandingErrorService()
 
         batch = Batch.query.get(form.id.data)
-        batchService.CompleteAllErrors(batch)
+        outstandingErrorService.CompleteAllErrors(batch)
 
         db.session.commit()
         flash("All error completed")

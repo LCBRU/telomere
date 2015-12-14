@@ -4,7 +4,6 @@ from flask_login import current_user
 from app import db
 from app.model.batch import Batch
 from app.model.outstandingError import OutstandingError
-from app.model.completedError import CompletedError
 import numpy
 from sets import Set
 from decimal import *
@@ -39,22 +38,6 @@ class BatchService():
             .filter(Batch.id != batch.id)
             .count()
             ) > 0
-
-    def CompleteError(self, outstandingError):
-        ce = CompletedError(
-            description = outstandingError.description,
-            batchId = outstandingError.batchId,
-            sampleId = outstandingError.sampleId,
-            completedByUserId = current_user.id,
-            completedDatetime = datetime.datetime.now()
-            )
-
-        db.session.add(ce)
-        db.session.delete(outstandingError)
-
-    def CompleteAllErrors(self, batch):
-        for oe in batch.outstandingErrors:
-            self.CompleteError(oe)
 
     def SetCoefficientsOfVariation(self, batch):
         for m in batch.measurements:
