@@ -1,4 +1,4 @@
-from flask import g, send_file, render_template
+from flask import g, send_file, render_template, redirect, url_for
 from flask.ext.login import login_required
 import tempfile, os, csv, datetime
 from flask_login import current_user
@@ -7,6 +7,8 @@ from app import telomere, db
 
 from app.model.measurement import Measurement
 from app.model.outstandingError import OutstandingError
+from app.model.user import User
+from app.forms.export import ExportUserErrorsForm
 
 @telomere.route('/exports')
 @login_required
@@ -38,6 +40,37 @@ def export_my_errors():
 
     finally:
         f.close
+
+@telomere.route("/exports/user_errors")
+@login_required
+def export_user_errors():
+    form = ExportUserErrorsForm()
+    users = User.query.order_by(User.code.asc()).all()
+    form.operatorUserId.choices = [(u.id, u.GetCodeAndName()) for u in users]
+
+    return render_template('export/user_errors.html', form=form)
+
+@telomere.route("/exports/user_errors/output/", methods=['POST'])
+@login_required
+def export_user_errors_output():
+    form = ExportUserErrorsForm()
+    users = User.query.order_by(User.code.asc()).all()
+    form.operatorUserId.choices = [(u.id, u.GetCodeAndName()) for u in users]
+
+    if form.validate_on_submit():
+
+        f = tempfile.TemporaryFile()
+
+        try:
+            _write_my_errors_csv(f, form.operatorUserId.data)
+
+            return _send_csv_to_response(f)
+
+        finally:
+            f.close
+
+    return redirect(url_for('export_user_errors'))
+
 
 def _send_csv_to_response(f):
     f.seek(0)
