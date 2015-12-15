@@ -90,6 +90,7 @@ def _send_csv_to_response(f):
 
 def _write_all_measurements_csv(outputFile):
     COL_BATCH_CODE = 'BatchId'
+    COL_PROCESS_TYPE = 'Process Type'
     COL_ROBOT = 'Robot'
     COL_TEMPERATURE = 'Temperature'
     COL_DATE_PROCESSED = 'DateProcessed'
@@ -122,6 +123,7 @@ def _write_all_measurements_csv(outputFile):
 
     fieldnames = [
         COL_BATCH_CODE,
+        COL_PROCESS_TYPE,
         COL_ROBOT,
         COL_TEMPERATURE,
         COL_DATE_PROCESSED,
@@ -160,6 +162,7 @@ def _write_all_measurements_csv(outputFile):
     for measurement in Measurement.query:
         output.writerow({
             COL_BATCH_CODE : measurement.batch.id,
+            COL_PROCESS_TYPE : measurement.batch.processType,
             COL_ROBOT : measurement.batch.robot,
             COL_TEMPERATURE : measurement.batch.temperature,
             COL_DATE_PROCESSED : measurement.batch.datetime,

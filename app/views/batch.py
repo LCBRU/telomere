@@ -41,6 +41,7 @@ def batch_edit(id):
         batch.rotorGene = form.batch.rotorGene.data
         batch.operatorUserId = form.batch.operatorUserId.data
         batch.batchFailureReason = form.batch.batchFailureReason.data
+        batch.processType = form.batch.processType.data
 
         db.session.commit()
         return redirect(url_for('batch_index'))
