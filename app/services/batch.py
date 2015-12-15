@@ -35,7 +35,8 @@ class BatchService():
     def IsBatchDuplicate(self, batch):
         return (Batch
             .query
-            .filter_by(plateName=batch.plateName, halfPlate=batch.halfPlate)
+            .filter_by(plateName=batch.plateName)
+            .filter_by(halfPlate=batch.halfPlate)
             .filter(Batch.id != batch.id)
             .count()
             ) > 0

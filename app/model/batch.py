@@ -53,3 +53,12 @@ class Batch(db.Model):
 
     def get_measurements_for_sample_code(self, sampleCode):
         return [m for m in self.measurements if m.sample.sampleCode == sampleCode]
+
+    def is_duplicate(self):
+        return self.processType == "Duplicate"
+
+    def is_replate(self):
+        return self.processType == "Re-Plate"
+
+    def is_initial(self):
+        return self.processType == "Initial"

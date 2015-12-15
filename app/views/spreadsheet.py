@@ -7,6 +7,7 @@ from app.services.spreadsheet import SpreadsheetService
 from app.services.batch import BatchService
 from app.model.spreadsheet import Spreadsheet
 from app.model.user import User
+from app.model.manifest import Manifest
 from flask_login import current_user
 from app.helpers.wrappers import manifest_required
 
@@ -27,11 +28,18 @@ def speadsheet_upload():
         batch = batchService.SaveAndReturn(form.batch)
 
         if batchService.IsBatchDuplicate(batch):
-            flash("The plate name and half plate have been used in a previous batch.", "warning")
+            if batch.is_initial() or batch.is_replate():
+                flash("The plate name and half plate have been used in a previous batch.", "error")
+                db.session.rollback()
+                return render_template('spreadsheet/upload.html', form=form)
+        else:
+            if batch.is_duplicate():
+                flash("The plate name and half plate have not been used in a previous batch.", "error")
+                db.session.rollback()
+                return render_template('spreadsheet/upload.html', form=form)
 
         if (batch and batch.batchFailureReason):
             db.session.commit()
-
             return redirect(url_for('batch_index'))            
 
         if (batch):
@@ -44,11 +52,13 @@ def speadsheet_upload():
                 db.session.rollback()
                 return render_template('spreadsheet/upload.html', form=form)
 
-            spreadsheetLoadResult = spreadsheetService.Process(spreadsheet)
+            spreadsheetLoadResult = spreadsheetService.Process(spreadsheet, not batch.is_replate())
 
             if spreadsheetLoadResult.abortUpload():
                 if len(spreadsheetLoadResult.missingSampleCodes) > 0:
                     flash("The following samples are not in the manifest: %s" % ", ".join(str(x) for x in spreadsheetLoadResult.missingSampleCodes), "error")
+                if len(spreadsheetLoadResult.incorrectPlateName) > 0:
+                    flash("The following samples have a different plate name to the manifest: %s" % ", ".join(str(x) for x in spreadsheetLoadResult.incorrectPlateName), "error")
 
                 flash("File '%s' has not been uploaded" % spreadsheet.filename, "error")
 

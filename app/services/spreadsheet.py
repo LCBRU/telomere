@@ -31,7 +31,7 @@ class SpreadsheetService():
 
         return spreadsheet
 
-    def Process(self, spreadsheet):
+    def Process(self, spreadsheet, disallowPlateNameMismatch):
         result = SpreadsheetLoadResult()
 
         wb = load_workbook(filename = self.GetPath(spreadsheet), use_iterators = True)
@@ -48,6 +48,10 @@ class SpreadsheetService():
 
             if sample is None:
                 result.missingSampleCodes.add(sampleCode)
+                continue
+
+            if sample.plateName != spreadsheet.batch.plateName and disallowPlateNameMismatch:
+                result.incorrectPlateName.add(sampleCode)
                 continue
 
             measurement = Measurement(
@@ -134,7 +138,8 @@ class SpreadsheetLoadResult:
 
     def __init__(self, *args, **kwargs):
         self.missingSampleCodes = Set()
+        self.incorrectPlateName = Set()
         self.hasOutstandingErrors = False
 
     def abortUpload(self):
-        return len(self.missingSampleCodes) > 0
+        return len(self.missingSampleCodes) > 0 or len(self.incorrectPlateName) > 0
