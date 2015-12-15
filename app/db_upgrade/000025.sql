@@ -1,5 +1,5 @@
 ALTER TABLE sample
-      ADD manifestId INTEGER NOT NULL
+      ADD manifestId INTEGER NULL
 ;
 
 ALTER TABLE sample
@@ -10,7 +10,7 @@ CREATE INDEX idx_sample_manifestId ON sample (manifestId)
 ;
 
 ALTER TABLE sample_audit
-      ADD manifestId INTEGER NOT NULL
+      ADD manifestId INTEGER NULL
 ;
 
 DROP TRIGGER trg_sample_insert;

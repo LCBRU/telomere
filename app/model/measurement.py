@@ -73,7 +73,7 @@ class Measurement(db.Model):
             result.append(self._missingErrorDescription('s'))
 
         if self.errorInvalidSampleCount:
-            result.append("Sample should have 2 measurements in the batch.")
+            result.append("Sample does not have the correct amount of ts values to calculate a CV.")
 
         if self.errorHighCv and str(self.errorCode) != '1':
             result.append("Samples have a coefficient of variation of {0:.2f}, but do not have an error code of '1'".format(self.coefficientOfVariation))

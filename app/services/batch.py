@@ -50,13 +50,12 @@ class BatchService():
             m.errorInvalidSampleCount = False
             m.errorHighCv = False
 
-            if len(measurements) != 2:
+            if not m.sample.is_valid_measurement_count(len(tsValues)):
                 m.errorInvalidSampleCount = True
                 continue
 
-            if len(tsValues) == 2:
-                m.coefficientOfVariation = round(numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100, 6)
-                m.errorHighCv = m.coefficientOfVariation > 10
+            m.coefficientOfVariation = round(numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100, 6)
+            m.errorHighCv = m.coefficientOfVariation > 10
 
     def GetValidationErrors(self, batch):
         result = []

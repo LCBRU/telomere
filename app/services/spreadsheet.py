@@ -41,7 +41,7 @@ class SpreadsheetService():
 
             sampleCode = row[23].value #Col X
 
-            if (sampleCode is None or not str(sampleCode).isdigit()):
+            if (sampleCode is None or not (str(sampleCode).isdigit() or sampleCode == Sample.POOL_NAME)):
                 continue
 
             sample = Sample.query.filter_by(sampleCode=sampleCode).first()
@@ -50,7 +50,9 @@ class SpreadsheetService():
                 result.missingSampleCodes.add(sampleCode)
                 continue
 
-            if sample.plateName != spreadsheet.batch.plateName and disallowPlateNameMismatch:
+            if (    sample.plate_name_mismatch(spreadsheet.batch.plateName)
+                    and disallowPlateNameMismatch):
+
                 result.incorrectPlateName.add(sampleCode)
                 continue
 

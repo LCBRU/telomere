@@ -1,6 +1,8 @@
 from app import db
 
 class Sample(db.Model):
+    POOL_NAME = 'pool'
+
     id = db.Column(db.Integer, primary_key=True)
     sampleCode = db.Column(db.String(20))
     volume = db.Column(db.Numeric(precision=6, scale=2))
@@ -23,3 +25,15 @@ class Sample(db.Model):
         self.dnaTest = kwargs.get('dnaTest')
         self.picoTest = kwargs.get('picoTest')
         self.manifestId = kwargs.get('manifestId')
+
+    def is_pool_sample(self):
+        return self.sampleCode == Sample.POOL_NAME
+
+    def plate_name_mismatch(self, plateName):
+        return self.plateName != plateName and not self.is_pool_sample()
+
+    def is_valid_measurement_count(self, num_values):
+        if self.is_pool_sample():
+            return (num_values == 3 or num_values == 4)
+        else:
+            return num_values == 2
