@@ -23,7 +23,7 @@ class BatchService():
             enzymeBatch = batchForm.enzymeBatch.data,
             rotorGene = batchForm.rotorGene.data,
             operatorUserId = batchForm.operatorUserId.data,
-            failed = batchForm.failed.data
+            batchFailureReason = batchForm.batchFailureReason.data
             )
 
         db.session.add(batch)

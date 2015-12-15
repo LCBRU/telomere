@@ -12,7 +12,7 @@ class RequiredIfBatchNotFailed(object):
         self.message = message
 
     def __call__(self, form, field):
-        if (not form.batch.failed.data and not form.spreadsheet.data):
+        if (not form.batch.batchFailureReason.data and not form.spreadsheet.data):
             raise ValidationError(self.message)
 
 class FileInput(_FileInput):

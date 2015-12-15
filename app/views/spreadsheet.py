@@ -29,7 +29,7 @@ def speadsheet_upload():
         if batchService.IsBatchDuplicate(batch):
             flash("The plate name and half plate have been used in a previous batch.", "warning")
 
-        if (batch and batch.failed):
+        if (batch and batch.batchFailureReason):
             db.session.commit()
 
             return redirect(url_for('batch_index'))            

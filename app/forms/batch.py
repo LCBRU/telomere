@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from wtforms import StringField, BooleanField, SelectField, HiddenField, FormField, DecimalField, IntegerField, Form as WtfForm
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms.validators import DataRequired, Length, NumberRange, Optional
 from wtforms.fields.html5 import DateTimeField
 from wtforms_components import read_only
 
@@ -15,16 +15,12 @@ class BatchForm(WtfForm):
     enzymeBatch = IntegerField('Enzyme Batch', validators=[DataRequired(), NumberRange(min=1, max=20)])
     rotorGene = IntegerField('Rotor Gene', validators=[DataRequired(), NumberRange(min=1, max=8)])
     operatorUserId = SelectField('Operator', coerce=int)
-    failed = BooleanField('Failed')
+    batchFailureReason = IntegerField('Failure Reason', validators=[Optional(), NumberRange(min=1, max=8)])
 
 class BatchEditForm(Form):
     id = HiddenField('id')
     version_id = HiddenField('version_id')
     batch = FormField(BatchForm)
-
-    def __init__(self, *args, **kwargs):
-        super(BatchEditForm, self).__init__(*args, **kwargs)
-        read_only(self.batch.failed)
 
 class BatchDelete(Form):
     id = HiddenField('id')

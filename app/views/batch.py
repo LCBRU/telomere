@@ -40,6 +40,7 @@ def batch_edit(id):
         batch.enzymeBatch = form.batch.enzymeBatch.data
         batch.rotorGene = form.batch.rotorGene.data
         batch.operatorUserId = form.batch.operatorUserId.data
+        batch.batchFailureReason = form.batch.batchFailureReason.data
 
         db.session.commit()
         return redirect(url_for('batch_index'))
