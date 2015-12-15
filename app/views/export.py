@@ -2,9 +2,11 @@ from flask import g, send_file, render_template, redirect, url_for
 from flask.ext.login import login_required
 import tempfile, os, csv, datetime
 from flask_login import current_user
+from sets import Set
 
 from app import telomere, db
 
+from app.model.batch import Batch
 from app.model.measurement import Measurement
 from app.model.outstandingError import OutstandingError
 from app.model.user import User
@@ -197,6 +199,7 @@ def _write_my_errors_csv(outputFile, user_id):
     COL_DNA_TEST = 'DNA Test'
     COL_PICO_TEST = 'PICO Test'
     COL_VOLUME = 'Volume'
+    COL_ERRORS = 'Errors'
 
     fieldnames = [
         COL_SAMPLE_CODE,
@@ -205,23 +208,32 @@ def _write_my_errors_csv(outputFile, user_id):
         COL_CONDITION_DESCRIPTION,
         COL_DNA_TEST,
         COL_PICO_TEST,
-        COL_VOLUME
+        COL_VOLUME,
+        COL_ERRORS
         ]
 
-    output = csv.DictWriter(outputFile, fieldnames=fieldnames)
+    output = csv.DictWriter(outputFile, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
 
     output.writer.writerow(output.fieldnames)
 
-    for oe in (OutstandingError
-                .query
-                .join(OutstandingError.batch)
-                .filter_by(operatorUserId=user_id)):
+    batches_with_errors = Batch.query.filter_by(operatorUserId=user_id).filter(Batch.outstandingErrorCount > 0).all()
+
+    samples_with_errors = Set()
+
+    for b in batches_with_errors:
+        for m in b.measurements:
+            if len(m.sample.outstandingErrors) > 0:
+                samples_with_errors.add(m.sample)
+
+    for s in samples_with_errors:
+
         output.writerow({
-            COL_SAMPLE_CODE : oe.sample.sampleCode,
-            COL_PLATE_NAME : oe.sample.plateName,
-            COL_WELL : oe.sample.well,
-            COL_CONDITION_DESCRIPTION : oe.sample.conditionDescription,
-            COL_DNA_TEST : oe.sample.dnaTest,
-            COL_PICO_TEST : oe.sample.picoTest,
-            COL_VOLUME : oe.sample.volume
+            COL_SAMPLE_CODE : s.sampleCode,
+            COL_PLATE_NAME : s.plateName,
+            COL_WELL : s.well,
+            COL_CONDITION_DESCRIPTION : s.conditionDescription,
+            COL_DNA_TEST : s.dnaTest,
+            COL_PICO_TEST : s.picoTest,
+            COL_VOLUME : s.volume,
+            COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors]))
             })
