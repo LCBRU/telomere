@@ -15,7 +15,7 @@ class BatchForm(WtfForm):
     enzymeBatch = IntegerField('Enzyme Batch', validators=[DataRequired(), NumberRange(min=1, max=20)])
     rotorGene = IntegerField('Rotor Gene', validators=[DataRequired(), NumberRange(min=1, max=8)])
     operatorUserId = SelectField('Operator', coerce=int)
-    batchFailureReason = IntegerField('Failure Reason', validators=[Optional(), NumberRange(min=1, max=8)])
+    batchFailureReason = IntegerField('Failure Reason', validators=[Optional(), NumberRange(min=1, max=9)])
 
 class BatchEditForm(Form):
     id = HiddenField('id')
