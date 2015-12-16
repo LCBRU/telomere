@@ -31,7 +31,7 @@ class ManifestService():
         ws = wb.worksheets[0]
 
         try:
-            chunks = [iter(ws.iter_rows(row_offset=1))] * 1000
+            chunks = [iter(ws.iter_rows(row_offset=1))] * 500
 
             for c in chunks:
 #                for row in c:
