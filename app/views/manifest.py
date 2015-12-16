@@ -39,6 +39,7 @@ def manifest_upload():
             db.session.rollback()
 
         else:
+            db.session.commit()
             if not manifestService.Process(manifest):
                 flash("Manifest has not been uploaded because it contained duplicate samples or other errors", "error")
 

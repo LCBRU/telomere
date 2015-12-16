@@ -31,18 +31,30 @@ class ManifestService():
         ws = wb.worksheets[0]
 
         try:
-            db.session.bulk_insert_mappings(
-                Sample,
+            db.engine.execute(
+                Sample.__table__.insert(),
                 [{  "plateName": row[0].value,
                     "well": row[1].value,
                     "sampleCode": row[2].value,
                     "conditionDescription": row[3].value,
                     "volume": row[4].value,
-                    "dnaTest": row[5].value,
+                   "dnaTest": row[5].value,
                     "picoTest": row[6].value,
                     "manifestId": manifest.id}
-                    for row in ws.iter_rows(row_offset=1)]
-                )
+                    for row in ws.iter_rows(row_offset=1)])
+
+#            db.session.bulk_insert_mappings(
+#                Sample,
+#                [{  "plateName": row[0].value,
+#                    "well": row[1].value,
+#                    "sampleCode": row[2].value,
+#                    "conditionDescription": row[3].value,
+#                    "volume": row[4].value,
+#                    "dnaTest": row[5].value,
+#                    "picoTest": row[6].value,
+#                    "manifestId": manifest.id}
+#                    for row in ws.iter_rows(row_offset=1)]
+#                )
         except:
             telomere.logger.error(traceback.format_exc())
             return False
