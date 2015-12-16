@@ -39,10 +39,8 @@ def manifest_upload():
             db.session.rollback()
 
         else:
-            errors = manifestService.Process(manifest)
-
-            if len(errors) > 0:
-                flash("The following samples have already been loaded in a previous manifest: %s" % ", ".join(str(x) for x in errors), "error")
+            if not manifestService.Process(manifest):
+                flash("Manifest has not been uploaded because it contained duplicate samples or other errors", "error")
 
                 db.session.rollback()
             else:
