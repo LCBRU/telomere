@@ -31,30 +31,36 @@ class ManifestService():
         ws = wb.worksheets[0]
 
         try:
-            db.engine.execute(
-                Sample.__table__.insert(),
-                [{  "plateName": row[0].value,
-                    "well": row[1].value,
-                    "sampleCode": row[2].value,
-                    "conditionDescription": row[3].value,
-                    "volume": row[4].value,
-                   "dnaTest": row[5].value,
-                    "picoTest": row[6].value,
-                    "manifestId": manifest.id}
-                    for row in ws.iter_rows(row_offset=1)])
+            chunks = [iter(ws.iter_rows(row_offset=1))] * 1000
 
-#            db.session.bulk_insert_mappings(
-#                Sample,
-#                [{  "plateName": row[0].value,
-#                    "well": row[1].value,
-#                    "sampleCode": row[2].value,
-#                    "conditionDescription": row[3].value,
-#                    "volume": row[4].value,
-#                    "dnaTest": row[5].value,
-#                    "picoTest": row[6].value,
-#                    "manifestId": manifest.id}
-#                    for row in ws.iter_rows(row_offset=1)]
-#                )
+            for c in chunks:
+#                for row in c:
+#                    print row[2].value
+
+#                db.engine.execute(
+#                    Sample.__table__.insert(),
+#                    [{  "plateName": row[0].value,
+#                        "well": row[1].value,
+#                        "sampleCode": row[2].value,
+#                        "conditionDescription": row[3].value,
+#                        "volume": row[4].value,
+#                       "dnaTest": row[5].value,
+#                        "picoTest": row[6].value,
+#                        "manifestId": manifest.id}
+#                        for row in c if len(row[2].value) > 0])
+
+                db.session.bulk_insert_mappings(
+                    Sample,
+                    [{  "plateName": row[0].value,
+                        "well": row[1].value,
+                        "sampleCode": row[2].value,
+                        "conditionDescription": row[3].value,
+                        "volume": row[4].value,
+                        "dnaTest": row[5].value,
+                        "picoTest": row[6].value,
+                        "manifestId": manifest.id}
+                        for row in c]
+                    )
         except:
             telomere.logger.error(traceback.format_exc())
             return False
