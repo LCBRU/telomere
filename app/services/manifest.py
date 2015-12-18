@@ -62,6 +62,7 @@ class ManifestService():
                         "manifestId": manifest.id}
                         for row in c]
                     )
+                db.session.commit()
         except:
             telomere.logger.error(traceback.format_exc())
             return False
