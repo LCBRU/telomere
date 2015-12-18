@@ -5,7 +5,7 @@ class Sample(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     sampleCode = db.Column(db.String(20))
-    volume = db.Column(db.Numeric(precision=6, scale=2))
+    volume = db.Column(db.Integer)
     plateName = db.Column(db.String(50))
     well = db.Column(db.String(50))
     conditionDescription = db.Column(db.String(50))

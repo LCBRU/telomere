@@ -7,6 +7,7 @@ from app.model.manifest import Manifest
 from app.model.sample import Sample
 from openpyxl import load_workbook
 import traceback
+from decimal import *
 
 class ManifestService():
 
@@ -33,7 +34,7 @@ class ManifestService():
         try:
             chunks = [iter(ws.iter_rows(row_offset=1))] * 10
 
-            for c in chunks:
+            for c in chunks[1:2]:
 #                for row in c:
 #                    print row[2].value
 
@@ -56,8 +57,8 @@ class ManifestService():
                         "sampleCode": row[2].value,
                         "conditionDescription": row[3].value,
                         "volume": row[4].value,
-                        "dnaTest": row[5].value,
-                        "picoTest": row[6].value,
+                        "dnaTest": Decimal(Decimal(row[5].value).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
+                        "picoTest": Decimal(Decimal(row[6].value).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
                         "manifestId": manifest.id}
                         for row in c]
                     )
