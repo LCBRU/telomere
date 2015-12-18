@@ -57,8 +57,8 @@ class ManifestService():
                         "sampleCode": row[2].value,
                         "conditionDescription": row[3].value,
                         "volume": row[4].value,
-                        "dnaTest": Decimal(Decimal(row[5].value).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
-                        "picoTest": Decimal(Decimal(row[6].value).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
+                        "dnaTest": Decimal(Decimal(str(row[5].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
+                        "picoTest": Decimal(Decimal(str(row[6].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
                         "manifestId": manifest.id}
                         for row in c]
                     )
