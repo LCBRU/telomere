@@ -13,8 +13,12 @@ CREATE TABLE samplePlate (
 )
 ;
 
-CREATE INDEX idx_samplePlate_sampleId
+CREATE INDEX idx_samplePlate_sampleCode
 ON samplePlate (sampleCode)
+;
+
+CREATE UNIQUE INDEX idx_samplePlate_sampleCode_plateName
+ON samplePlate (sampleCode, plateName)
 ;
 
 CREATE INDEX idx_samplePlate_manifestId
