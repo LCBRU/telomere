@@ -42,19 +42,66 @@ class ManifestService():
             # too big.
             chunks = izip_longest(*[iter(ws.iter_rows(row_offset=1))]*5000, fillvalue=None)
 
+#            for c in chunks:
+#                db.session.bulk_insert_mappings(
+#                    Sample,
+#                    [{  "plateName": row[0].value,
+#                        "well": row[1].value,
+#                        "sampleCode": row[2].value,
+#                        "conditionDescription": row[3].value,
+#                        "volume": row[4].value,
+#                        "dnaTest": Decimal(Decimal(str(row[5].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
+#                        "picoTest": Decimal(Decimal(str(row[6].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
+#                        "manifestId": manifest.id}
+#                        for row in c if row is not None]
+#                    )
+#                db.session.flush()
             for c in chunks:
-                db.session.bulk_insert_mappings(
-                    Sample,
-                    [{  "plateName": row[0].value,
-                        "well": row[1].value,
+                db.session.execute(
+                    # Works only for MySQL.  Ignore duplicates
+                    'INSERT IGNORE INTO sample (sampleCode) VALUES (:sampleCode)',
+                    [{"sampleCode": row[2].value} for row in c if row is not None]
+                )
+                db.session.flush()
+
+            chunks = izip_longest(*[iter(ws.iter_rows(row_offset=1))]*5000, fillvalue=None)
+
+            for c in chunks:
+                db.session.execute(
+                    # Not tested on anything other than MySQL.
+                    """
+                        INSERT INTO samplePlate (
+                            sampleCode,
+                            volume,
+                            plateName,
+                            well,
+                            conditionDescription,
+                            dnaTest,
+                            picoTest,
+                            manifestId
+                            )
+                        VALUES (
+                            :sampleCode,
+                            :volume,
+                            :plateName,
+                            :well,
+                            :conditionDescription,
+                            :dnaTest,
+                            :picoTest,
+                            :manifestId
+                            )
+                    """,
+                    [{
                         "sampleCode": row[2].value,
-                        "conditionDescription": row[3].value,
                         "volume": row[4].value,
+                        "plateName": row[0].value,
+                        "well": row[1].value,
+                        "conditionDescription": row[3].value,
                         "dnaTest": Decimal(Decimal(str(row[5].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
                         "picoTest": Decimal(Decimal(str(row[6].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
-                        "manifestId": manifest.id}
-                        for row in c if row is not None]
-                    )
+                        "manifestId": manifest.id
+                        } for row in c if row is not None]
+                )
                 db.session.flush()
         except:
             telomere.logger.error(traceback.format_exc())
