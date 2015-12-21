@@ -8,6 +8,7 @@ from app.model.sample import Sample
 from openpyxl import load_workbook
 import traceback
 from decimal import *
+from itertools import izip_longest
 
 class ManifestService():
 
@@ -32,9 +33,11 @@ class ManifestService():
         ws = wb.worksheets[0]
 
         try:
-            chunks = [iter(ws.iter_rows(row_offset=1))] * 10
+#            chunks = [iter(ws.iter_rows(row_offset=1))] * 10
+            chunks = izip_longest(*[iter(ws.iter_rows(row_offset=1))]*5000, fillvalue=None)
 
-            for c in chunks[1:2]:
+            for c in chunks:
+#            for c in self.chunks(ws.iter_rows(row_offset=1), 1000):
 #                for row in c:
 #                    print row[2].value
 
@@ -60,14 +63,21 @@ class ManifestService():
                         "dnaTest": Decimal(Decimal(str(row[5].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
                         "picoTest": Decimal(Decimal(str(row[6].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
                         "manifestId": manifest.id}
-                        for row in c]
+                        for row in c if row is not None]
                     )
                 db.session.commit()
+
+                print 'Hello'
         except:
             telomere.logger.error(traceback.format_exc())
             return False
 
         return True
+
+#    def chunks(self, l, n):
+#        """Yield successive n-sized chunks from l."""
+#        for i in xrange(0, len(l), n):
+#            yield l[i:i+n]
 
     def ValidateFormat(self, manifest):
 
