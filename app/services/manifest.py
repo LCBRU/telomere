@@ -33,26 +33,16 @@ class ManifestService():
         ws = wb.worksheets[0]
 
         try:
-#            chunks = [iter(ws.iter_rows(row_offset=1))] * 10
+            # Divide the spreadsheet rows into chunks of
+            # no more than 5000 rows.  This is because the
+            # UoL LAMP servers are running python 2.6
+            # which for some reason errors if you
+            # try to insert too many rows at a time.
+            # I think it's because the query text gets
+            # too big.
             chunks = izip_longest(*[iter(ws.iter_rows(row_offset=1))]*5000, fillvalue=None)
 
             for c in chunks:
-#            for c in self.chunks(ws.iter_rows(row_offset=1), 1000):
-#                for row in c:
-#                    print row[2].value
-
-#                db.engine.execute(
-#                    Sample.__table__.insert(),
-#                    [{  "plateName": row[0].value,
-#                        "well": row[1].value,
-#                        "sampleCode": row[2].value,
-#                        "conditionDescription": row[3].value,
-#                        "volume": row[4].value,
-#                       "dnaTest": row[5].value,
-#                        "picoTest": row[6].value,
-#                        "manifestId": manifest.id}
-#                        for row in c if len(row[2].value) > 0])
-
                 db.session.bulk_insert_mappings(
                     Sample,
                     [{  "plateName": row[0].value,
@@ -71,11 +61,6 @@ class ManifestService():
             return False
 
         return True
-
-#    def chunks(self, l, n):
-#        """Yield successive n-sized chunks from l."""
-#        for i in xrange(0, len(l), n):
-#            yield l[i:i+n]
 
     def ValidateFormat(self, manifest):
 
