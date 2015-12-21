@@ -2,6 +2,8 @@ from app import db
 
 class SamplePlate(db.Model):
 
+    __tablename__ = 'samplePlate'
+
     id = db.Column(db.Integer, primary_key=True)
     sampleCode = db.Column(db.String(20), db.ForeignKey('sample.sampleCode'))
     volume = db.Column(db.Integer)
