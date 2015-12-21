@@ -65,9 +65,7 @@ class ManifestService():
                         "manifestId": manifest.id}
                         for row in c if row is not None]
                     )
-                db.session.commit()
-
-                print 'Hello'
+                db.session.flush()
         except:
             telomere.logger.error(traceback.format_exc())
             return False
