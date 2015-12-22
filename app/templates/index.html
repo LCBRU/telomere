@@ -7,13 +7,17 @@
     <div class="col-sm-6 col-sm-offset-3">
         <h2>Progress so far</h2>
         <table class="table">
+            <tr>
+                <td>Manifests Uploaded</td>
+                <td class="text-right">{{ '%d' | format(manifests) }}</td>
+            </tr>
+            <tr>
+                <td>Sample Plate Details Uploaded</td>
+                <td class="text-right">{{ '%d' | format(samplePlates) }}</td>
+            </tr>
         	<tr>
         		<td>Batches Processed</td>
         		<td class="text-right">{{ '%d' | format(batches) }}</td>
-        	</tr>
-        	<tr>
-        		<td>Samples Processed</td>
-                <td class="text-right">{{ '%d' | format(samples) }}</td>
         	</tr>
         	<tr>
         		<td>Measurements Processed</td>
