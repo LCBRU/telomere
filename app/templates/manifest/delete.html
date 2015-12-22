@@ -7,7 +7,7 @@
 <div class="alert alert-danger" role="alert">
   <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
   Are you sure you want to delete manifest '{{ manifest.filename }}'?
-  <strong>This will delete {{ manifest.samples | length }} samples.</strong>
+  <strong>This will delete {{ manifest.samplePlateCount() }} sample plate records.</strong>
 </div>
 
 <form method="POST" class="form-horizontal" action="{{ url_for('manifest_delete_confirm') }}">

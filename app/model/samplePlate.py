@@ -14,7 +14,7 @@ class SamplePlate(db.Model):
     picoTest = db.Column(db.Numeric(precision=6, scale=2))
     manifestId = db.Column(db.Integer, db.ForeignKey('manifest.id'))
 
-    manifest = db.relationship("Manifest", backref=db.backref('samples', order_by=id, cascade="all, delete-orphan"))
+    manifest = db.relationship("Manifest", backref=db.backref('samplePlates', order_by=id, cascade="all, delete-orphan"))
     sample = db.relationship("Sample", backref=db.backref('samplePlates', order_by=id, cascade="all, delete-orphan"))
 
     def __init__(self, *args, **kwargs):

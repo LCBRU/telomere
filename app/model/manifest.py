@@ -1,4 +1,5 @@
 from app import db
+from app.model.samplePlate import SamplePlate
 
 class Manifest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,3 +13,6 @@ class Manifest(db.Model):
         self.filename = kwargs.get('filename')
         self.uploaded = kwargs.get('uploaded')
         self.userId = kwargs.get('userId')
+
+    def samplePlateCount(self):
+        return SamplePlate.query.filter_by(manifestId=self.id).count()
