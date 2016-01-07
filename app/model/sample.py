@@ -19,6 +19,9 @@ class Sample(db.Model):
 
         return plateName not in [p.plateName for p in self.samplePlates]
 
+    def get_samplePlate_for_plateName(self, plate_name):
+        return next((p for p in self.samplePlates if p.plateName == plate_name), None)
+
     def is_valid_measurement_count(self, num_values):
         if self.is_pool_sample():
             return (num_values == 3 or num_values == 4)

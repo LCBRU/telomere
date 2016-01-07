@@ -10,6 +10,7 @@ from app.model.batch import Batch
 from app.model.measurement import Measurement
 from app.model.outstandingError import OutstandingError
 from app.model.user import User
+from app.model.samplePlate import SamplePlate
 from app.forms.export import ExportUserErrorsForm
 
 @telomere.route('/exports')
@@ -136,11 +137,6 @@ def _write_all_measurements_csv(outputFile):
         COL_ROTOR_GENE,
         COL_HUMIDITY,
         COL_SAMPLE_CODE,
-        COL_WELL,
-        COL_CONDITION_DESCRIPTION,
-        COL_DNA_TEST,
-        COL_PICO_TEST,
-        COL_VOLUME,
         COL_ERROR_CODE,
         COL_T_TO,
         COL_T_AMP,
@@ -175,11 +171,6 @@ def _write_all_measurements_csv(outputFile):
             COL_ROTOR_GENE : measurement.batch.rotorGene,
             COL_HUMIDITY : measurement.batch.humidity,
             COL_SAMPLE_CODE : measurement.sample.sampleCode,
-            COL_WELL : measurement.sample.well,
-            COL_CONDITION_DESCRIPTION : measurement.sample.conditionDescription,
-            COL_DNA_TEST : measurement.sample.dnaTest,
-            COL_PICO_TEST : measurement.sample.picoTest,
-            COL_VOLUME : measurement.sample.volume,
             COL_ERROR_CODE : measurement.errorCode,
             COL_T_TO : measurement.t_to,
             COL_T_AMP : measurement.t_amp,
@@ -224,19 +215,17 @@ def _write_my_errors_csv(outputFile, user_id):
     samples_with_errors = Set()
 
     for b in batches_with_errors:
-        for m in b.measurements:
-            if len(m.sample.outstandingErrors) > 0:
-                samples_with_errors.add(m.sample)
+        for s in Set([m.sample for m in b.measurements]):
 
-    for s in samples_with_errors:
+            samplePlate = (s.get_samplePlate_for_plateName(b.plateName) or SamplePlate())
 
-        output.writerow({
-            COL_SAMPLE_CODE : s.sampleCode,
-            COL_PLATE_NAME : s.plateName,
-            COL_WELL : s.well,
-            COL_CONDITION_DESCRIPTION : s.conditionDescription,
-            COL_DNA_TEST : s.dnaTest,
-            COL_PICO_TEST : s.picoTest,
-            COL_VOLUME : s.volume,
-            COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors]))
-            })
+            output.writerow({
+                COL_SAMPLE_CODE : s.sampleCode,
+                COL_PLATE_NAME : b.plateName,
+                COL_WELL : samplePlate.well,
+                COL_CONDITION_DESCRIPTION : samplePlate.conditionDescription,
+                COL_DNA_TEST : samplePlate.dnaTest,
+                COL_PICO_TEST : samplePlate.picoTest,
+                COL_VOLUME : samplePlate.volume,
+                COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors]))
+                })
