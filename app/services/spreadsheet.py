@@ -44,10 +44,7 @@ class SpreadsheetService():
             if (sampleCode is None or not (str(sampleCode).isdigit() or sampleCode == Sample.POOL_NAME)):
                 continue
 
-            # TODO: What to do here depends on what we're doing
-            #       for re-running samples that are on more than
-            #       one plate.  I've asked Veryan.
-            sample = Sample.query.filter(Sample.sampleCode == sampleCode).filter(Sample.plateName == spreadsheet.batch.plateName).first()
+            sample = Sample.query.filter(Sample.sampleCode == sampleCode).first()
 
             if sample is None:
                 result.missingSampleCodes.add(sampleCode)

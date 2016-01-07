@@ -15,9 +15,9 @@ class Sample(db.Model):
 
     def plate_name_mismatch(self, plateName):
         if self.is_pool_sample():
-            return false
+            return False
 
-        return plateName in [p.plateName for p in self.samplePlates]
+        return plateName not in [p.plateName for p in self.samplePlates]
 
     def is_valid_measurement_count(self, num_values):
         if self.is_pool_sample():
