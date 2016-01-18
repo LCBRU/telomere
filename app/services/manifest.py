@@ -63,8 +63,8 @@ class ManifestService():
                         "sampleCode": row[2].value,
                         "conditionDescription": row[3].value,
                         "volume": row[4].value,
-                        "dnaTest": Decimal(Decimal(str(row[5].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
-                        "picoTest": Decimal(Decimal(str(row[6].value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP)),
+                        "dnaTest": self._roundDecimal(row[5].value),
+                        "picoTest": self._roundDecimal(row[6].value),
                         "manifestId": manifest.id}
                         for row in c if row is not None]
                     )
@@ -75,6 +75,12 @@ class ManifestService():
             return False
 
         return True
+
+    def _roundDecimal(self, value):
+        if value is None:
+            return None
+
+        return Decimal(Decimal(str(value)).quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
 
     def ValidateFormat(self, manifest):
 

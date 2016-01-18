@@ -52,7 +52,7 @@ CREATE TRIGGER trg_samplePlate_insert AFTER INSERT ON samplePlate
 CREATE TRIGGER trg_samplePlate_update AFTER UPDATE ON samplePlate
     FOR EACH ROW
     BEGIN
-		INSERT INTO samplePlate_audit(audit_action, audit_datetime, samplePlateCode, sampleId, manifestId, plateName, well, volume, conditionDescription, dnaTest, picoTest)
+		INSERT INTO samplePlate_audit(audit_action, audit_datetime, samplePlateId, sampleCode, manifestId, plateName, well, volume, conditionDescription, dnaTest, picoTest)
 		VALUES ('UPDATE OLD', NOW(), OLD.id, OLD.sampleCode, OLD.manifestId, OLD.plateName, OLD.well, OLD.volume, OLD.conditionDescription, OLD.dnaTest, OLD.picoTest);
 		INSERT INTO samplePlate_audit(audit_action, audit_datetime, samplePlateId, sampleCode, manifestId, plateName, well, volume, conditionDescription, dnaTest, picoTest)
 		VALUES ('UPDATE NEW', NOW(), NEW.id, NEW.sampleCode, NEW.manifestId, NEW.plateName, NEW.well, NEW.volume, NEW.conditionDescription, NEW.dnaTest, NEW.picoTest);

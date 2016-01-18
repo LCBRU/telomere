@@ -10,8 +10,8 @@ class SamplePlate(db.Model):
     plateName = db.Column(db.String(50))
     well = db.Column(db.String(50))
     conditionDescription = db.Column(db.String(50))
-    dnaTest = db.Column(db.Numeric(precision=6, scale=2))
-    picoTest = db.Column(db.Numeric(precision=6, scale=2))
+    dnaTest = db.Column(db.Numeric(precision=6, scale=2), nullable=True)
+    picoTest = db.Column(db.Numeric(precision=6, scale=2), nullable=True)
     manifestId = db.Column(db.Integer, db.ForeignKey('manifest.id'))
 
     manifest = db.relationship("Manifest", backref=db.backref('samplePlates', order_by=id, cascade="all, delete-orphan"))
