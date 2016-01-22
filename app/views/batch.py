@@ -49,26 +49,19 @@ def batch_edit(id):
     return render_template('batch/batchEdit.html', form=form)
 
 @telomere.route('/batch/')
-@telomere.route('/batch/<errorsOnly>')
 @telomere.route("/batch/page/<int:page>")
-@telomere.route("/batch/<errorsOnly>/page/<int:page>")
 @login_required
 @manifest_required
-def batch_index(page=1, errorsOnly=None):
+def batch_index(page=1):
 
-    batchQuery = Batch.query
-
-    if errorsOnly is not None and len(errorsOnly) > 0:
-        batchQuery = Batch.query.filter(Batch.outstandingErrorCount > 0)
-
-    batches = (batchQuery
+    batches = (Batch.query
         .order_by(Batch.id.desc())
         .paginate(
             page=page,
             per_page=10,
             error_out=False))
 
-    return render_template('batch/index.html', batches=batches, errorsOnly=errorsOnly)
+    return render_template('batch/index.html', batches=batches)
 
 
 @telomere.route("/batch/delete/<int:id>")
@@ -92,20 +85,3 @@ def batch_delete_confirm():
             flash("Deleted batch '%s'." % batch.id)
             
     return redirect(url_for('batch_index'))
-
-@telomere.route("/batch/<int:id>/errors/")
-@telomere.route("/batch/<int:id>/errors/<int:page>")
-@login_required
-def batch_errors(id, page=1):
-    batch = Batch.query.get(id)
-    errors = (OutstandingError
-                .query
-                .filter_by(batchId=id)
-                .join(OutstandingError.sample)
-                .order_by(Sample.sampleCode)
-                .paginate(
-                    page=page,
-                    per_page=10,
-                    error_out=False))
-
-    return render_template('batch/errors.html', batch=batch, outstandingErrors=errors)
