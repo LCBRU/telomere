@@ -37,7 +37,7 @@ def export_my_errors():
     f = tempfile.TemporaryFile()
 
     try:
-        _write_my_errors_csv(f, current_user.id)
+        _write_user_errors_csv(f, current_user.id)
 
         return _send_csv_to_response(f)
 
@@ -65,7 +65,7 @@ def export_user_errors_output():
         f = tempfile.TemporaryFile()
 
         try:
-            _write_my_errors_csv(f, form.operatorUserId.data)
+            _write_user_errors_csv(f, form.operatorUserId.data)
 
             return _send_csv_to_response(f)
 
@@ -99,6 +99,7 @@ def _write_all_measurements_csv(outputFile):
     COL_PLATE_NAME = 'Plate Name'
     COL_HALF_PLATE = 'Half Plate'
     COL_OPERATOR = 'Operator'
+    COL_OPERATOR_CODE = 'Operator Code'
     COL_PRIMER_BATCH = 'Primer Batch'
     COL_ENZYME_BATCH = 'Enzyme Batch'
     COL_ROTOR_GENE = 'Rotor Gene'
@@ -132,6 +133,7 @@ def _write_all_measurements_csv(outputFile):
         COL_PLATE_NAME,
         COL_HALF_PLATE,
         COL_OPERATOR,
+        COL_OPERATOR_CODE,
         COL_PRIMER_BATCH,
         COL_ENZYME_BATCH,
         COL_ROTOR_GENE,
@@ -166,6 +168,7 @@ def _write_all_measurements_csv(outputFile):
             COL_PLATE_NAME : measurement.batch.plateName,
             COL_HALF_PLATE : measurement.batch.halfPlate,
             COL_OPERATOR : measurement.batch.operator.username,
+            COL_OPERATOR_CODE : measurement.batch.operator.code,
             COL_PRIMER_BATCH : measurement.batch.primerBatch,
             COL_ENZYME_BATCH : measurement.batch.enzymeBatch,
             COL_ROTOR_GENE : measurement.batch.rotorGene,
@@ -185,7 +188,7 @@ def _write_all_measurements_csv(outputFile):
             COL_ERROR_INVALIDSAMPLECOUNT : measurement.errorInvalidSampleCount
             })
 
-def _write_my_errors_csv(outputFile, user_id):
+def _write_user_errors_csv(outputFile, user_id):
     COL_SAMPLE_CODE = 'Sample Code'
     COL_PLATE_NAME = 'Plate Name'
     COL_WELL = 'Well'
