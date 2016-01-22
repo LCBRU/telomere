@@ -196,7 +196,8 @@ def _write_user_errors_csv(outputFile, user_id):
     COL_DNA_TEST = 'DNA Test'
     COL_PICO_TEST = 'PICO Test'
     COL_VOLUME = 'Volume'
-    COL_ERRORS = 'Errors'
+    COL_ERROR_CODE = 'Error Code'
+    COL_ERRORS = 'Other Errors'
 
     fieldnames = [
         COL_SAMPLE_CODE,
@@ -206,6 +207,7 @@ def _write_user_errors_csv(outputFile, user_id):
         COL_DNA_TEST,
         COL_PICO_TEST,
         COL_VOLUME,
+        COL_ERROR_CODE,
         COL_ERRORS
         ]
 
@@ -222,6 +224,18 @@ def _write_user_errors_csv(outputFile, user_id):
 
             samplePlate = (s.get_samplePlate_for_plateName(b.plateName) or SamplePlate())
 
+            # I'm aware that this is not that great, but basically the user
+            # isn't really bothered about errors other than the error code
+            # that they're entering in the spreadsheet.  So this is an
+            # attempt to compromise and show them all the errors, but
+            # with their error code in a separate column.
+            # Oh!  And they're only interested in the highest error
+            # code value.
+            errorCodes = [oe.description[14:] for oe in s.outstandingErrors if oe.description[:14] == 'Error code of ']
+            maxErrorCode = ''
+            if errorCodes:
+                maxErrorCode = max(errorCodes)
+
             output.writerow({
                 COL_SAMPLE_CODE : s.sampleCode,
                 COL_PLATE_NAME : b.plateName,
@@ -230,5 +244,6 @@ def _write_user_errors_csv(outputFile, user_id):
                 COL_DNA_TEST : samplePlate.dnaTest,
                 COL_PICO_TEST : samplePlate.picoTest,
                 COL_VOLUME : samplePlate.volume,
-                COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors]))
+                COL_ERROR_CODE : maxErrorCode,
+                COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors if oe.description[:14] != 'Error code of ' and oe.description[:10] != 'Validated ']))
                 })
