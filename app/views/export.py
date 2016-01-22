@@ -224,16 +224,10 @@ def _write_user_errors_csv(outputFile, user_id):
 
             samplePlate = (s.get_samplePlate_for_plateName(b.plateName) or SamplePlate())
 
-            # I'm aware that this is not that great, but basically the user
-            # isn't really bothered about errors other than the error code
-            # that they're entering in the spreadsheet.  So this is an
-            # attempt to compromise and show them all the errors, but
-            # with their error code in a separate column.
-            # Oh!  And they're only interested in the highest error
-            # code value.
-            errorCodes = [oe.description[14:] for oe in s.outstandingErrors if oe.description[:14] == 'Error code of ']
+            errorCodes = [m.errorCode for m in s.measurements]
+
             maxErrorCode = ''
-            if errorCodes:
+            if '' not in errorCodes and errorCodes:
                 maxErrorCode = max(errorCodes)
 
             output.writerow({
