@@ -20,7 +20,7 @@ def speadsheet_upload():
 
     users = User.query.order_by(User.code.asc()).all()
     form.batch.operatorUserId.choices = [(u.id, u.GetCodeAndName()) for u in users]
-    form.batch.operatorUserId.data = current_user.id
+    form.batch.operatorUserId.data = form.batch.operatorUserId.data or current_user.id
 
     if form.validate_on_submit():
 
