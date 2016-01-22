@@ -239,6 +239,5 @@ def _write_user_errors_csv(outputFile, user_id):
                 COL_PICO_TEST : samplePlate.picoTest,
                 COL_VOLUME : samplePlate.volume,
                 COL_ERROR_CODE : maxErrorCode,
-#                COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors if oe.description[:14] != 'Error code of ' and oe.description[:10] != 'Validated ']))
-                COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors]))
+                COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors if oe.description[:14] != 'Error code of ' and oe.description[:10] != 'Validated ']))
                 })
