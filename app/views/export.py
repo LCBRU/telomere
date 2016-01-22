@@ -218,7 +218,7 @@ def _write_user_errors_csv(outputFile, user_id):
     samples_with_errors = Set()
 
     for b in batches_with_errors:
-        for s in Set([m.sample for m in b.measurements]):
+        for s in Set([m.sample for m in b.measurements if len(m.sample.outstandingErrors) > 0]):
 
             samplePlate = (s.get_samplePlate_for_plateName(b.plateName) or SamplePlate())
 
