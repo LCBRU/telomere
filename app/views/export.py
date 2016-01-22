@@ -224,7 +224,7 @@ def _write_user_errors_csv(outputFile, user_id):
 
             samplePlate = (s.get_samplePlate_for_plateName(b.plateName) or SamplePlate())
 
-            errorCodes = [m.errorCode for m in s.measurements]
+            errorCodes = [m.errorCode for m in b.measurements if m.sample == s]
 
             maxErrorCode = ''
             if '' not in errorCodes and errorCodes:
