@@ -51,7 +51,7 @@
 					{% if item.failed %}
 						<span>Failed</span>
 					{% else %}
-						<a href="{{ url_for('speadsheet_download', id=item.id) }}">{{ item.spreadsheet.filename }}</a>
+						<a href="{{ url_for('speadsheet_download', id=item.spreadsheet.id) }}">{{ item.spreadsheet.filename }}</a>
 					{% endif %}
 				</td>
 			</tr>
