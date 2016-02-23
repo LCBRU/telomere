@@ -81,6 +81,8 @@ def speadsheet_download(id):
     spreadsheet = Spreadsheet.query.get(id)
     service = SpreadsheetService()
 
+    print dir(spreadsheet)
+
     return send_from_directory(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], service.GetFilename(spreadsheet), as_attachment=True, attachment_filename=spreadsheet.filename)
 
 
