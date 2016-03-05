@@ -4,6 +4,7 @@ import tempfile, os, csv, datetime
 from flask_login import current_user
 from sets import Set
 from sqlalchemy.orm import joinedload
+from sqlalchemy.sql import text
 from app import telomere, db
 
 from app.model.batch import Batch
@@ -157,6 +158,76 @@ def write_all_measurements_csv(outputFile):
 
     output.writer.writerow(output.fieldnames)
 
+    cmd = """
+        SELECT
+              b.id AS batchId
+            , b.processType
+            , b.robot
+            , b.temperature
+            , b.datetime
+            , u.username
+            , b.plateName
+            , b.halfPlate
+            , o.username AS operator_name
+            , o.code AS operator_code
+            , b.primerBatch
+            , b.enzymeBatch
+            , b.rotorGene
+            , b.humidity
+            , s.sampleCode
+            , m.errorCode
+            , m.t_to
+            , m.t_amp
+            , m.t
+            , m.s_to
+            , m.s_amp
+            , m.s
+            , m.ts
+            , m.coefficientOfVariation
+            , m.errorLowT_to
+            , m.errorHighCv
+            , m.errorInvalidSampleCount
+        FROM    measurement m
+        JOIN    batch b ON b.id = m.batchId
+        JOIN    sample s ON s.id = m.sampleId
+        JOIN    user u ON u.id = b.userId
+        JOIN    user o ON o.id = b.operatorUserId
+        ;
+    """
+
+    measurements = db.engine.execute(text(cmd))
+    for m in measurements:
+        output.writerow({
+            COL_BATCH_CODE : m[0],
+            COL_PROCESS_TYPE : m[1],
+            COL_ROBOT : m[2],
+            COL_TEMPERATURE : m[3],
+            COL_DATE_PROCESSED : m[4],
+            COL_UPLOADED_BY : m[5],
+            COL_PLATE_NAME : m[6],
+            COL_HALF_PLATE : m[7],
+            COL_OPERATOR : m[8],
+            COL_OPERATOR_CODE : m[9],
+            COL_PRIMER_BATCH : m[10],
+            COL_ENZYME_BATCH : m[11],
+            COL_ROTOR_GENE : m[12],
+            COL_HUMIDITY : m[13],
+            COL_SAMPLE_CODE : m[14],
+            COL_ERROR_CODE : m[15],
+            COL_T_TO : m[16],
+            COL_T_AMP : m[17],
+            COL_T : m[18],
+            COL_S_TO : m[19],
+            COL_S_AMP : m[20],
+            COL_S : m[21],
+            COL_TS : m[22],
+            COL_CV : m[23],
+            COL_ERRORLOWT_TO : m[24],
+            COL_ERRORHIGHCV : m[25],
+            COL_ERROR_INVALIDSAMPLECOUNT : m[26]
+            })
+
+'''
     for measurement in Measurement.query.options(joinedload(Measurement.batch).joinedload("user")).options(joinedload(Measurement.sample)):
         output.writerow({
             COL_BATCH_CODE : measurement.batch.id,
@@ -187,6 +258,7 @@ def write_all_measurements_csv(outputFile):
             COL_ERRORHIGHCV : measurement.errorHighCv,
             COL_ERROR_INVALIDSAMPLECOUNT : measurement.errorInvalidSampleCount
             })
+'''
 
 def _write_user_errors_csv(outputFile, user_id):
     COL_SAMPLE_CODE = 'Sample Code'
