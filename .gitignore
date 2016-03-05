@@ -65,3 +65,4 @@ venv
 #uploads directory
 uploads
 
+app/static/exports/*
