@@ -294,32 +294,3 @@ def _write_user_errors_csv(outputFile, user_id):
             COL_ERROR_CODE : m[7],
             COL_ERRORS : m[8]
         })
-
-'''
-    batches_with_errors = Batch.query.filter_by(operatorUserId=user_id).filter(Batch.outstandingErrorCount > 0).all()
-
-    samples_with_errors = Set()
-
-    for b in batches_with_errors:
-        for s in Set([m.sample for m in b.measurements if len(m.sample.outstandingErrors) > 0]):
-
-            samplePlate = (s.get_samplePlate_for_plateName(b.plateName) or SamplePlate())
-
-            errorCodes = [m.errorCode for m in b.measurements if m.sample == s]
-
-            maxErrorCode = ''
-            if '' not in errorCodes and errorCodes:
-                maxErrorCode = max(errorCodes)
-
-            output.writerow({
-                COL_SAMPLE_CODE : s.sampleCode,
-                COL_PLATE_NAME : b.plateName,
-                COL_WELL : samplePlate.well,
-                COL_CONDITION_DESCRIPTION : samplePlate.conditionDescription,
-                COL_DNA_TEST : samplePlate.dnaTest,
-                COL_PICO_TEST : samplePlate.picoTest,
-                COL_VOLUME : samplePlate.volume,
-                COL_ERROR_CODE : maxErrorCode,
-                COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors if oe.description[:14] != 'Error code of ' and oe.description[:10] != 'Validated ']))
-                })
-'''
