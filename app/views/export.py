@@ -227,39 +227,6 @@ def write_all_measurements_csv(outputFile):
             COL_ERROR_INVALIDSAMPLECOUNT : m[26]
             })
 
-'''
-    for measurement in Measurement.query.options(joinedload(Measurement.batch).joinedload("user")).options(joinedload(Measurement.sample)):
-        output.writerow({
-            COL_BATCH_CODE : measurement.batch.id,
-            COL_PROCESS_TYPE : measurement.batch.processType,
-            COL_ROBOT : measurement.batch.robot,
-            COL_TEMPERATURE : measurement.batch.temperature,
-            COL_DATE_PROCESSED : measurement.batch.datetime,
-            COL_UPLOADED_BY : measurement.batch.user.username,
-            COL_PLATE_NAME : measurement.batch.plateName,
-            COL_HALF_PLATE : measurement.batch.halfPlate,
-            COL_OPERATOR : measurement.batch.operator.username,
-            COL_OPERATOR_CODE : measurement.batch.operator.code,
-            COL_PRIMER_BATCH : measurement.batch.primerBatch,
-            COL_ENZYME_BATCH : measurement.batch.enzymeBatch,
-            COL_ROTOR_GENE : measurement.batch.rotorGene,
-            COL_HUMIDITY : measurement.batch.humidity,
-            COL_SAMPLE_CODE : measurement.sample.sampleCode,
-            COL_ERROR_CODE : measurement.errorCode,
-            COL_T_TO : measurement.t_to,
-            COL_T_AMP : measurement.t_amp,
-            COL_T : measurement.t,
-            COL_S_TO : measurement.s_to,
-            COL_S_AMP : measurement.s_amp,
-            COL_S : measurement.s,
-            COL_TS : measurement.ts,
-            COL_CV : measurement.coefficientOfVariation,
-            COL_ERRORLOWT_TO : measurement.errorLowT_to,
-            COL_ERRORHIGHCV : measurement.errorHighCv,
-            COL_ERROR_INVALIDSAMPLECOUNT : measurement.errorInvalidSampleCount
-            })
-'''
-
 def _write_user_errors_csv(outputFile, user_id):
     COL_SAMPLE_CODE = 'Sample Code'
     COL_PLATE_NAME = 'Plate Name'
@@ -287,6 +254,48 @@ def _write_user_errors_csv(outputFile, user_id):
 
     output.writer.writerow(output.fieldnames)
 
+    cmd = """
+    SELECT
+          s.sampleCode
+        , b.plateName
+        , sp.well
+        , sp.conditionDescription
+        , sp.dnaTest
+        , sp.picoTest
+        , sp.volume
+        , MAX(m.errorCode) AS errorCode
+        , GROUP_CONCAT(DISTINCT oe.description SEPARATOR '; ') AS errors
+    FROM    measurement m
+    JOIN    outstandingError oe ON  oe.sampleId = m.sampleId
+                                AND oe.batchId = m.batchId
+    JOIN    sample s ON s.id = m.sampleId
+    JOIN    batch b ON b.id = m.batchId
+    LEFT JOIN   samplePlate sp ON   sp.sampleCode = s.sampleCode
+                                AND sp.plateName = b.plateName
+    WHERE   oe.description NOT LIKE 'Error code of %'
+        AND oe.description NOT LIKE 'Validated %'
+        AND b.operatorUserId = :userId
+    GROUP BY
+          m.batchId
+        , m.sampleId
+    ;
+    """
+
+    measurements = db.engine.execute(text(cmd), userId = user_id)
+    for m in measurements:
+        output.writerow({
+            COL_SAMPLE_CODE : m[0],
+            COL_PLATE_NAME : m[1],
+            COL_WELL : m[2],
+            COL_CONDITION_DESCRIPTION : m[3],
+            COL_DNA_TEST : m[4],
+            COL_PICO_TEST : m[5],
+            COL_VOLUME : m[6],
+            COL_ERROR_CODE : m[7],
+            COL_ERRORS : m[8]
+        })
+
+'''
     batches_with_errors = Batch.query.filter_by(operatorUserId=user_id).filter(Batch.outstandingErrorCount > 0).all()
 
     samples_with_errors = Set()
@@ -313,3 +322,4 @@ def _write_user_errors_csv(outputFile, user_id):
                 COL_ERROR_CODE : maxErrorCode,
                 COL_ERRORS : "; ".join(Set([oe.description for oe in s.outstandingErrors if oe.description[:14] != 'Error code of ' and oe.description[:10] != 'Validated ']))
                 })
+'''
