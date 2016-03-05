@@ -3,7 +3,7 @@ from flask.ext.login import login_required
 import tempfile, os, csv, datetime
 from flask_login import current_user
 from sets import Set
-
+from sqlalchemy.orm import joinedload
 from app import telomere, db
 
 from app.model.batch import Batch
@@ -157,7 +157,7 @@ def _write_all_measurements_csv(outputFile):
 
     output.writer.writerow(output.fieldnames)
 
-    for measurement in Measurement.query:
+    for measurement in Measurement.query.options(joinedload(Measurement.sample)).options(joinedload(Measurement.batch)):
         output.writerow({
             COL_BATCH_CODE : measurement.batch.id,
             COL_PROCESS_TYPE : measurement.batch.processType,
