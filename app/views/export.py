@@ -24,7 +24,7 @@ def export_all_measurements():
     f = tempfile.TemporaryFile()
 
     try:
-        _write_all_measurements_csv(f)
+        write_all_measurements_csv(f)
 
         return _send_csv_to_response(f)
 
@@ -89,7 +89,7 @@ def _send_csv_to_response(f):
     
     return response
 
-def _write_all_measurements_csv(outputFile):
+def write_all_measurements_csv(outputFile):
     COL_BATCH_CODE = 'BatchId'
     COL_PROCESS_TYPE = 'Process Type'
     COL_ROBOT = 'Robot'
@@ -157,7 +157,7 @@ def _write_all_measurements_csv(outputFile):
 
     output.writer.writerow(output.fieldnames)
 
-    for measurement in Measurement.query.options(joinedload(Measurement.sample)).options(joinedload(Measurement.batch)):
+    for measurement in Measurement.query.options(joinedload(Measurement.batch).joinedload("user")).options(joinedload(Measurement.sample)):
         output.writerow({
             COL_BATCH_CODE : measurement.batch.id,
             COL_PROCESS_TYPE : measurement.batch.processType,
