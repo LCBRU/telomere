@@ -75,12 +75,13 @@ class Measurement(db.Model):
         if self.errorInvalidSampleCount:
             result.append("Sample does not have the correct amount of ts values to calculate a CV.")
 
-        if self.errorHighCv and str(self.errorCode) != '1':
-            result.append("Samples have a coefficient of variation of {0:.2f}, but do not have an error code of '1'".format(self.coefficientOfVariation))
-        elif (not self.errorHighCv) and str(self.errorCode) == '1':
-            result.append("Samples have a coefficient of variation of {0:.2f}, but have been given an error code of '1'".format(self.coefficientOfVariation))
-        elif self.coefficientOfVariation and str(self.errorCode) == '1':
-            result.append("Validated error code '1': Sample coefficient of variation = {0:.2f}".format(self.coefficientOfVariation))
+        if self.coefficientOfVariation is not None:
+            if self.errorHighCv and str(self.errorCode) != '1':
+                result.append("Samples have a coefficient of variation of {0:.2f}, but do not have an error code of '1'".format(self.coefficientOfVariation))
+            elif (not self.errorHighCv) and str(self.errorCode) == '1':
+                result.append("Samples have a coefficient of variation of {0:.2f}, but have been given an error code of '1'".format(self.coefficientOfVariation))
+            elif self.coefficientOfVariation and str(self.errorCode) == '1':
+                result.append("Validated error code '1': Sample coefficient of variation = {0:.2f}".format(self.coefficientOfVariation))
 
         return result
 
