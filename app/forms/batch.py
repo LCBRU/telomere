@@ -13,7 +13,7 @@ class BatchForm(WtfForm):
     humidity = IntegerField('Humidity', validators=[DataRequired(), NumberRange(min=20, max=65)])
     primerBatch = IntegerField('Primer Batch', validators=[DataRequired(), NumberRange(min=1, max=20)])
     enzymeBatch = IntegerField('Enzyme Batch', validators=[DataRequired(), NumberRange(min=1, max=20)])
-    rotorGene = IntegerField('Rotor Gene', validators=[DataRequired(), NumberRange(min=1, max=8)])
+    rotorGene = IntegerField('Rotor Gene', validators=[DataRequired(), NumberRange(min=1, max=9)])
     operatorUserId = SelectField('Operator', coerce=int)
     batchFailureReason = IntegerField('Failure Reason', validators=[Optional(), NumberRange(min=1, max=9)])
     processType = SelectField('Process Type', choices=[('Initial', 'Initial'), ('Duplicate', 'Duplicate'), ('Re-Plate', 'Re-Plate')])

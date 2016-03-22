@@ -54,6 +54,16 @@ def speadsheet_upload():
 
             spreadsheetLoadResult = spreadsheetService.Process(spreadsheet, not batch.is_replate())
 
+            if batch.has_no_pool_samples():
+                flash("Batch has no pool samples", "error")
+                db.session.rollback()
+                return render_template('spreadsheet/upload.html', form=form)
+
+            if batch.has_invalid_pool_ts_average():
+                flash("Batch has incorrect average pool TS value", "error")
+                db.session.rollback()
+                return render_template('spreadsheet/upload.html', form=form)
+
             if spreadsheetLoadResult.abortUpload():
                 if len(spreadsheetLoadResult.missingSampleCodes) > 0:
                     flash("The following samples are not in the manifest: %s" % ", ".join(str(x) for x in spreadsheetLoadResult.missingSampleCodes), "error")
