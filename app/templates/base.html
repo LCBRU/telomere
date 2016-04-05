@@ -43,7 +43,7 @@
 
     <script type="text/javascript">
       $(function () {
-          $('button').not('.no-wait').click(function(){
+          $('form').not('.no-wait').submit(function(){
             $('body').append("<div class=\"loader\"></div>");
           });
       });

@@ -5,7 +5,7 @@
 
 <h2>Export User Errors</h2>
 
-<form method="POST" class="form-horizontal" action="{{ url_for('export_user_errors_output') }}">
+<form method="POST" class="form-horizontal no-wait" action="{{ url_for('export_user_errors_output') }}">
     {{ form.hidden_tag() }}
 
     <div class="col-sm-5">
@@ -14,7 +14,7 @@
 
     <div class="col-sm-12 text-right">
         <a href="{{ url_for('export_index') }}" class="btn btn-default" role="button">Cancel</a>
-        <button type="submit" class="btn btn-primary no-wait">Export</button>
+        <button type="submit" class="btn btn-primary">Export</button>
     </div>
 </form>
 
