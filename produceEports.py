@@ -1,4 +1,4 @@
-#!venv/bin/python
+#!/usr/bin/env python
 from app.views.export import write_all_measurements_csv
 import tempfile
 
