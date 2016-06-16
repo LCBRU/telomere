@@ -276,8 +276,13 @@ def _write_user_errors_csv(outputFile, user_id):
         AND oe.description NOT LIKE 'Validated %'
         AND b.operatorUserId = :userId
     GROUP BY
-          m.batchId
-        , m.sampleId
+          s.sampleCode
+        , b.plateName
+        , sp.well
+        , sp.conditionDescription
+        , sp.dnaTest
+        , sp.picoTest
+        , sp.volume
     ;
     """
 
