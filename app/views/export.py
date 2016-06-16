@@ -272,8 +272,7 @@ def _write_user_errors_csv(outputFile, user_id):
     JOIN    batch b ON b.id = m.batchId
     LEFT JOIN   samplePlate sp ON   sp.sampleCode = s.sampleCode
                                 AND sp.plateName = b.plateName
-    WHERE   oe.description NOT LIKE 'Error code of %'
-        AND oe.description NOT LIKE 'Validated %'
+    WHERE   oe.description NOT LIKE 'Validated %'
         AND b.operatorUserId = :userId
     GROUP BY
           s.sampleCode
