@@ -7,7 +7,7 @@
     <div class="col-sm-6 col-sm-offset-3">
         <h2>Available Exports</h2>
         <ul>
-            <li><a href="{{ url_for('export_all_measurements') }}">Export All Measurements</a></li>
+            <li><a href="{{ url_for('static', filename='exports/AllMeasurements.csv') }}">Export All Measurements</a></li>
             <li><a href="{{ url_for('export_my_errors') }}">Export My Outstanding Errors</a></li>
             <li><a href="{{ url_for('export_user_errors') }}">Export User Outstanding Errors</a></li>
         </ul>
