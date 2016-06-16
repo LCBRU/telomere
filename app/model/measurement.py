@@ -31,11 +31,17 @@ class Measurement(db.Model):
         self.s_to = kwargs.get('s_to')
         self.s_amp = kwargs.get('s_amp')
         self.s = kwargs.get('s')
+        primerBatch = kwargs.get('primerBatch')
+
+        if (primerBatch == 3):
+            t_to_minimum = 11.7
+        else:
+            t_to_minimum = 12.4
 
         if self.t is not None and self.s is not None:
             self.ts = round(self.t / self.s, 6)
 
-        self.errorLowT_to = (self.t_to < 12.4)
+        self.errorLowT_to = (self.t_to < t_to_minimum)
         self.errorCode = kwargs.get('errorCode')
 
     def GetValidationErrors(self):

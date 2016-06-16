@@ -65,6 +65,7 @@ class SpreadsheetService():
                 s_to=row[13].value, #Col N
                 s_amp=row[14].value, #Col O
                 s=row[15].value, #Col P
+                primerBatch=spreadsheet.batch.primerBatch,
                 errorCode=row[29].value or '' #Col AD
                 )
 
