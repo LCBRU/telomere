@@ -93,5 +93,8 @@ class Measurement(db.Model):
 
         return result
 
+    def is_error_free(self):
+        return len(self.GetValidationErrors()) == 0
+
     def _missingErrorDescription(self, fieldname):
         return "'%s' is missing or not valid" % fieldname

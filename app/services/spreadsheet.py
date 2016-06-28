@@ -34,6 +34,8 @@ class SpreadsheetService():
     def Process(self, spreadsheet, disallowPlateNameMismatch):
         result = SpreadsheetLoadResult()
 
+        outstandingErrorService = OutstandingErrorService()
+
         wb = load_workbook(filename = self.GetPath(spreadsheet), use_iterators = True)
         ws = wb.worksheets[0]
 
@@ -69,8 +71,6 @@ class SpreadsheetService():
                 errorCode=row[29].value or '' #Col AD
                 )
 
-            outstandingErrorService = OutstandingErrorService()
-
             for oe in sample.outstandingErrors:
                 outstandingErrorService.CompleteError(oe)
 
@@ -83,7 +83,12 @@ class SpreadsheetService():
 
         for e in batchService.GetValidationErrors(spreadsheet.batch):
             db.session.add(e)
-            result.hasOutstandingErrors = True
+            db.session.flush()
+
+            if e.sample.has_good_measurement():
+                outstandingErrorService.CompleteError(e)
+            else:
+                result.hasOutstandingErrors = True
 
         return result
 

@@ -7,6 +7,10 @@ from app.model.completedError import CompletedError
 class OutstandingErrorService():
 
     def CompleteError(self, outstandingError):
+        self.SaveCompleteError(outstandingError)
+        db.session.delete(outstandingError)
+
+    def SaveCompleteError(self, outstandingError):
         ce = CompletedError(
             description = outstandingError.description,
             batchId = outstandingError.batchId,
@@ -16,4 +20,3 @@ class OutstandingErrorService():
             )
 
         db.session.add(ce)
-        db.session.delete(outstandingError)

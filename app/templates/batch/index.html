@@ -6,7 +6,11 @@
 <header>
 	<h2 class="col-sm-6">Batches</h2>
 	<div class="col-sm-6 text-right">
-		<a href="{{ url_for('speadsheet_upload') }}" class="btn btn-primary" role="button">Upload Spreadsheet</a>
+		<form method="GET" class="form-horizontal" action="{{ url_for('batch_index') }}">
+		    {{ form.search() | safe }}
+		    <button type="submit" class="btn btn-primary">Search</button>
+			<a href="{{ url_for('speadsheet_upload') }}" class="btn btn-primary" role="button">Upload Spreadsheet</a>
+		</form>
 	</div>
 </header>
 
@@ -61,7 +65,7 @@
 	</tbody>
 </table>
 
-{{ formhelper.render_pagination(batches, 'batch_index', errorsOnly=errorsOnly) }}
+{{ formhelper.render_pagination(batches, 'batch_index', search=form.search.data) }}
 
 {% endblock %}
 

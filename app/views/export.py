@@ -274,6 +274,23 @@ def _write_user_errors_csv(outputFile, user_id):
                                 AND sp.plateName = b.plateName
     WHERE   oe.description NOT LIKE 'Validated %'
         AND b.operatorUserId = :userId
+        AND m.sampleID NOT IN (
+            SELECT  sampleId
+            FROM    measurement
+            WHERE
+                    t_to IS NOT  NULL
+                AND t_amp IS NOT NULL
+                AND t IS NOT NULL
+                AND s_to IS NOT NULL
+                AND s_amp IS NOT NULL
+                AND s IS NOT NULL
+                AND ts IS NOT NULL
+                AND coefficientOfVariation IS NOT NULL
+                AND errorLowT_to = 0
+                AND errorHighCv = 0
+                AND errorInvalidSampleCount = 0
+                AND errorCode = ''
+            )
     GROUP BY
           s.sampleCode
         , b.plateName

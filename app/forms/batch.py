@@ -25,3 +25,7 @@ class BatchEditForm(Form):
 
 class BatchDelete(Form):
     id = HiddenField('id')
+
+class BatchSearchForm(Form):
+    search = StringField('Search', validators=[Length(max=20)])
+

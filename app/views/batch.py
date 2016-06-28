@@ -4,7 +4,7 @@ from flask.ext.login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
 from app.services.outstandingError import OutstandingErrorService
-from app.forms.batch import BatchDelete, BatchEditForm
+from app.forms.batch import BatchDelete, BatchEditForm, BatchSearchForm
 from app.model.batch import Batch
 from app.model.sample import Sample
 from app.model.outstandingError import OutstandingError
@@ -49,19 +49,26 @@ def batch_edit(id):
     return render_template('batch/batchEdit.html', form=form)
 
 @telomere.route('/batch/')
-@telomere.route("/batch/page/<int:page>")
+@telomere.route("/batch/<int:page>")
 @login_required
 @manifest_required
 def batch_index(page=1):
+    searchString = request.args.get('search')
+    form = BatchSearchForm(search=searchString)
 
-    batches = (Batch.query
-        .order_by(Batch.id.desc())
-        .paginate(
+    q = Batch.query
+
+    if searchString:
+        q = q.filter(Batch.plateName.like("%{}%".format(searchString)))
+
+    batches = (
+        q.order_by(Batch.id.desc())
+         .paginate(
             page=page,
             per_page=10,
             error_out=False))
 
-    return render_template('batch/index.html', batches=batches)
+    return render_template('batch/index.html', batches=batches, form=form)
 
 
 @telomere.route("/batch/delete/<int:id>")

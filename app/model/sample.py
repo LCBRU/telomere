@@ -27,3 +27,6 @@ class Sample(db.Model):
             return (num_values == 3 or num_values == 4)
         else:
             return num_values == 2
+
+    def has_good_measurement(self):
+        return any(m.is_error_free() for m in self.measurements)
