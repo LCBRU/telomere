@@ -278,18 +278,21 @@ def _write_user_errors_csv(outputFile, user_id):
             SELECT  sampleId
             FROM    measurement
             WHERE
-                    t_to IS NOT  NULL
-                AND t_amp IS NOT NULL
-                AND t IS NOT NULL
-                AND s_to IS NOT NULL
-                AND s_amp IS NOT NULL
-                AND s IS NOT NULL
-                AND ts IS NOT NULL
-                AND coefficientOfVariation IS NOT NULL
-                AND errorLowT_to = 0
-                AND errorHighCv = 0
-                AND errorInvalidSampleCount = 0
-                AND errorCode = ''
+                    (       t_to IS NOT  NULL
+                        AND t_amp IS NOT NULL
+                        AND t IS NOT NULL
+                        AND s_to IS NOT NULL
+                        AND s_amp IS NOT NULL
+                        AND s IS NOT NULL
+                        AND ts IS NOT NULL
+                        AND coefficientOfVariation IS NOT NULL
+                        AND errorLowT_to = 0
+                        AND errorHighCv = 0
+                        AND errorInvalidSampleCount = 0
+                        AND errorCode = ''
+                    ) OR (
+                            errorCode IN (8,9)
+                    )
             )
     GROUP BY
           s.sampleCode
