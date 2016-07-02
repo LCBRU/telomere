@@ -59,7 +59,7 @@ def batch_index(page=1):
     q = Batch.query
 
     if searchString:
-        q = q.filter(Batch.plateName.like("%{}%".format(searchString)))
+        q = q.filter(Batch.plateName.like("%{0}%".format(searchString)))
 
     batches = (
         q.order_by(Batch.id.desc())
