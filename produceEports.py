@@ -3,9 +3,11 @@ from app.views.export import write_all_measurements_csv
 from app import db
 from sqlalchemy.sql import text
 import os
+import tempfile
 
+temp_name = next(tempfile._get_candidate_names())
 exportDirectory = "{0}/app/static/exports".format(os.path.dirname(os.path.realpath(__file__)))
-workingFile = "/tmp/AllMeasurements_inprogress.csv"
+workingFile = "/tmp/{0}.csv".format(temp_name)
 finalFile = "{0}/AllMeasurements.csv".format(exportDirectory)
 
 cmd = """
@@ -42,11 +44,11 @@ cmd = """
     JOIN    sample s ON s.id = m.sampleId
     JOIN    user u ON u.id = b.userId
     JOIN    user o ON o.id = b.operatorUserId
-    INTO OUTFILE '/tmp/AllMeasurements_inprogress.csv'
+    INTO OUTFILE '{0}'
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n';
-"""
+""".format(workingFile)
 
 db.engine.execute(text(cmd))
 
