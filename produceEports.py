@@ -4,7 +4,7 @@ from app import db
 from sqlalchemy.sql import text
 import os
 import tempfile
-from shutil import move
+from shutil import copy
 
 temp_name = next(tempfile._get_candidate_names())
 exportDirectory = "{0}/app/static/exports".format(os.path.dirname(os.path.realpath(__file__)))
@@ -53,5 +53,5 @@ cmd = """
 
 db.engine.execute(text(cmd))
 
-move(workingFile, finalFile)
+copy(workingFile, finalFile)
 
