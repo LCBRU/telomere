@@ -50,5 +50,5 @@ cmd = """
 
 db.engine.execute(text(cmd))
 
-os.rename(workingFile, finalFile)
+os.move(workingFile, finalFile)
 
