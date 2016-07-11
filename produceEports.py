@@ -12,6 +12,35 @@ workingFile = "/tmp/{0}.csv".format(temp_name)
 finalFile = "{0}/AllMeasurements.csv".format(exportDirectory)
 
 cmd = """
+	SELECT
+          'batchId'
+        , 'processType'
+        , 'robot'
+        , 'temperature'
+        , 'datetime'
+        , 'username'
+        , 'plateName'
+        , 'halfPlate'
+        , 'operator_name'
+        , 'operator_code'
+        , 'primerBatch'
+        , 'enzymeBatch'
+        , 'rotorGene'
+        , 'humidity'
+        , 'sampleCode'
+        , 'errorCode'
+        , 't_to'
+        , 't_amp'
+        , 't'
+        , 's_to'
+        , 's_amp'
+        , 's'
+        , 'ts'
+        , 'coefficientOfVariation'
+        , 'errorLowT_to'
+        , 'errorHighCv'
+        , 'errorInvalidSampleCount'
+	UNION ALL
     SELECT
           b.id AS batchId
         , b.processType
