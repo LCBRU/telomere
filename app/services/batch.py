@@ -54,7 +54,9 @@ class BatchService():
                 m.errorInvalidSampleCount = True
                 continue
 
-            m.coefficientOfVariation = round(numpy.std(tsValues, ddof=1) / numpy.mean(tsValues) * 100, 6)
+            mean = numpy.mean(tsValues)
+            std = numpy.std(tsValues, ddof=1)
+            m.coefficientOfVariation = round( std / mean * 100, 6)
             m.errorHighCv = m.coefficientOfVariation > 10
 
     def GetValidationErrors(self, batch):
