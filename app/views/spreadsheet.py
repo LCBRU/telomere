@@ -59,6 +59,11 @@ def speadsheet_upload():
                 db.session.rollback()
                 return render_template('spreadsheet/upload.html', form=form)
 
+            if batch.has_no_non_pool_samples():
+                flash("Batch contains no non-pool samples", "error")
+                db.session.rollback()
+                return render_template('spreadsheet/upload.html', form=form)
+
             if batch.has_invalid_pool_ts_average():
                 flash("Batch has incorrect average pool TS value", "error")
                 db.session.rollback()

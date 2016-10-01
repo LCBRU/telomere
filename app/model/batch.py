@@ -58,6 +58,9 @@ class Batch(db.Model):
     def has_no_pool_samples(self):
         return not any(m.sample.is_pool_sample() for m in self.measurements)
 
+    def has_no_non_pool_samples(self):        
+        return not any(not m.sample.is_pool_sample() for m in self.measurements)
+
     def has_invalid_pool_ts_average(self):
         poolTsValues = [ m.ts for m in self.measurements if m.ts is not None and m.sample.is_pool_sample()]
         averagePoolTs = numpy.mean(poolTsValues)
