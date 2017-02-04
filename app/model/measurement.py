@@ -1,5 +1,5 @@
 from app import db
-from decimal import *
+
 
 class Measurement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -16,10 +16,17 @@ class Measurement(db.Model):
     errorLowT_to = db.Column(db.Boolean(), nullable=True)
     errorHighCv = db.Column(db.Boolean(), nullable=True)
     errorInvalidSampleCount = db.Column(db.Boolean(), nullable=True)
-    coefficientOfVariation = db.Column(db.Numeric(precision=12, scale=6), nullable=True)
+    coefficientOfVariation = db.Column(
+        db.Numeric(precision=12, scale=6), nullable=True)
 
-    batch = db.relationship("Batch", backref=db.backref('measurements', order_by=id, cascade="all, delete-orphan"))
-    sample = db.relationship("Sample", backref=db.backref('measurements', order_by=id, cascade="all, delete-orphan"))
+    batch = db.relationship("Batch", backref=db.backref(
+        'measurements',
+        order_by=id,
+        cascade="all, delete-orphan"))
+    sample = db.relationship("Sample", backref=db.backref(
+        'measurements',
+        order_by=id,
+        cascade="all, delete-orphan"))
 
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get('id')
@@ -35,6 +42,8 @@ class Measurement(db.Model):
 
         if (primerBatch == 3 or primerBatch == 4):
             t_to_minimum = 11.7
+        elif primerBatch == 5:
+            t_to_minimum = 12.2
         else:
             t_to_minimum = 12.4
 
@@ -51,17 +60,22 @@ class Measurement(db.Model):
         if self.t_to is None:
             result.append(self._missingErrorDescription('t_to'))
         elif self.errorLowT_to and str(self.errorCode) != '2':
-            result.append("Measurement has T_TO value of {0:.2f}, but does not have error code of '2'".format(self.t_to))
+            result.append(
+                "Measurement has T_TO value of {0:.2f}, "
+                "but does not have error code of '2'".format(self.t_to))
             errorCodeReported = True
         elif (not self.errorLowT_to) and str(self.errorCode) == '2':
-            result.append("Measurement has T_TO value of {0:.2f}, but has been given an error code of '2'".format(self.t_to))
+            result.append(
+                "Measurement has T_TO value of {0:.2f}, "
+                "but has been given an error code of '2'".format(self.t_to))
             errorCodeReported = True
         elif self.errorLowT_to and str(self.errorCode) == '2':
-            result.append("Validated error code '2': T_TO = {0:.2f}.".format(self.t_to))
+            result.append(
+                "Validated error code '2': T_TO = {0:.2f}.".format(self.t_to))
             errorCodeReported = True
 
         if str(self.errorCode) != '' and not errorCodeReported:
-            result.append("Error code of {0}".format(self.errorCode))            
+            result.append("Error code of {0}".format(self.errorCode))
 
         if self.t_amp is None:
             result.append(self._missingErrorDescription('t_amp'))
@@ -79,17 +93,30 @@ class Measurement(db.Model):
             result.append(self._missingErrorDescription('s'))
 
         if self.errorInvalidSampleCount:
-            result.append("Sample does not have the correct amount of ts values to calculate a CV.")
+            result.append(
+                "Sample does not have the correct amount "
+                "of ts values to calculate a CV.")
 
         if self.coefficientOfVariation is not None:
             if self.errorHighCv and str(self.errorCode) != '1':
-                result.append("Samples have a coefficient of variation of {0:.2f}, but do not have an error code of '1'".format(self.coefficientOfVariation))
+                result.append(
+                    "Samples have a coefficient of variation of {0:.2f}, "
+                    "but do not have an error code of '1'"
+                    .format(self.coefficientOfVariation))
             elif (not self.errorHighCv) and str(self.errorCode) == '1':
-                result.append("Samples have a coefficient of variation of {0:.2f}, but have been given an error code of '1'".format(self.coefficientOfVariation))
+                result.append(
+                    "Samples have a coefficient of variation of {0:.2f}, "
+                    "but have been given an error code of '1'"
+                    .format(self.coefficientOfVariation))
             elif self.coefficientOfVariation and str(self.errorCode) == '1':
-                result.append("Validated error code '1': Sample coefficient of variation = {0:.2f}".format(self.coefficientOfVariation))
+                result.append(
+                    "Validated error code '1': "
+                    "Sample coefficient of variation = {0:.2f}"
+                    .format(self.coefficientOfVariation))
         elif str(self.errorCode) == '1':
-            result.append("Samples coefficient of variation cannot be calculated, but have been given an error code of '1'")
+            result.append(
+                "Samples coefficient of variation cannot be calculated, "
+                "but have been given an error code of '1'")
 
         return result
 
