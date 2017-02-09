@@ -3,6 +3,7 @@ from app import db
 from app.model.batch import Batch
 from app.model.outstandingError import OutstandingError
 import numpy
+import decimal
 
 
 class BatchService():
@@ -42,7 +43,9 @@ class BatchService():
             measurements = batch.get_measurements_for_sample_code(
                 m.sample.sampleCode)
 
-            tsValues = [x.ts for x in measurements if x.ts is not None]
+            tsValues = [
+                decimal.Decimal(x.ts) for x in measurements if x.ts is not None
+            ]
 
             m.errorInvalidSampleCount = False
             m.errorHighCv = False
