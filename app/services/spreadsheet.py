@@ -101,7 +101,7 @@ class SpreadsheetService():
 
         wb = load_workbook(
             filename=self.GetPath(spreadsheet),
-            use_iterators=True)
+            read_only=True)
 
         ws = wb.worksheets[0]
 
