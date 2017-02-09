@@ -79,6 +79,7 @@ def speadsheet_upload():
                 return render_template('spreadsheet/upload.html', form=form)
 
             if batch.has_no_non_pool_samples():
+                flash("{} measurements".format(len(batch.measurements)))
                 flash("Batch contains no non-pool samples", "error")
                 db.session.rollback()
                 return render_template('spreadsheet/upload.html', form=form)

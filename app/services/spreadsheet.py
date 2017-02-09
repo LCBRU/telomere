@@ -4,6 +4,7 @@ import re
 from sets import Set
 from werkzeug import secure_filename
 from flask_login import current_user
+from flask import flash
 from app import db, telomere
 from app.services.batch import BatchService
 from app.services.outstandingError import OutstandingErrorService
@@ -41,7 +42,6 @@ class SpreadsheetService():
         ws = wb.worksheets[0]
 
         for row in ws.iter_rows(row_offset=1):
-
             sampleCode = row[23].value  # Col X
 
             if (sampleCode is None or

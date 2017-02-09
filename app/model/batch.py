@@ -3,6 +3,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.sql import select, func
 from app.model.outstandingError import OutstandingError
 import numpy
+import decimal
+
 
 class Batch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,11 +60,11 @@ class Batch(db.Model):
     def has_no_pool_samples(self):
         return not any(m.sample.is_pool_sample() for m in self.measurements)
 
-    def has_no_non_pool_samples(self):        
+    def has_no_non_pool_samples(self):
         return not any(not m.sample.is_pool_sample() for m in self.measurements)
 
     def has_invalid_pool_ts_average(self):
-        poolTsValues = [ m.ts for m in self.measurements if m.ts is not None and m.sample.is_pool_sample()]
+        poolTsValues = [ decimal.Decimal(m.ts) for m in self.measurements if m.ts is not None and m.sample.is_pool_sample()]
         averagePoolTs = numpy.mean(poolTsValues)
         return averagePoolTs < 0.99 or averagePoolTs > 1.01
 
