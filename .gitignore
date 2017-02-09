@@ -61,6 +61,7 @@ app/settings.py
 
 # Virtual Environment
 venv
+venv2.7
 
 #uploads directory
 uploads
