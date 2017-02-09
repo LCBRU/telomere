@@ -30,7 +30,7 @@ class ManifestService():
         return manifest
 
     def Process(self, manifest):
-        wb = load_workbook(filename=self.GetPath(manifest), use_iterators=True)
+        wb = load_workbook(filename=self.GetPath(manifest), read_only=True)
         ws = wb.worksheets[0]
 
         try:
@@ -95,7 +95,7 @@ class ManifestService():
 
     def ValidateFormat(self, manifest):
 
-        wb = load_workbook(filename=self.GetPath(manifest), use_iterators=True)
+        wb = load_workbook(filename=self.GetPath(manifest), read_only=True)
         ws = wb.worksheets[0]
 
         return (
