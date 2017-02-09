@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from app.views.export import write_all_measurements_csv
 from app import db
 from sqlalchemy.sql import text
 import os
@@ -7,12 +6,13 @@ import tempfile
 from shutil import copy
 
 temp_name = next(tempfile._get_candidate_names())
-exportDirectory = "{0}/app/static/exports".format(os.path.dirname(os.path.realpath(__file__)))
-workingFile = "/tmp/{0}.csv".format(temp_name)
+exportDirectory = "{0}/app/static/exports".format(
+    os.path.dirname(os.path.realpath(__file__)))
+workingFile = "/db/mysql/tmp/{0}.csv".format(temp_name)
 finalFile = "{0}/AllMeasurements.csv".format(exportDirectory)
 
 cmd = """
-	SELECT
+          SELECT
           'batchId'
         , 'processType'
         , 'robot'
@@ -40,7 +40,7 @@ cmd = """
         , 'errorLowT_to'
         , 'errorHighCv'
         , 'errorInvalidSampleCount'
-	UNION ALL
+UNION ALL
     SELECT
           b.id AS batchId
         , b.processType
@@ -83,4 +83,3 @@ cmd = """
 db.engine.execute(text(cmd))
 
 copy(workingFile, finalFile)
-
