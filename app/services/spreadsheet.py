@@ -1,7 +1,8 @@
-import os, datetime, re
+import os
+import datetime
+import re
 from sets import Set
 from werkzeug import secure_filename
-from flask import flash
 from flask_login import current_user
 from app import db, telomere
 from app.services.batch import BatchService
@@ -9,8 +10,8 @@ from app.services.outstandingError import OutstandingErrorService
 from app.model.spreadsheet import Spreadsheet
 from app.model.measurement import Measurement
 from app.model.sample import Sample
-from app.model.outstandingError import OutstandingError
 from openpyxl import load_workbook
+
 
 class SpreadsheetService():
 
@@ -18,11 +19,11 @@ class SpreadsheetService():
         filename = secure_filename(spreadsheetFile.filename)
 
         spreadsheet = Spreadsheet(
-            filename = filename,
-            uploaded = datetime.datetime.now(),
-            userId = current_user.id,
-            batchId = batch.id
-            )
+            filename=filename,
+            uploaded=datetime.datetime.now(),
+            userId=current_user.id,
+            batchId=batch.id
+        )
 
         db.session.add(spreadsheet)
         db.session.flush()
@@ -36,24 +37,28 @@ class SpreadsheetService():
 
         outstandingErrorService = OutstandingErrorService()
 
-        wb = load_workbook(filename = self.GetPath(spreadsheet), use_iterators = True)
+        wb = load_workbook(filename=self.GetPath(spreadsheet), read_only=True)
         ws = wb.worksheets[0]
 
         for row in ws.iter_rows(row_offset=1):
 
-            sampleCode = row[23].value #Col X
+            sampleCode = row[23].value  # Col X
 
-            if (sampleCode is None or not (str(sampleCode).isdigit() or sampleCode == Sample.POOL_NAME)):
+            if (sampleCode is None or
+                    not (
+                        str(sampleCode).isdigit() or
+                        sampleCode == Sample.POOL_NAME)):
                 continue
 
-            sample = Sample.query.filter(Sample.sampleCode == sampleCode).first()
+            sample = Sample.query.filter(
+                Sample.sampleCode == sampleCode).first()
 
             if sample is None:
                 result.missingSampleCodes.add(sampleCode)
                 continue
 
-            if (    sample.plate_name_mismatch(spreadsheet.batch.plateName)
-                    and disallowPlateNameMismatch):
+            if (sample.plate_name_mismatch(spreadsheet.batch.plateName) and
+                    disallowPlateNameMismatch):
 
                 result.incorrectPlateName.add(sampleCode)
                 continue
@@ -61,15 +66,15 @@ class SpreadsheetService():
             measurement = Measurement(
                 batchId=spreadsheet.batch.id,
                 sampleId=sample.id,
-                t_to=row[1].value, #Col B
-                t_amp=row[2].value, #Col C
-                t=row[3].value, #Col D
-                s_to=row[13].value, #Col N
-                s_amp=row[14].value, #Col O
-                s=row[15].value, #Col P
+                t_to=row[1].value,  # Col B
+                t_amp=row[2].value,  # Col C
+                t=row[3].value,  # Col D
+                s_to=row[13].value,  # Col N
+                s_amp=row[14].value,  # Col O
+                s=row[15].value,  # Col P
                 primerBatch=spreadsheet.batch.primerBatch,
-                errorCode=row[29].value or '' #Col AD
-                )
+                errorCode=row[29].value or ''  # Col AD
+            )
 
             for oe in sample.outstandingErrors:
                 outstandingErrorService.CompleteError(oe)
@@ -94,7 +99,10 @@ class SpreadsheetService():
 
     def ValidateFormat(self, spreadsheet):
 
-        wb = load_workbook(filename = self.GetPath(spreadsheet), use_iterators = True)
+        wb = load_workbook(
+            filename=self.GetPath(spreadsheet),
+            use_iterators=True)
+
         ws = wb.worksheets[0]
 
         return (
@@ -129,10 +137,13 @@ class SpreadsheetService():
             ws['AB1'].value == 'ave ts' and
             ws['AC1'].value == 'cv' and
             ws['AD1'].value == 'error code'
-            )
+        )
 
     def GetPath(self, spreadsheet):
-        return os.path.join(telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'], self.GetFilename(spreadsheet))
+        return os.path.join(
+            telomere.config['SPREADSHEET_UPLOAD_DIRECTORY'],
+            self.GetFilename(spreadsheet)
+        )
 
     def GetFilename(self, spreadsheet):
         return "%d.xlsx" % spreadsheet.id
@@ -140,7 +151,8 @@ class SpreadsheetService():
     def _isValidValue(self, value):
         valAsString = str(value)
         p = re.compile('\d+(\.\d+)?')
-        return p.match(valAsString) != None
+        return p.match(valAsString) is not None
+
 
 class SpreadsheetLoadResult:
 
@@ -150,4 +162,7 @@ class SpreadsheetLoadResult:
         self.hasOutstandingErrors = False
 
     def abortUpload(self):
-        return len(self.missingSampleCodes) > 0 or len(self.incorrectPlateName) > 0
+        return (
+            len(self.missingSampleCodes) > 0 or
+            len(self.incorrectPlateName) > 0
+        )
