@@ -1,5 +1,5 @@
 from flask import g, send_file, render_template, redirect, url_for
-from flask.ext.login import login_required
+from flask_login import login_required
 import tempfile, os, csv, datetime
 from flask_login import current_user
 from sets import Set

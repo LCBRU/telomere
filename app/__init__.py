@@ -1,6 +1,6 @@
 import datetime
 from flask import Flask, g, render_template
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 import logging
 import traceback
 

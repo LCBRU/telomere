@@ -1,6 +1,6 @@
 import datetime
 from flask import flash, redirect, url_for, request, g, render_template
-from flask.ext.login import login_required
+from flask_login import login_required
 from app import db, telomere
 from app.services.batch import BatchService
 from app.services.outstandingError import OutstandingErrorService

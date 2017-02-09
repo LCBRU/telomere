@@ -1,5 +1,5 @@
 from flask import redirect, url_for, request, g, render_template, request
-from flask.ext.login import LoginManager, login_user, logout_user, current_user
+from flask_login import LoginManager, login_user, logout_user, current_user
 from app import db
 import ldap, time
 from urlparse import urlparse

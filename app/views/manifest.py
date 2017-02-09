@@ -1,6 +1,6 @@
 import datetime
 from flask import flash, redirect, url_for, request, render_template, send_from_directory
-from flask.ext.login import login_required
+from flask_login import login_required
 from app import db, telomere
 from app.model.manifest import Manifest
 from app.forms.manifest import ManifestUpload, ManifestDelete
