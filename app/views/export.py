@@ -38,7 +38,7 @@ def export_my_errors():
     f = tempfile.TemporaryFile()
 
     try:
-        _write_user_errors_csv(f, current_user.id)
+        _direct_write_user_errors_csv(f, current_user.id)
 
         return _send_csv_to_response(f)
 
@@ -68,7 +68,7 @@ def export_user_errors_output():
         f = tempfile.TemporaryFile()
 
         try:
-            _write_user_errors_csv(f, form.operatorUserId.data)
+            _direct_write_user_errors_csv(f, form.operatorUserId.data)
 
             return _send_csv_to_response(f)
 
@@ -325,4 +325,155 @@ def _write_user_errors_csv(outputFile, user_id):
             COL_VOLUME: m[6],
             COL_ERROR_CODE: m[7],
             COL_ERRORS: m[8]
+        })
+
+
+def _direct_write_user_errors_csv(outputFile, user_id):
+    COL_SAMPLE_CODE = 'Sample Code'
+    COL_PLATE_NAME = 'Plate Name'
+    COL_WELL = 'Well'
+    COL_CONDITION_DESCRIPTION = 'Condition'
+    COL_DNA_TEST = 'DNA Test'
+    COL_PICO_TEST = 'PICO Test'
+    COL_VOLUME = 'Volume'
+    COL_ERRORS = 'Errors'
+
+    fieldnames = [
+        COL_SAMPLE_CODE,
+        COL_PLATE_NAME,
+        COL_WELL,
+        COL_CONDITION_DESCRIPTION,
+        COL_DNA_TEST,
+        COL_PICO_TEST,
+        COL_VOLUME,
+        COL_ERRORS
+    ]
+
+    output = csv.DictWriter(
+        outputFile,
+        fieldnames=fieldnames,
+        quoting=csv.QUOTE_NONNUMERIC
+    )
+
+    output.writer.writerow(output.fieldnames)
+
+    cmd = """
+SELECT
+      sampleCode
+    , plateName
+    , well
+    , conditionDescription
+    , dnaTest
+    , picoTest
+    , volume
+    , CONCAT_WS("; ",
+        CASE WHEN errorCode <> ''
+            THEN CONCAT("Error code = ", CAST(errorCode AS CHAR))
+            ELSE NULL END,
+        CASE WHEN errorLowT_to = 1
+            THEN "Low t_to"
+            ELSE NULL END,
+        CASE WHEN errorHighCv = 1
+            THEN "High coefficient of variation"
+            ELSE NULL END,
+        CASE WHEN errorInvalidSampleCount = 1
+            THEN "Incorrect number of samples in batch"
+            ELSE NULL END,
+        CASE WHEN missing_data = 1
+            THEN "Missing data"
+            ELSE NULL END
+      ) errors
+FROM    (
+    SELECT
+              s.sampleCode
+            , b.plateName
+            , sp.well
+            , sp.conditionDescription
+            , sp.dnaTest
+            , sp.picoTest
+            , sp.volume
+            , MAX(m.errorCode) errorCode
+            , MAX(m.errorLowT_to) errorLowT_to
+            , MAX(m.errorHighCv) errorHighCv
+            , MAX(m.errorInvalidSampleCount) errorInvalidSampleCount
+            , MAX(CASE WHEN t_to IS NULL OR
+                        t_amp IS NULL OR
+                        t IS NULL OR
+                        s_to IS NULL OR
+                        s_amp IS NULL OR
+                        s IS NULL OR
+                        ts IS NULL OR
+                        coefficientOfVariation IS NULL
+                    THEN 1
+                    ELSE 0
+                END) missing_data
+    FROM (
+        SELECT s.id AS sampleId, MAX(b.datetime) AS datetime
+        FROM sample s
+        JOIN measurement m ON m.sampleId = s.id
+        JOIN batch b ON b.id = m.batchId
+        GROUP BY s.id
+    ) mrb
+    JOIN measurement m ON m.sampleId = mrb.sampleId
+    JOIN batch b ON b.id = m.batchId AND b.datetime = mrb.datetime
+                     AND b.operatorUserId = :userId
+    JOIN sample s ON s.id = m.sampleId
+    LEFT JOIN   samplePlate sp ON   sp.sampleCode = s.sampleCode
+                                AND sp.plateName = b.plateName
+    WHERE (
+           errorCode <> ''
+        OR t_to IS NULL
+        OR t_amp IS NULL
+        OR t IS NULL
+        OR s_to IS NULL
+        OR s_amp IS NULL
+        OR s IS NULL
+        OR errorLowT_to = 1
+        OR errorHighCv = 1
+        OR errorInvalidSampleCount = 1
+        )
+        AND m.sampleID NOT IN (
+            SELECT  sampleId
+            FROM    measurement
+            WHERE
+                    (       t_to IS NOT  NULL
+                        AND t_amp IS NOT NULL
+                        AND t IS NOT NULL
+                        AND s_to IS NOT NULL
+                        AND s_amp IS NOT NULL
+                        AND s IS NOT NULL
+                        AND ts IS NOT NULL
+                        AND coefficientOfVariation IS NOT NULL
+                        AND errorLowT_to = 0
+                        AND errorHighCv = 0
+                        AND errorInvalidSampleCount = 0
+                        AND errorCode = ''
+                    ) OR (
+                            errorCode IN (8,9)
+                    )
+                )
+        GROUP BY
+              s.sampleCode
+            , b.plateName
+            , sp.well
+            , sp.conditionDescription
+            , sp.dnaTest
+            , sp.picoTest
+            , sp.volume
+    ) x
+;
+    """
+
+    measurements = db.engine.execute(text(cmd), userId=user_id)
+
+    for m in measurements:
+        output.writerow({
+            COL_SAMPLE_CODE: m[0],
+            COL_PLATE_NAME: m[1],
+            COL_WELL: m[2],
+            COL_CONDITION_DESCRIPTION: m[3],
+            COL_DNA_TEST: m[4],
+            COL_PICO_TEST: m[5],
+            COL_VOLUME: m[6],
+            COL_ERRORS: m[7]
         })
