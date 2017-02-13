@@ -13,11 +13,17 @@ print dbUpgradeDir
 def init_db():
     print 'initialising DB'
     db.engine.execute(
-        '''CREATE TABLE IF NOT EXISTS db_version (
+        '''
+            SET sql_notes = 0; # Supress table does not exist warning
+
+            CREATE TABLE IF NOT EXISTS db_version (
             id INT AUTO_INCREMENT,
             version INT,
             appliedDate DATETIME,
-            PRIMARY KEY(id));''')
+            PRIMARY KEY(id));
+
+            SET sql_notes = 1; # Re-enable warning
+            ''')
 
     currentVersion = db.engine.execute(
         "SELECT MAX(version) maxVersion FROM db_version").fetchall()[0][0] or 0
