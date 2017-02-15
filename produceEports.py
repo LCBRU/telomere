@@ -82,4 +82,4 @@ UNION ALL
 
 db.engine.execute(text(cmd))
 
-copy(workingFile, finalFile)
+rename(workingFile, finalFile)
