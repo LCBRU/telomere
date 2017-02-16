@@ -3,7 +3,7 @@ from app import db
 from sqlalchemy.sql import text
 import os
 import tempfile
-from shutil import copy
+from shutil import move
 
 temp_name = next(tempfile._get_candidate_names())
 exportDirectory = "{0}/app/static/exports".format(
@@ -82,4 +82,4 @@ UNION ALL
 
 db.engine.execute(text(cmd))
 
-rename(workingFile, finalFile)
+move(workingFile, finalFile)
