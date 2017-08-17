@@ -13,6 +13,8 @@ from app.model.measurement import Measurement
     (4, 11.6, True),
     (5, 12.2, False),
     (5, 12.1, True),
+    (6, 11.7, False),
+    (6, 11.6, True),
 ])
 def test_primerBatch_errorLowT_to(primerBatch, t_to, expected):
     out = Measurement(primerBatch=primerBatch, t_to=t_to)

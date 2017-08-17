@@ -40,7 +40,7 @@ class Measurement(db.Model):
         self.s = kwargs.get('s')
         primerBatch = kwargs.get('primerBatch')
 
-        if (primerBatch == 3 or primerBatch == 4):
+        if (primerBatch in [3, 4, 6]):
             t_to_minimum = 11.7
         elif primerBatch == 5:
             t_to_minimum = 12.2
