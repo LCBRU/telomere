@@ -67,3 +67,4 @@ venv2.7
 uploads
 
 app/static/exports/*
+database.sqlite

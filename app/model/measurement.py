@@ -44,6 +44,8 @@ class Measurement(db.Model):
             t_to_minimum = 11.7
         elif primerBatch == 5:
             t_to_minimum = 12.2
+        elif primerBatch == 7:
+            t_to_minimum = 11.3
         else:
             t_to_minimum = 12.4
 
