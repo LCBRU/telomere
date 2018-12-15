@@ -42,3 +42,23 @@ necessary permissions.
 ## Installation on University of Leicester LAMP servers
 
 See [Here](http://lcbru-trac.rcs.le.ac.uk/wiki/Telomere%20Length%20Recording%20Application%20HowTo%20Install).
+
+## Run the Application in Dev
+
+1. Install the requirements by running the command:
+
+```bash
+pip install -r requirements.txt
+```
+
+2. Run the Application by running the command:
+
+```bash
+python run.py
+```
+
+3. Test the application by running the command:
+
+```bash
+pytest
+```
