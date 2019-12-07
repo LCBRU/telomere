@@ -2,7 +2,7 @@ flask
 Flask-Login
 Flask-SQLAlchemy
 Flask-WTF
-mysqlclient
+PyMySQL
 numpy
 openpyxl
 python-ldap
