@@ -7,11 +7,11 @@ import traceback
 dbUpgradeDir = os.path.join(os.path.abspath(
     os.path.dirname(__file__)), 'db_upgrade')
 
-print dbUpgradeDir
+print(dbUpgradeDir)
 
 
 def init_db():
-    print 'initialising DB'
+    print('initialising DB')
     db.engine.execute(
         '''
             SET sql_notes = 0; # Supress table does not exist warning
@@ -28,9 +28,9 @@ def init_db():
     currentVersion = db.engine.execute(
         "SELECT MAX(version) maxVersion FROM db_version").fetchall()[0][0] or 0
 
-    print 'Upgrading DB from version %d' % currentVersion
+    print('Upgrading DB from version {}'.format(currentVersion))
 
-    print 'Upgrade directory is ' + dbUpgradeDir
+    print('Upgrade directory is ' + dbUpgradeDir)
 
     upgradeScripts = [f for f in os.listdir(dbUpgradeDir)
                       if f.split('.')[0].isdigit() and
@@ -41,7 +41,7 @@ def init_db():
     upgradeScripts.sort(key=lambda s: int(s.split('.')[0]))
 
     for f in upgradeScripts:
-        print 'Running DB script %s' % f
+        print('Running DB script {}'.format(f))
 
         with open(os.path.join(dbUpgradeDir, f)) as s:
             try:
@@ -57,5 +57,5 @@ def init_db():
             except:
                 telomere.logger.error(traceback.format_exc())
                 db.engine.raw_connection().cursor().execute("ROLLBACK;")
-                print "Unexpected Error: ", sys.exc_info()[0]
+                print("Unexpected Error: ", sys.exc_info()[0])
                 raise

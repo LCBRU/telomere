@@ -8,7 +8,7 @@ from app.model.samplePlate import SamplePlate
 from openpyxl import load_workbook
 import traceback
 from decimal import *
-from itertools import izip_longest
+from itertools import zip_longest
 
 
 class ManifestService():
@@ -41,7 +41,7 @@ class ManifestService():
             # try to insert too many rows at a time.
             # I think it's because the query text gets
             # too big.
-            chunks = izip_longest(
+            chunks = zip_longest(
                 *[iter(ws.iter_rows(row_offset=1))] * 5000,
                 fillvalue=None
             )
@@ -56,7 +56,7 @@ class ManifestService():
 
             # Have to recreate the chunks because they've
             # been consumed.  They're so meaty!
-            chunks = izip_longest(
+            chunks = zip_longest(
                 *[iter(ws.iter_rows(row_offset=1))] * 5000,
                 fillvalue=None
             )

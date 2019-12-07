@@ -2,7 +2,7 @@ from flask import redirect, url_for, request, g, render_template, request
 from flask_login import LoginManager, login_user, logout_user, current_user
 from app import db
 import ldap, time
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from app import telomere
 from app.model.user import User
@@ -50,11 +50,11 @@ def validateLDAP(username,password):
             'uid={0},{1}'.format(username, telomere.config['LDAP_BASEDN']),
             password
         )
-        print "Validated user"
+        print("Validated user")
         return True
-    except ldap.LDAPError, e:
-        print "authentication error"
-        print e
+    except ldap.LDAPError as e:
+        print("authentication error")
+        print(e)
         return False
 
 def _getValidatedNext():

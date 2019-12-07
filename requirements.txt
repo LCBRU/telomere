@@ -1,10 +1,10 @@
-flask ~> 0.12.3
-Flask-Login==0.4.0
-Flask-SQLAlchemy==2.1
-Flask-WTF==0.14.2
-MySQL-python==1.2.5
-numpy==1.12.0
-openpyxl==2.4.2
-python-ldap==2.4.30
-SQLAlchemy==1.1.5
+flask
+Flask-Login
+Flask-SQLAlchemy
+Flask-WTF
+mysqlclient
+numpy
+openpyxl
+python-ldap
+SQLAlchemy
 wtforms_components

@@ -1,7 +1,6 @@
 import os
 import datetime
 import re
-from sets import Set
 from werkzeug import secure_filename
 from flask_login import current_user
 from flask import flash
