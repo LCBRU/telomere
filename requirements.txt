@@ -4,7 +4,7 @@ Flask-SQLAlchemy
 Flask-WTF
 PyMySQL
 numpy
-openpyxl
+openpyxl==2.6.4
 python-ldap
 SQLAlchemy
 wtforms_components
