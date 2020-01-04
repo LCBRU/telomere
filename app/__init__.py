@@ -27,8 +27,8 @@ def internal_error(exception):
 
 db = SQLAlchemy(telomere)
 
-import app.database
-database.init_db()
+from app.database import init_db
+init_db()
 
 @telomere.before_request
 def set_date():
