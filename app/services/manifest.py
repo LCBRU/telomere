@@ -1,6 +1,6 @@
 import os
 import datetime
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from flask_login import current_user
 from app import db, telomere
 from app.model.manifest import Manifest

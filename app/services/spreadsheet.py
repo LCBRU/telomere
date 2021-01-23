@@ -1,7 +1,7 @@
 import os
 import datetime
 import re
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from flask_login import current_user
 from flask import flash
 from app import db, telomere
