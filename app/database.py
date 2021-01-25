@@ -14,11 +14,11 @@ def init_db():
     print('initialising DB')
     db.engine.execute(
         '''
-            SET sql_notes = 0; # Supress table does not exist warning
+            SET sql_notes = 0;
 
             CREATE TABLE IF NOT EXISTS db_version (id INT AUTO_INCREMENT, version INT, appliedDate DATETIME, PRIMARY KEY(id));
 
-            SET sql_notes = 1; # Re-enable warning
+            SET sql_notes = 1;
             ''')
 
     currentVersion = db.engine.execute(
