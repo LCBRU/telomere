@@ -16,11 +16,7 @@ def init_db():
         '''
             SET sql_notes = 0; # Supress table does not exist warning
 
-            CREATE TABLE IF NOT EXISTS db_version (
-            id INT AUTO_INCREMENT,
-            version INT,
-            appliedDate DATETIME,
-            PRIMARY KEY(id));
+            CREATE TABLE IF NOT EXISTS db_version (id INT AUTO_INCREMENT, version INT, appliedDate DATETIME, PRIMARY KEY(id));
 
             SET sql_notes = 1; # Re-enable warning
             ''')
